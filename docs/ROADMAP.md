@@ -2,7 +2,7 @@
 
 ## M0 — Bootstrap
 - [x] Repository and Godot project scaffold
-- [ ] Verify Godot headless import/start on Linux
+- [x] Verify Godot headless import/start on Linux (Godot 4.3-stable)
 - [ ] Verify macOS export and local launch
 
 ## M1 — Fun to drive
