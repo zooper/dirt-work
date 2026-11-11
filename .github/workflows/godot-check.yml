@@ -15,3 +15,5 @@ jobs:
         run: godot --headless --path . --editor --import --quit
       - name: Start main scene
         run: godot --headless --path . --quit-after 60
+      - name: Run headless tests
+        run: godot --headless --path . -s tests/run_tests.gd

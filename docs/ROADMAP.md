@@ -6,10 +6,10 @@
 - [ ] Verify macOS export and local launch
 
 ## M1 — Fun to drive
-- [ ] Blockout quarry, ground and obstacles
-- [ ] Wheel loader movement and camera
-- [ ] Lift and tilt controls with keyboard and gamepad
-- [ ] Tune weight, acceleration and steering
+- [x] Blockout quarry, ground and obstacles
+- [x] Wheel loader movement and camera (headless-tested; feel not yet playtested)
+- [x] Lift and tilt controls with keyboard and gamepad (bindings tested; device test on macOS pending)
+- [ ] Tune weight, acceleration and steering (needs macOS playtest)
 
 ## M2 — First job
 - [ ] Gravel pile with volume accounting
