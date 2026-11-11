@@ -22,12 +22,12 @@ M1 in progress: drivable wheel loader in a blockout quarry (`scenes/levels/quarr
 | Curl bucket / dump | J / L | Right stick X |
 | Orbit camera | Q / E | LB / RB |
 | Reset camera | C | R3 |
+| Screenshot | F12 | View |
 
 Holding brake when nearly stopped reverses; throttle while reversing brakes.
 
 ## Checks
 ```bash
-godot --headless --path . --editor --import --quit
-godot --headless --path . --quit-after 60
-godot --headless --path . -s tests/run_tests.gd
+tests/check.sh   # import + boot + tests; fails on any script error
 ```
+Screenshots (F12) are saved to `~/Library/Application Support/Godot/app_userdata/Dirt Work/screenshots/` on macOS.

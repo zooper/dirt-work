@@ -12,13 +12,14 @@
 - [ ] Tune weight, acceleration and steering (needs macOS playtest)
 
 ## M2 — First job
+- [ ] Articulated dump truck (concept image) as the loading target
 - [ ] Gravel pile with volume accounting
 - [ ] Bucket load/unload interaction
 - [ ] Dump zone and job objective
 - [ ] Money counter and completion feedback
 
 ## M3 — Polish
-- [ ] Better low-poly assets and lighting
+- [~] Better low-poly assets and lighting (first pass: world, site props, loader model, golden-hour lighting — needs macOS visual review)
 - [ ] Sounds and particles
 - [ ] Save/load, settings and accessibility
 - [ ] Performance profiling on macOS

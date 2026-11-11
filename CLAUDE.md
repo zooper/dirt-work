@@ -22,6 +22,7 @@ Build a playable, performant low-poly heavy-equipment game in Godot 4 (GDScript)
 - scripts/vehicles — controls and vehicle simulation
 - scripts/gameplay — contracts, material, economy
 - scripts/core — shared state and persistence
+- scripts/world — presentation-only world building (palette, low-poly batches, scenery)
 - assets/models, assets/materials, assets/audio — authored assets
 - tests — automated scene and logic checks
 - docs — design, roadmap, architecture and decisions

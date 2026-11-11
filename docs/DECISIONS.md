@@ -10,3 +10,9 @@
 - 2026-11-11: Bucket is self-levelling (approximates parallel Z-bar linkage); tilt is relative to level, not to the arms. Bucket/arms have no world collision in M1.
 - 2026-11-11: Chassis pitch/roll to the floor is visual only; collision stays upright.
 - 2026-11-11: Quarry is a seeded procedural blockout from primitives (no external assets). Gravel piles are drivable convex hulls without volume accounting until M2.
+- 2026-11-11: Art direction targets the user's concept image: saturated golden-hour palette, faceted angular rock benches, dense pine plateau, lake and snow-capped mountains. Colours live in `scripts/world/palette.gd`.
+- 2026-11-11: Static scenery is merged into vertex-coloured, flat-shaded `LowPolyBatch` meshes (one draw call per batch); trees and rubble use MultiMesh. Keeps the Compatibility renderer fast on a modest Mac.
+- 2026-11-11: Presentation-only world scripts live in `scripts/world/` (palette, batch builder, quarry world, site props), separate from gameplay logic.
+- 2026-11-11: Machine model designations are fictional (`DW-90`); real manufacturer model names from the concept art are not used.
+- 2026-11-11: The Linux host cannot render (no display), so visuals are reviewed from macOS screenshots (F12 / gamepad View → user://screenshots).
+- 2026-11-11: `tests/check.sh` is the single validation entry point and fails on any engine/script error, except the known dummy-renderer `Parameter "m" is null` message caused by Label3D in headless mode.
