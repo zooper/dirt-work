@@ -5,7 +5,7 @@ extends SceneTree
 
 const ACTIONS := ["throttle", "brake_reverse", "steer_left", "steer_right", "handbrake",
 	"lift_up", "lift_down", "tilt_back", "tilt_dump",
-	"camera_orbit_left", "camera_orbit_right", "camera_reset"]
+	"camera_orbit_left", "camera_orbit_right", "camera_reset", "screenshot"]
 
 var _failures := 0
 
@@ -50,6 +50,15 @@ func _test_quarry_drive() -> void:
 	var loader := level.get_node("WheelLoader") as WheelLoader
 	(loader.get_node("PlayerInput") as PlayerLoaderInput).enabled = false
 	await _frames(60)
+	var world := level.get_node("World") as QuarryWorld
+	_check(world.piles.size() == 4, "world has 4 gravel piles")
+	var forest := world.get_node("Forest") as MultiMeshInstance3D
+	_check(forest.multimesh.instance_count > 500, "forest has %d pines" % forest.multimesh.instance_count)
+	var draw_nodes := 0
+	for n in world.get_children():
+		if n is GeometryInstance3D:
+			draw_nodes += 1
+	_check(draw_nodes <= 10, "scenery batched into %d mesh nodes" % draw_nodes)
 	_check(loader.is_on_floor(), "loader settles on the floor")
 	var start := loader.global_position
 
