@@ -20,7 +20,9 @@ static func material() -> StandardMaterial3D:
 		_shared_material = StandardMaterial3D.new()
 		_shared_material.vertex_color_use_as_albedo = true
 		# add_tri() converts colours via Palette.render() (renderer-aware).
-		_shared_material.vertex_color_is_srgb = false
+		# Honoured by Forward+/Mobile; Compatibility ignores it, which
+		# Palette.render() compensates for by linearizing there.
+		_shared_material.vertex_color_is_srgb = true
 		_shared_material.roughness = 0.92
 	return _shared_material
 

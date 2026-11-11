@@ -17,7 +17,7 @@ Tip, Wheel*, RearShape, FrontShape, PlayerInput, LiftRam*, Cab) must stay stable
 """
 import math
 
-LINEARIZE = True     # project uses gl_compatibility; set False for Forward+/Mobile
+LINEARIZE = False    # True only for the gl_compatibility renderer
 WHEEL_R = 1.0        # visual tyre radius (m) - wheel centre at y = WHEEL_R
 LIFT = WHEEL_R - 0.8 # frames are lifted so physics shapes stay unchanged
 TRACK = 1.32         # wheel centre x

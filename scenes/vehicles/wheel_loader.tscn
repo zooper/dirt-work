@@ -10,49 +10,49 @@
 [ext_resource type="Script" path="res://scripts/vehicles/bucket_shell.gd" id="8"]
 
 [sub_resource type="StandardMaterial3D" id="glass"]
-albedo_color = Color(0.1706, 0.3424, 0.5225, 0.35)
+albedo_color = Color(0.45, 0.62, 0.75, 0.35)
 roughness = 0.05
 metallic = 0
 transparency = 1
 
 [sub_resource type="StandardMaterial3D" id="lamp"]
-albedo_color = Color(1.0, 0.89, 0.6038, 1.0)
+albedo_color = Color(1.0, 0.95, 0.8, 1.0)
 roughness = 0.6
 metallic = 0
 emission_enabled = true
-emission = Color(1.0, 0.89, 0.6038, 1)
+emission = Color(1.0, 0.95, 0.8, 1)
 emission_energy_multiplier = 3
 
 [sub_resource type="StandardMaterial3D" id="tail"]
-albedo_color = Color(1.0, 0.0134, 0.0049, 1.0)
+albedo_color = Color(1.0, 0.12, 0.06, 1.0)
 roughness = 0.6
 metallic = 0
 emission_enabled = true
-emission = Color(1.0, 0.0134, 0.0049, 1)
+emission = Color(1.0, 0.12, 0.06, 1)
 emission_energy_multiplier = 2.5
 
 [sub_resource type="StandardMaterial3D" id="red"]
-albedo_color = Color(0.7106, 0.0153, 0.01, 1.0)
+albedo_color = Color(0.86, 0.13, 0.1, 1.0)
 roughness = 0.5
 metallic = 0
 
 [sub_resource type="StandardMaterial3D" id="black"]
-albedo_color = Color(0.01, 0.01, 0.0116, 1.0)
+albedo_color = Color(0.1, 0.1, 0.11, 1.0)
 roughness = 0.9
 metallic = 0
 
 [sub_resource type="StandardMaterial3D" id="hivis"]
-albedo_color = Color(0.5705, 0.89, 0.0272, 1.0)
+albedo_color = Color(0.78, 0.95, 0.18, 1.0)
 roughness = 0.8
 metallic = 0
 
 [sub_resource type="StandardMaterial3D" id="skin"]
-albedo_color = Color(0.7106, 0.3672, 0.214, 1.0)
+albedo_color = Color(0.86, 0.64, 0.5, 1.0)
 roughness = 0.8
 metallic = 0
 
 [sub_resource type="StandardMaterial3D" id="chrome"]
-albedo_color = Color(0.7106, 0.7293, 0.7874, 1.0)
+albedo_color = Color(0.86, 0.87, 0.9, 1.0)
 roughness = 0.25
 metallic = 0.6
 

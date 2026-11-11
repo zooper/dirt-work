@@ -23,6 +23,9 @@ func _run() -> void:
 	DirAccess.make_dir_recursive_absolute(out)
 	root.size = Vector2i(1600, 900)
 	var level: Node = load("res://scenes/levels/quarry.tscn").instantiate()
+	if OS.get_environment("DW_PREVIEW_NO_FOG") == "1":
+		# Mesa lavapipe crashes on Godot 4.3 fog; previews only.
+		(level.get_node("WorldEnvironment") as WorldEnvironment).environment.fog_enabled = false
 	root.add_child(level)
 	var loader := level.get_node("WheelLoader") as WheelLoader
 	(loader.get_node("PlayerInput") as PlayerLoaderInput).enabled = false
