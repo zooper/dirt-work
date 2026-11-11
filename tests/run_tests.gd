@@ -87,8 +87,12 @@ func _test_quarry_drive() -> void:
 	_check(site.get_node("Collision").get_child_count() > 20, "site props have colliders")
 	_check(draw_nodes <= 10, "scenery batched into %d mesh nodes" % draw_nodes)
 	_check(loader.is_on_floor(), "loader settles on the floor")
-	var tire := loader.get_node("Chassis/FrontFrame/WheelFL/Tire") as MeshInstance3D
-	_check(tire.mesh != null and tire.mesh.get_surface_count() > 0, "procedural tyre has geometry")
+	var meshes := 0
+	for part in ["Chassis/FrontFrame/Model", "Chassis/RearPivot/Model", "Chassis/FrontFrame/ArmPivot/Model",
+			"Chassis/FrontFrame/ArmPivot/BucketPivot/Model", "Chassis/FrontFrame/WheelFL/Tire"]:
+		if not loader.get_node(part).find_children("*", "MeshInstance3D").is_empty():
+			meshes += 1
+	_check(meshes == 5, "all 5 Blender model parts loaded (%d)" % meshes)
 	var ram := loader.get_node("Chassis/FrontFrame/LiftRamL") as Node3D
 	_check(ram.get_child_count() == 2, "lift ram built barrel + rod")
 	var start := loader.global_position

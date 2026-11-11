@@ -39,6 +39,10 @@ Render review shots on a machine with a display (or Xvfb):
 ```bash
 DISPLAY=:0 godot --path . --resolution 1600x900 -s tools/capture_shots.gd -- /tmp/shots
 ```
-The loader scene is generated: edit `tools/gen_wheel_loader.py`, then run it.
+The loader is built in two steps:
+```bash
+blender -b --factory-startup --python tools/blender/build_wheel_loader.py -- assets/models/wheel_loader
+python3 tools/gen_wheel_loader.py   # assembles the .glb parts into scenes/vehicles/wheel_loader.tscn
+```
 
 Screenshots (F12) are saved to `~/Library/Application Support/Godot/app_userdata/Dirt Work/screenshots/` on macOS.

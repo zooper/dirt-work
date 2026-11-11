@@ -12,7 +12,7 @@ enum Mode { CHASE, CAB }
 
 @export var target_path: NodePath
 @export var cab_path: NodePath = ^"../WheelLoader/Chassis/RearPivot/Cab"
-@export var cab_eye := Vector3(0.0, 3.25, 0.0)
+@export var cab_eye := Vector3(0.0, 3.55, 0.15)
 @export var distance := 11.0
 @export var min_distance := 6.0
 @export var max_distance := 24.0
