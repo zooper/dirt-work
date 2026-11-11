@@ -1,8 +1,9 @@
 class_name WheelLoader
 extends CharacterBody3D
 ## Articulated wheel loader. Arcade-style kinematic simulation tuned for feel,
-## not fidelity. The body origin sits at the articulation hinge; the front frame
-## (arms + bucket) defines heading, the rear frame swings by the articulation angle.
+## not fidelity. The body origin sits at the articulation hinge and its heading is
+## the bisector of the two frames: steering bends the front frame by +a/2 and the
+## rear frame by -a/2 around the hinge, like a real centre-articulated machine.
 ##
 ## This script knows nothing about input devices: a controller node
 ## (see PlayerLoaderInput) writes the control fields below each frame.
@@ -14,6 +15,8 @@ var steer := 0.0           ## -1 (left) .. 1 (right)
 var handbrake := false
 var lift_input := 0.0      ## -1 (lower) .. 1 (raise)
 var tilt_input := 0.0      ## -1 (curl back) .. 1 (dump)
+var cruise_active := false ## hold cruise_speed; any brake input cancels
+var cruise_speed := 4.0    ## m/s
 
 @export_group("Drive")
 @export var max_forward_speed := 8.0     ## m/s
@@ -53,17 +56,21 @@ var tilt_angle := 0.0            ## degrees, relative to level
 @onready var _rear_pivot: Node3D = $Chassis/RearPivot
 @onready var _arm_pivot: Node3D = $Chassis/FrontFrame/ArmPivot
 @onready var _bucket_pivot: Node3D = $Chassis/FrontFrame/ArmPivot/BucketPivot
+@onready var _front_frame: Node3D = $Chassis/FrontFrame
 @onready var _rear_shape: CollisionShape3D = $RearShape
+@onready var _front_shape: CollisionShape3D = $FrontShape
 @onready var _wheels: Array[Node3D] = [
 	$Chassis/FrontFrame/WheelFL, $Chassis/FrontFrame/WheelFR,
 	$Chassis/RearPivot/WheelRL, $Chassis/RearPivot/WheelRR,
 ]
 var _rear_shape_offset: Vector3
+var _front_shape_offset: Vector3
 var _wheel_spin := 0.0
 
 
 func _ready() -> void:
 	_rear_shape_offset = _rear_shape.position
+	_front_shape_offset = _front_shape.position
 	floor_snap_length = 0.6
 	floor_max_angle = deg_to_rad(38.0)
 	_apply_hydraulics()
@@ -75,7 +82,8 @@ func _physics_process(delta: float) -> void:
 	_update_heading(delta)
 	_update_hydraulics(delta)
 
-	var forward := -global_transform.basis.z
+	# The hinge travels along the front frame's heading.
+	var forward := (-global_transform.basis.z).rotated(Vector3.UP, -articulation * 0.5)
 	var horizontal := forward * speed
 	velocity.x = horizontal.x
 	velocity.z = horizontal.z
@@ -94,22 +102,29 @@ func _physics_process(delta: float) -> void:
 
 
 func _update_speed(delta: float) -> void:
+	if brake > 0.05:
+		cruise_active = false
+	var t := throttle
+	if cruise_active and speed < cruise_speed:
+		t = maxf(t, clampf((cruise_speed - speed) * 0.8, 0.0, 1.0))
 	var drive := 0.0
-	if throttle > 0.0 and speed >= -reverse_threshold:
-		drive += throttle * acceleration
+	if t > 0.0 and speed >= -reverse_threshold:
+		drive += t * acceleration
 	if brake > 0.0:
 		if speed > reverse_threshold:
 			drive -= brake * brake_deceleration
 		else:
 			drive -= brake * acceleration * 0.8   # reverse
-	if throttle > 0.0 and speed < -reverse_threshold:
-		drive += throttle * brake_deceleration  # throttle brakes while reversing
+	if t > 0.0 and speed < -reverse_threshold:
+		drive += t * brake_deceleration  # throttle brakes while reversing
 
 	speed += drive * delta
 	if handbrake:
 		speed = move_toward(speed, 0.0, brake_deceleration * 1.3 * delta)
-	elif is_zero_approx(throttle) and is_zero_approx(brake):
+	elif is_zero_approx(t) and is_zero_approx(brake):
 		speed = move_toward(speed, 0.0, rolling_drag * delta)
+	if cruise_active and speed > cruise_speed and t <= 0.01:
+		speed = move_toward(speed, cruise_speed, brake_deceleration * 0.3 * delta)
 	speed = clampf(speed, -max_reverse_speed, max_forward_speed)
 
 
@@ -143,10 +158,14 @@ func _apply_hydraulics() -> void:
 
 
 func _update_presentation(delta: float) -> void:
-	# Rear frame swings opposite to steering around the hinge.
-	_rear_pivot.rotation.y = articulation
-	_rear_shape.position = _rear_shape_offset.rotated(Vector3.UP, articulation)
-	_rear_shape.rotation.y = articulation
+	# Both frames bend around the hinge, half the articulation each.
+	var half := articulation * 0.5
+	_front_frame.rotation.y = -half
+	_rear_pivot.rotation.y = half
+	_front_shape.position = _front_shape_offset.rotated(Vector3.UP, -half)
+	_front_shape.rotation.y = -half
+	_rear_shape.position = _rear_shape_offset.rotated(Vector3.UP, half)
+	_rear_shape.rotation.y = half
 
 	_wheel_spin += speed / wheel_radius * delta
 	for w in _wheels:

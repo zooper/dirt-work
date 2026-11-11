@@ -3,9 +3,20 @@ extends SceneTree
 ##   godot --headless --path . -s tests/run_tests.gd
 ## Exits with code 1 on any failure. Checks behaviour, not visuals or feel.
 
-const ACTIONS := ["throttle", "brake_reverse", "steer_left", "steer_right", "handbrake",
-	"lift_up", "lift_down", "tilt_back", "tilt_dump",
-	"camera_orbit_left", "camera_orbit_right", "camera_reset", "screenshot"]
+## Each player feature must be reachable from keyboard AND gamepad; a feature
+## may use several actions (e.g. keyboard keys + a gamepad modifier combo).
+const FEATURES := {
+	"drive": ["throttle", "brake_reverse"],
+	"steer": ["steer_left", "steer_right"],
+	"handbrake": ["handbrake"],
+	"loader arm/bucket": ["lift_up", "lift_down", "tilt_back", "tilt_dump",
+		"loader_modifier", "loader_stick_up", "loader_stick_down", "loader_stick_left", "loader_stick_right"],
+	"camera look": ["look_left", "look_right", "look_up", "look_down"],
+	"camera switch": ["camera_switch"],
+	"camera zoom": ["camera_zoom_in", "camera_zoom_out"],
+	"cruise control": ["cruise_toggle", "cruise_slower", "cruise_faster"],
+	"screenshot": ["screenshot"],
+}
 
 var _failures := 0
 
@@ -28,14 +39,28 @@ func _check(cond: bool, msg: String) -> void:
 
 
 func _test_input_map() -> void:
-	print("InputMap: every action has keyboard and gamepad bindings")
-	for a in ACTIONS:
+	print("InputMap: every feature has keyboard and gamepad bindings")
+	for feature in FEATURES:
 		var has_key := false
 		var has_pad := false
-		for ev in InputMap.action_get_events(a) if InputMap.has_action(a) else []:
-			has_key = has_key or ev is InputEventKey
-			has_pad = has_pad or ev is InputEventJoypadButton or ev is InputEventJoypadMotion
-		_check(has_key and has_pad, a)
+		var missing := []
+		for a in FEATURES[feature]:
+			if not InputMap.has_action(a):
+				missing.append(a)
+				continue
+			for ev in InputMap.action_get_events(a):
+				has_key = has_key or ev is InputEventKey or ev is InputEventMouseButton
+				has_pad = has_pad or ev is InputEventJoypadButton or ev is InputEventJoypadMotion
+		_check(has_key and has_pad and missing.is_empty(), "%s %s" % [feature, missing if missing else ""])
+	# Farming Simulator default keys for the front loader.
+	_check(_has_key("lift_up", KEY_J) and _has_key("lift_down", KEY_N) and _has_key("tilt_back", KEY_K) and _has_key("tilt_dump", KEY_M), "loader keys are J/N/K/M")
+
+
+func _has_key(action: String, key: Key) -> bool:
+	for ev in InputMap.action_get_events(action):
+		if ev is InputEventKey and ev.physical_keycode == key:
+			return true
+	return false
 
 
 func _frames(n: int) -> void:
@@ -79,11 +104,22 @@ func _test_quarry_drive() -> void:
 	await _frames(120)
 	_check(loader.articulation > deg_to_rad(20.0), "steering articulates the frame")
 	_check(loader.global_rotation.y < yaw0, "steering right turns clockwise")
+	var front := loader.get_node("Chassis/FrontFrame") as Node3D
+	var rear := loader.get_node("Chassis/RearPivot") as Node3D
+	_check(front.rotation.y < 0.0 and rear.rotation.y > 0.0 and is_equal_approx(-front.rotation.y, rear.rotation.y), "both frames bend symmetrically around the hinge")
 	loader.steer = 0.0
 	loader.throttle = 0.0
 	loader.brake = 1.0
 	await _frames(240)
 	_check(loader.speed < 0.0, "brake stops then reverses (speed %.2f)" % loader.speed)
+	loader.brake = 0.0
+	loader.cruise_speed = 3.0
+	loader.cruise_active = true
+	await _frames(240)
+	_check(absf(loader.speed - 3.0) < 0.3, "cruise control holds speed (%.2f m/s)" % loader.speed)
+	loader.brake = 1.0
+	await _frames(2)
+	_check(not loader.cruise_active, "brake cancels cruise control")
 	loader.brake = 0.0
 	loader.handbrake = true
 	await _frames(120)
