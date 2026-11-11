@@ -5,45 +5,44 @@
 [ext_resource type="Script" path="res://scripts/vehicles/wheel_visual.gd" id="3"]
 [ext_resource type="Script" path="res://scripts/vehicles/hydraulic_ram.gd" id="4"]
 [ext_resource type="Script" path="res://scripts/vehicles/beacon.gd" id="5"]
-
-[sub_resource type="StandardMaterial3D" id="yellow"]
-albedo_color = Color(0.9551, 0.5542, 0.01, 1.0)
-roughness = 0.45
-metallic = 0
-
-[sub_resource type="StandardMaterial3D" id="dark"]
-albedo_color = Color(0.0593, 0.0637, 0.0732, 1.0)
-roughness = 0.7
-metallic = 0
-
-[sub_resource type="StandardMaterial3D" id="steel"]
-albedo_color = Color(0.1706, 0.1789, 0.196, 1.0)
-roughness = 0.5
-metallic = 0.2
-
-[sub_resource type="StandardMaterial3D" id="bucket"]
-albedo_color = Color(0.1329, 0.1329, 0.1473, 1.0)
-roughness = 0.65
-metallic = 0.1
-
-[sub_resource type="StandardMaterial3D" id="teeth"]
-albedo_color = Color(0.2633, 0.2738, 0.2957, 1.0)
-roughness = 0.4
-metallic = 0.5
-
-[sub_resource type="StandardMaterial3D" id="red"]
-albedo_color = Color(0.6921, 0.0134, 0.01, 1.0)
-roughness = 0.5
-metallic = 0
+[ext_resource type="Script" path="res://scripts/vehicles/chamfer_box.gd" id="6"]
+[ext_resource type="Script" path="res://scripts/vehicles/fender_arch.gd" id="7"]
+[ext_resource type="Script" path="res://scripts/vehicles/bucket_shell.gd" id="8"]
 
 [sub_resource type="StandardMaterial3D" id="glass"]
-albedo_color = Color(0.1005, 0.2633, 0.448, 0.4)
-roughness = 0.1
+albedo_color = Color(0.1706, 0.3424, 0.5225, 0.35)
+roughness = 0.05
 metallic = 0
 transparency = 1
 
+[sub_resource type="StandardMaterial3D" id="lamp"]
+albedo_color = Color(1.0, 0.89, 0.6038, 1.0)
+roughness = 0.6
+metallic = 0
+emission_enabled = true
+emission = Color(1.0, 0.89, 0.6038, 1)
+emission_energy_multiplier = 3
+
+[sub_resource type="StandardMaterial3D" id="tail"]
+albedo_color = Color(1.0, 0.0134, 0.0049, 1.0)
+roughness = 0.6
+metallic = 0
+emission_enabled = true
+emission = Color(1.0, 0.0134, 0.0049, 1)
+emission_energy_multiplier = 2.5
+
+[sub_resource type="StandardMaterial3D" id="red"]
+albedo_color = Color(0.7106, 0.0153, 0.01, 1.0)
+roughness = 0.5
+metallic = 0
+
+[sub_resource type="StandardMaterial3D" id="black"]
+albedo_color = Color(0.01, 0.01, 0.0116, 1.0)
+roughness = 0.9
+metallic = 0
+
 [sub_resource type="StandardMaterial3D" id="hivis"]
-albedo_color = Color(0.5225, 0.89, 0.0196, 1.0)
+albedo_color = Color(0.5705, 0.89, 0.0272, 1.0)
 roughness = 0.8
 metallic = 0
 
@@ -52,26 +51,10 @@ albedo_color = Color(0.7106, 0.3672, 0.214, 1.0)
 roughness = 0.8
 metallic = 0
 
-[sub_resource type="StandardMaterial3D" id="lamp"]
-albedo_color = Color(1.0, 0.8481, 0.5225, 1.0)
-roughness = 0.6
-metallic = 0
-emission_enabled = true
-emission = Color(1.0, 0.8481, 0.5225, 1)
-emission_energy_multiplier = 2.5
-
-[sub_resource type="StandardMaterial3D" id="tail"]
-albedo_color = Color(1.0, 0.01, 0.0039, 1.0)
-roughness = 0.6
-metallic = 0
-emission_enabled = true
-emission = Color(1.0, 0.01, 0.0039, 1)
-emission_energy_multiplier = 2
-
-[sub_resource type="StandardMaterial3D" id="black"]
-albedo_color = Color(0.0049, 0.0049, 0.006, 1.0)
-roughness = 0.9
-metallic = 0
+[sub_resource type="StandardMaterial3D" id="chrome"]
+albedo_color = Color(0.7106, 0.7293, 0.7874, 1.0)
+roughness = 0.25
+metallic = 0.6
 
 [sub_resource type="BoxShape3D" id="front_shape"]
 size = Vector3(2.8, 1.4, 2.4)
@@ -80,202 +63,26 @@ size = Vector3(2.8, 1.4, 2.4)
 size = Vector3(2.6, 1.8, 2.8)
 
 [sub_resource type="BoxMesh" id="m0"]
-size = Vector3(1.2, 0.7, 2.4)
-material = SubResource("dark")
-
-[sub_resource type="BoxMesh" id="m1"]
-size = Vector3(1.35, 1.1, 0.9)
-material = SubResource("yellow")
-
-[sub_resource type="BoxMesh" id="m2"]
-size = Vector3(1.4, 0.12, 0.95)
-material = SubResource("dark")
-
-[sub_resource type="BoxMesh" id="m3"]
-size = Vector3(1.0, 0.12, 2.2)
-material = SubResource("dark")
-
-[sub_resource type="BoxMesh" id="m4"]
-size = Vector3(1.0, 0.4, 0.1)
-material = SubResource("dark")
-
-[sub_resource type="BoxMesh" id="m5"]
-size = Vector3(0.22, 0.16, 0.08)
+size = Vector3(0.22, 0.16, 0.06)
 material = SubResource("lamp")
 
-[sub_resource type="BoxMesh" id="m6"]
-size = Vector3(0.7, 0.6, 0.8)
-material = SubResource("steel")
-
-[sub_resource type="BoxMesh" id="m7"]
-size = Vector3(0.3, 0.52, 3.0)
-material = SubResource("yellow")
-
-[sub_resource type="BoxMesh" id="m8"]
-size = Vector3(0.36, 0.2, 0.2)
-material = SubResource("dark")
-
-[sub_resource type="BoxMesh" id="m9"]
-size = Vector3(1.8, 0.34, 0.34)
-material = SubResource("yellow")
-
-[sub_resource type="BoxMesh" id="m10"]
-size = Vector3(0.3, 0.9, 0.25)
-material = SubResource("yellow")
-
-[sub_resource type="BoxMesh" id="m11"]
-size = Vector3(3.1, 0.75, 0.12)
-material = SubResource("bucket")
-
-[sub_resource type="BoxMesh" id="m12"]
-size = Vector3(3.1, 0.6, 0.12)
-material = SubResource("bucket")
-
-[sub_resource type="BoxMesh" id="m13"]
-size = Vector3(3.1, 0.12, 0.5)
-material = SubResource("bucket")
-
-[sub_resource type="BoxMesh" id="m14"]
-size = Vector3(3.1, 0.12, 1.35)
-material = SubResource("bucket")
-
-[sub_resource type="BoxMesh" id="m15"]
-size = Vector3(0.12, 1.15, 1.6)
-material = SubResource("bucket")
-
-[sub_resource type="BoxMesh" id="m16"]
-size = Vector3(0.16, 0.16, 1.4)
-material = SubResource("dark")
-
-[sub_resource type="BoxMesh" id="m17"]
-size = Vector3(3.1, 0.08, 0.25)
-material = SubResource("teeth")
-
-[sub_resource type="BoxMesh" id="m18"]
-size = Vector3(0.14, 0.09, 0.3)
-material = SubResource("teeth")
-
-[sub_resource type="BoxMesh" id="m19"]
-size = Vector3(0.3, 0.3, 0.25)
-material = SubResource("dark")
-
-[sub_resource type="BoxMesh" id="m20"]
-size = Vector3(1.3, 0.6, 3.4)
-material = SubResource("dark")
-
-[sub_resource type="BoxMesh" id="m21"]
-size = Vector3(2.3, 0.14, 1.9)
-material = SubResource("dark")
-
-[sub_resource type="BoxMesh" id="m22"]
-size = Vector3(1.9, 0.95, 2.1)
-material = SubResource("yellow")
-
-[sub_resource type="BoxMesh" id="m23"]
-size = Vector3(1.6, 0.1, 1.7)
-material = SubResource("dark")
-
-[sub_resource type="BoxMesh" id="m24"]
-size = Vector3(1.9, 0.5, 0.5)
-material = SubResource("yellow")
-
-[sub_resource type="BoxMesh" id="m25"]
-size = Vector3(1.5, 0.8, 0.08)
+[sub_resource type="BoxMesh" id="m1"]
+size = Vector3(0.4, 0.2, 0.2)
 material = SubResource("black")
 
-[sub_resource type="BoxMesh" id="m26"]
-size = Vector3(2.5, 1.0, 0.65)
-material = SubResource("yellow")
-
-[sub_resource type="BoxMesh" id="m27"]
-size = Vector3(2.52, 0.18, 0.67)
-material = SubResource("dark")
-
-[sub_resource type="BoxMesh" id="m28"]
-size = Vector3(2.6, 0.28, 0.35)
-material = SubResource("dark")
-
-[sub_resource type="BoxMesh" id="m29"]
+[sub_resource type="BoxMesh" id="m2"]
 size = Vector3(0.24, 0.16, 0.06)
 material = SubResource("tail")
 
-[sub_resource type="BoxMesh" id="m30"]
-size = Vector3(0.04, 0.4, 0.6)
-material = SubResource("black")
-
-[sub_resource type="BoxMesh" id="m31"]
+[sub_resource type="BoxMesh" id="m3"]
 size = Vector3(0.05, 0.05, 2.2)
 material = SubResource("red")
 
-[sub_resource type="BoxMesh" id="m32"]
-size = Vector3(0.05, 0.55, 0.05)
+[sub_resource type="BoxMesh" id="m4"]
+size = Vector3(0.05, 0.6, 0.05)
 material = SubResource("red")
 
-[sub_resource type="BoxMesh" id="m33"]
-size = Vector3(0.05, 1.5, 0.05)
-material = SubResource("yellow")
-
-[sub_resource type="BoxMesh" id="m34"]
-size = Vector3(0.05, 0.04, 0.45)
-material = SubResource("dark")
-
-[sub_resource type="BoxMesh" id="m35"]
-size = Vector3(0.05, 0.9, 0.05)
-material = SubResource("red")
-
-[sub_resource type="BoxMesh" id="m36"]
-size = Vector3(1.75, 0.35, 1.75)
-material = SubResource("dark")
-
-[sub_resource type="BoxMesh" id="m37"]
-size = Vector3(0.12, 1.55, 0.12)
-material = SubResource("yellow")
-
-[sub_resource type="BoxMesh" id="m38"]
-size = Vector3(1.55, 1.45, 0.03)
-material = SubResource("glass")
-
-[sub_resource type="BoxMesh" id="m39"]
-size = Vector3(0.03, 1.45, 1.55)
-material = SubResource("glass")
-
-[sub_resource type="BoxMesh" id="m40"]
-size = Vector3(1.95, 0.18, 1.95)
-material = SubResource("yellow")
-
-[sub_resource type="BoxMesh" id="m41"]
-size = Vector3(1.95, 0.07, 0.35)
-material = SubResource("dark")
-
-[sub_resource type="BoxMesh" id="m42"]
-size = Vector3(0.05, 0.3, 0.2)
-material = SubResource("dark")
-
-[sub_resource type="BoxMesh" id="m43"]
-size = Vector3(0.24, 0.15, 0.1)
-material = SubResource("lamp")
-
-[sub_resource type="BoxMesh" id="m44"]
-size = Vector3(0.55, 0.5, 0.5)
-material = SubResource("black")
-
-[sub_resource type="BoxMesh" id="m45"]
-size = Vector3(0.46, 0.55, 0.3)
-material = SubResource("hivis")
-
-[sub_resource type="BoxMesh" id="m46"]
-size = Vector3(0.24, 0.26, 0.24)
-material = SubResource("skin")
-
-[sub_resource type="BoxMesh" id="m47"]
-size = Vector3(0.28, 0.08, 0.34)
-material = SubResource("dark")
-
-[sub_resource type="BoxMesh" id="m48"]
-size = Vector3(0.35, 0.35, 0.04)
-material = SubResource("black")
-
-[sub_resource type="CylinderMesh" id="m49"]
+[sub_resource type="CylinderMesh" id="m5"]
 top_radius = 0.09
 bottom_radius = 0.09
 height = 1
@@ -283,9 +90,59 @@ radial_segments = 6
 rings = 1
 material = SubResource("black")
 
+[sub_resource type="BoxMesh" id="m6"]
+size = Vector3(0.05, 1.75, 0.05)
+material = SubResource("red")
+
+[sub_resource type="BoxMesh" id="m7"]
+size = Vector3(0.05, 0.05, 0.4)
+material = SubResource("black")
+
+[sub_resource type="BoxMesh" id="m8"]
+size = Vector3(1.6, 1.5, 0.03)
+material = SubResource("glass")
+
+[sub_resource type="BoxMesh" id="m9"]
+size = Vector3(0.03, 1.5, 1.6)
+material = SubResource("glass")
+
+[sub_resource type="BoxMesh" id="m10"]
+size = Vector3(0.24, 0.15, 0.1)
+material = SubResource("lamp")
+
+[sub_resource type="BoxMesh" id="m11"]
+size = Vector3(0.05, 0.32, 0.2)
+material = SubResource("black")
+
+[sub_resource type="BoxMesh" id="m12"]
+size = Vector3(0.3, 0.04, 0.04)
+material = SubResource("black")
+
+[sub_resource type="BoxMesh" id="m13"]
+size = Vector3(0.55, 0.55, 0.5)
+material = SubResource("black")
+
+[sub_resource type="BoxMesh" id="m14"]
+size = Vector3(0.46, 0.55, 0.3)
+material = SubResource("hivis")
+
+[sub_resource type="BoxMesh" id="m15"]
+size = Vector3(0.24, 0.26, 0.24)
+material = SubResource("skin")
+
+[sub_resource type="BoxMesh" id="m16"]
+size = Vector3(0.28, 0.08, 0.34)
+material = SubResource("black")
+
+[sub_resource type="BoxMesh" id="m17"]
+size = Vector3(0.35, 0.35, 0.04)
+material = SubResource("black")
+
 [node name="WheelLoader" type="CharacterBody3D"]
 script = ExtResource("1")
 wheel_radius = 1
+lift_min_deg = -23
+lift_max_deg = 50
 
 [node name="FrontShape" type="CollisionShape3D" parent="."]
 transform = Transform3D(1.000000, 0.000000, 0.000000, 0.000000, 1.000000, 0.000000, 0.000000, 0.000000, 1.000000, 0.000000, 0.700000, -1.500000)
@@ -300,6 +157,9 @@ shape = SubResource("rear_shape")
 [node name="FrontFrame" type="Node3D" parent="Chassis"]
 transform = Transform3D(1.000000, 0.000000, 0.000000, 0.000000, 1.000000, 0.000000, 0.000000, 0.000000, 1.000000, 0.000000, 0.200000, 0.000000)
 
+[node name="RearPivot" type="Node3D" parent="Chassis"]
+transform = Transform3D(1.000000, 0.000000, 0.000000, 0.000000, 1.000000, 0.000000, 0.000000, 0.000000, 1.000000, 0.000000, 0.200000, 0.000000)
+
 [node name="WheelFL" type="Node3D" parent="Chassis/FrontFrame"]
 transform = Transform3D(1.000000, 0.000000, 0.000000, 0.000000, 1.000000, 0.000000, 0.000000, 0.000000, 1.000000, -1.320000, 0.800000, -1.600000)
 
@@ -307,8 +167,8 @@ transform = Transform3D(1.000000, 0.000000, 0.000000, 0.000000, 1.000000, 0.0000
 script = ExtResource("3")
 radius = 1
 width = 0.9
-segments = 20
-lug_depth = 0.09
+segments = 26
+lug_depth = 0.045
 
 [node name="WheelFR" type="Node3D" parent="Chassis/FrontFrame"]
 transform = Transform3D(1.000000, 0.000000, 0.000000, 0.000000, 1.000000, 0.000000, 0.000000, 0.000000, 1.000000, 1.320000, 0.800000, -1.600000)
@@ -317,171 +177,148 @@ transform = Transform3D(1.000000, 0.000000, 0.000000, 0.000000, 1.000000, 0.0000
 script = ExtResource("3")
 radius = 1
 width = 0.9
-segments = 20
-lug_depth = 0.09
-
-[node name="FrontChassis" type="MeshInstance3D" parent="Chassis/FrontFrame"]
-transform = Transform3D(1.000000, 0.000000, 0.000000, 0.000000, 1.000000, 0.000000, 0.000000, 0.000000, 1.000000, 0.000000, 1.000000, -1.300000)
-mesh = SubResource("m0")
-
-[node name="Tower" type="MeshInstance3D" parent="Chassis/FrontFrame"]
-transform = Transform3D(1.000000, 0.000000, 0.000000, 0.000000, 1.000000, 0.000000, 0.000000, 0.000000, 1.000000, 0.000000, 1.550000, -0.750000)
-mesh = SubResource("m1")
-
-[node name="TowerCap" type="MeshInstance3D" parent="Chassis/FrontFrame"]
-transform = Transform3D(1.000000, 0.000000, 0.000000, 0.000000, 1.000000, 0.000000, 0.000000, 0.000000, 1.000000, 0.000000, 2.120000, -0.750000)
-mesh = SubResource("m2")
+segments = 26
+lug_depth = 0.045
 
 [node name="FenderL" type="MeshInstance3D" parent="Chassis/FrontFrame"]
-transform = Transform3D(1.000000, 0.000000, 0.000000, 0.000000, 1.000000, 0.000000, 0.000000, 0.000000, 1.000000, -1.320000, 1.950000, -1.600000)
-mesh = SubResource("m3")
-
-[node name="FenderLipL" type="MeshInstance3D" parent="Chassis/FrontFrame"]
-transform = Transform3D(1.000000, 0.000000, 0.000000, 0.000000, 0.877583, 0.479426, 0.000000, -0.479426, 0.877583, -1.320000, 1.750000, -2.750000)
-mesh = SubResource("m4")
-
-[node name="HeadlightL" type="MeshInstance3D" parent="Chassis/FrontFrame"]
-transform = Transform3D(1.000000, 0.000000, 0.000000, 0.000000, 1.000000, 0.000000, 0.000000, 0.000000, 1.000000, -0.620000, 1.950000, -1.220000)
-mesh = SubResource("m5")
-
-[node name="LiftRamBaseL" type="Marker3D" parent="Chassis/FrontFrame"]
-transform = Transform3D(1.000000, 0.000000, 0.000000, 0.000000, 1.000000, 0.000000, 0.000000, 0.000000, 1.000000, -0.500000, 0.850000, -1.250000)
+transform = Transform3D(1.000000, 0.000000, 0.000000, 0.000000, 1.000000, 0.000000, 0.000000, 0.000000, 1.000000, -1.320000, 0.800000, -1.600000)
+script = ExtResource("7")
+radius = 1.12
+width = 1
+start_deg = 20
+end_deg = 135
+segments = 7
+color = Color(0.24, 0.25, 0.27, 1)
 
 [node name="FenderR" type="MeshInstance3D" parent="Chassis/FrontFrame"]
-transform = Transform3D(1.000000, 0.000000, 0.000000, 0.000000, 1.000000, 0.000000, 0.000000, 0.000000, 1.000000, 1.320000, 1.950000, -1.600000)
-mesh = SubResource("m3")
+transform = Transform3D(1.000000, 0.000000, 0.000000, 0.000000, 1.000000, 0.000000, 0.000000, 0.000000, 1.000000, 1.320000, 0.800000, -1.600000)
+script = ExtResource("7")
+radius = 1.12
+width = 1
+start_deg = 20
+end_deg = 135
+segments = 7
+color = Color(0.24, 0.25, 0.27, 1)
 
-[node name="FenderLipR" type="MeshInstance3D" parent="Chassis/FrontFrame"]
-transform = Transform3D(1.000000, 0.000000, 0.000000, 0.000000, 0.877583, 0.479426, 0.000000, -0.479426, 0.877583, 1.320000, 1.750000, -2.750000)
-mesh = SubResource("m4")
+[node name="FrontChassis" type="MeshInstance3D" parent="Chassis/FrontFrame"]
+transform = Transform3D(1.000000, 0.000000, 0.000000, 0.000000, 1.000000, 0.000000, 0.000000, 0.000000, 1.000000, 0.000000, 0.950000, -1.550000)
+script = ExtResource("6")
+size = Vector3(1.1, 0.8, 2.4)
+chamfer = 0.12
+color = Color(0.24, 0.25, 0.27, 1)
+
+[node name="AxleHousing" type="MeshInstance3D" parent="Chassis/FrontFrame"]
+transform = Transform3D(1.000000, 0.000000, 0.000000, 0.000000, 1.000000, 0.000000, 0.000000, 0.000000, 1.000000, 0.000000, 0.800000, -1.600000)
+script = ExtResource("6")
+size = Vector3(2.2, 0.35, 0.45)
+chamfer = 0.1
+color = Color(0.24, 0.25, 0.27, 1)
+
+[node name="Tower" type="MeshInstance3D" parent="Chassis/FrontFrame"]
+transform = Transform3D(1.000000, 0.000000, 0.000000, 0.000000, 1.000000, 0.000000, 0.000000, 0.000000, 1.000000, 0.000000, 1.850000, -0.950000)
+script = ExtResource("6")
+size = Vector3(1.35, 1.5, 1.0)
+chamfer = 0.16
+color = Color(0.98, 0.77, 0.1, 1)
+top_scale = Vector2(0.9, 0.8)
+top_shift_z = 0.1
+
+[node name="TowerNose" type="MeshInstance3D" parent="Chassis/FrontFrame"]
+transform = Transform3D(1.000000, 0.000000, 0.000000, 0.000000, 1.000000, 0.000000, 0.000000, 0.000000, 1.000000, 0.000000, 1.350000, -1.600000)
+script = ExtResource("6")
+size = Vector3(1.1, 0.5, 0.5)
+chamfer = 0.12
+color = Color(0.98, 0.77, 0.1, 1)
+
+[node name="HingeFront" type="MeshInstance3D" parent="Chassis/FrontFrame"]
+transform = Transform3D(1.000000, 0.000000, 0.000000, 0.000000, 1.000000, 0.000000, 0.000000, 0.000000, 1.000000, 0.000000, 1.000000, -0.300000)
+script = ExtResource("6")
+size = Vector3(0.7, 0.6, 0.55)
+chamfer = 0.08
+color = Color(0.42, 0.43, 0.46, 1)
+
+[node name="HeadlightL" type="MeshInstance3D" parent="Chassis/FrontFrame"]
+transform = Transform3D(1.000000, 0.000000, 0.000000, 0.000000, 1.000000, 0.000000, 0.000000, 0.000000, 1.000000, -0.420000, 2.150000, -1.470000)
+mesh = SubResource("m0")
+
+[node name="LiftRamBaseL" type="Marker3D" parent="Chassis/FrontFrame"]
+transform = Transform3D(1.000000, 0.000000, 0.000000, 0.000000, 1.000000, 0.000000, 0.000000, 0.000000, 1.000000, -0.520000, 1.050000, -1.750000)
 
 [node name="HeadlightR" type="MeshInstance3D" parent="Chassis/FrontFrame"]
-transform = Transform3D(1.000000, 0.000000, 0.000000, 0.000000, 1.000000, 0.000000, 0.000000, 0.000000, 1.000000, 0.620000, 1.950000, -1.220000)
-mesh = SubResource("m5")
+transform = Transform3D(1.000000, 0.000000, 0.000000, 0.000000, 1.000000, 0.000000, 0.000000, 0.000000, 1.000000, 0.420000, 2.150000, -1.470000)
+mesh = SubResource("m0")
 
 [node name="LiftRamBaseR" type="Marker3D" parent="Chassis/FrontFrame"]
-transform = Transform3D(1.000000, 0.000000, 0.000000, 0.000000, 1.000000, 0.000000, 0.000000, 0.000000, 1.000000, 0.500000, 0.850000, -1.250000)
-
-[node name="Hinge" type="MeshInstance3D" parent="Chassis/FrontFrame"]
-transform = Transform3D(1.000000, 0.000000, 0.000000, 0.000000, 1.000000, 0.000000, 0.000000, 0.000000, 1.000000, 0.000000, 1.000000, -0.050000)
-mesh = SubResource("m6")
+transform = Transform3D(1.000000, 0.000000, 0.000000, 0.000000, 1.000000, 0.000000, 0.000000, 0.000000, 1.000000, 0.520000, 1.050000, -1.750000)
 
 [node name="ArmPivot" type="Node3D" parent="Chassis/FrontFrame"]
-transform = Transform3D(1.000000, 0.000000, 0.000000, 0.000000, 1.000000, 0.000000, 0.000000, 0.000000, 1.000000, 0.000000, 1.700000, -1.000000)
+transform = Transform3D(1.000000, 0.000000, 0.000000, 0.000000, 1.000000, 0.000000, 0.000000, 0.000000, 1.000000, 0.000000, 2.350000, -0.850000)
 
 [node name="ArmL" type="MeshInstance3D" parent="Chassis/FrontFrame/ArmPivot"]
-transform = Transform3D(1.000000, 0.000000, 0.000000, 0.000000, 1.000000, 0.000000, 0.000000, 0.000000, 1.000000, -0.720000, 0.000000, -1.400000)
-mesh = SubResource("m7")
+transform = Transform3D(1.000000, 0.000000, 0.000000, 0.000000, 1.000000, 0.000000, 0.000000, 0.000000, 1.000000, -0.780000, 0.000000, -1.600000)
+script = ExtResource("6")
+size = Vector3(0.3, 0.55, 3.5)
+chamfer = 0.1
+color = Color(0.98, 0.77, 0.1, 1)
 
 [node name="ArmPinL" type="MeshInstance3D" parent="Chassis/FrontFrame/ArmPivot"]
-transform = Transform3D(1.000000, 0.000000, 0.000000, 0.000000, 1.000000, 0.000000, 0.000000, 0.000000, 1.000000, -0.720000, 0.000000, -2.800000)
-mesh = SubResource("m8")
+transform = Transform3D(1.000000, 0.000000, 0.000000, 0.000000, 1.000000, 0.000000, 0.000000, 0.000000, 1.000000, -0.780000, 0.000000, -3.200000)
+mesh = SubResource("m1")
 
 [node name="LiftRamEndL" type="Marker3D" parent="Chassis/FrontFrame/ArmPivot"]
-transform = Transform3D(1.000000, 0.000000, 0.000000, 0.000000, 1.000000, 0.000000, 0.000000, 0.000000, 1.000000, -0.500000, -0.150000, -1.450000)
+transform = Transform3D(1.000000, 0.000000, 0.000000, 0.000000, 1.000000, 0.000000, 0.000000, 0.000000, 1.000000, -0.520000, -0.220000, -1.700000)
 
 [node name="ArmR" type="MeshInstance3D" parent="Chassis/FrontFrame/ArmPivot"]
-transform = Transform3D(1.000000, 0.000000, 0.000000, 0.000000, 1.000000, 0.000000, 0.000000, 0.000000, 1.000000, 0.720000, 0.000000, -1.400000)
-mesh = SubResource("m7")
+transform = Transform3D(1.000000, 0.000000, 0.000000, 0.000000, 1.000000, 0.000000, 0.000000, 0.000000, 1.000000, 0.780000, 0.000000, -1.600000)
+script = ExtResource("6")
+size = Vector3(0.3, 0.55, 3.5)
+chamfer = 0.1
+color = Color(0.98, 0.77, 0.1, 1)
 
 [node name="ArmPinR" type="MeshInstance3D" parent="Chassis/FrontFrame/ArmPivot"]
-transform = Transform3D(1.000000, 0.000000, 0.000000, 0.000000, 1.000000, 0.000000, 0.000000, 0.000000, 1.000000, 0.720000, 0.000000, -2.800000)
-mesh = SubResource("m8")
+transform = Transform3D(1.000000, 0.000000, 0.000000, 0.000000, 1.000000, 0.000000, 0.000000, 0.000000, 1.000000, 0.780000, 0.000000, -3.200000)
+mesh = SubResource("m1")
 
 [node name="LiftRamEndR" type="Marker3D" parent="Chassis/FrontFrame/ArmPivot"]
-transform = Transform3D(1.000000, 0.000000, 0.000000, 0.000000, 1.000000, 0.000000, 0.000000, 0.000000, 1.000000, 0.500000, -0.150000, -1.450000)
+transform = Transform3D(1.000000, 0.000000, 0.000000, 0.000000, 1.000000, 0.000000, 0.000000, 0.000000, 1.000000, 0.520000, -0.220000, -1.700000)
 
 [node name="CrossTube" type="MeshInstance3D" parent="Chassis/FrontFrame/ArmPivot"]
-transform = Transform3D(1.000000, 0.000000, 0.000000, 0.000000, 1.000000, 0.000000, 0.000000, 0.000000, 1.000000, 0.000000, 0.050000, -1.600000)
-mesh = SubResource("m9")
+transform = Transform3D(1.000000, 0.000000, 0.000000, 0.000000, 1.000000, 0.000000, 0.000000, 0.000000, 1.000000, 0.000000, 0.050000, -2.000000)
+script = ExtResource("6")
+size = Vector3(1.85, 0.36, 0.4)
+chamfer = 0.1
+color = Color(0.98, 0.77, 0.1, 1)
 
 [node name="TiltLever" type="MeshInstance3D" parent="Chassis/FrontFrame/ArmPivot"]
-transform = Transform3D(1.000000, 0.000000, 0.000000, 0.000000, 0.939373, 0.342898, 0.000000, -0.342898, 0.939373, 0.000000, 0.450000, -1.600000)
-mesh = SubResource("m10")
+transform = Transform3D(1.000000, 0.000000, 0.000000, 0.000000, 0.939373, 0.342898, 0.000000, -0.342898, 0.939373, 0.000000, 0.550000, -2.050000)
+script = ExtResource("6")
+size = Vector3(0.32, 1.0, 0.28)
+chamfer = 0.08
+color = Color(0.98, 0.77, 0.1, 1)
 
 [node name="TiltRamBase" type="Marker3D" parent="Chassis/FrontFrame/ArmPivot"]
-transform = Transform3D(1.000000, 0.000000, 0.000000, 0.000000, 1.000000, 0.000000, 0.000000, 0.000000, 1.000000, 0.000000, 0.850000, -1.750000)
+transform = Transform3D(1.000000, 0.000000, 0.000000, 0.000000, 1.000000, 0.000000, 0.000000, 0.000000, 1.000000, 0.000000, 0.350000, -0.600000)
+
+[node name="TiltLeverTop" type="Marker3D" parent="Chassis/FrontFrame/ArmPivot"]
+transform = Transform3D(1.000000, 0.000000, 0.000000, 0.000000, 1.000000, 0.000000, 0.000000, 0.000000, 1.000000, 0.000000, 0.980000, -2.200000)
 
 [node name="BucketPivot" type="Node3D" parent="Chassis/FrontFrame/ArmPivot"]
-transform = Transform3D(1.000000, 0.000000, 0.000000, 0.000000, 1.000000, 0.000000, 0.000000, 0.000000, 1.000000, 0.000000, 0.000000, -2.800000)
+transform = Transform3D(1.000000, 0.000000, 0.000000, 0.000000, 1.000000, 0.000000, 0.000000, 0.000000, 1.000000, 0.000000, 0.000000, -3.200000)
 
-[node name="BackUpper" type="MeshInstance3D" parent="Chassis/FrontFrame/ArmPivot/BucketPivot"]
-transform = Transform3D(1.000000, 0.000000, 0.000000, 0.000000, 0.968912, -0.247404, 0.000000, 0.247404, 0.968912, 0.000000, -0.120000, -0.020000)
-mesh = SubResource("m11")
-
-[node name="BackLower" type="MeshInstance3D" parent="Chassis/FrontFrame/ArmPivot/BucketPivot"]
-transform = Transform3D(1.000000, 0.000000, 0.000000, 0.000000, 0.852525, 0.522687, 0.000000, -0.522687, 0.852525, 0.000000, -0.680000, -0.200000)
-mesh = SubResource("m12")
-
-[node name="TopPlate" type="MeshInstance3D" parent="Chassis/FrontFrame/ArmPivot/BucketPivot"]
-transform = Transform3D(1.000000, 0.000000, 0.000000, 0.000000, 0.980067, 0.198669, 0.000000, -0.198669, 0.980067, 0.000000, 0.250000, -0.250000)
-mesh = SubResource("m13")
-
-[node name="BottomPlate" type="MeshInstance3D" parent="Chassis/FrontFrame/ArmPivot/BucketPivot"]
-transform = Transform3D(1.000000, 0.000000, 0.000000, 0.000000, 1.000000, 0.000000, 0.000000, 0.000000, 1.000000, 0.000000, -0.950000, -0.900000)
-mesh = SubResource("m14")
-
-[node name="SideL" type="MeshInstance3D" parent="Chassis/FrontFrame/ArmPivot/BucketPivot"]
-transform = Transform3D(1.000000, 0.000000, 0.000000, 0.000000, 1.000000, 0.000000, 0.000000, 0.000000, 1.000000, -1.550000, -0.400000, -0.800000)
-mesh = SubResource("m15")
-
-[node name="SideRibL" type="MeshInstance3D" parent="Chassis/FrontFrame/ArmPivot/BucketPivot"]
-transform = Transform3D(1.000000, 0.000000, 0.000000, 0.000000, 1.000000, 0.000000, 0.000000, 0.000000, 1.000000, -1.590000, -0.150000, -0.750000)
-mesh = SubResource("m16")
-
-[node name="SideR" type="MeshInstance3D" parent="Chassis/FrontFrame/ArmPivot/BucketPivot"]
-transform = Transform3D(1.000000, 0.000000, 0.000000, 0.000000, 1.000000, 0.000000, 0.000000, 0.000000, 1.000000, 1.550000, -0.400000, -0.800000)
-mesh = SubResource("m15")
-
-[node name="SideRibR" type="MeshInstance3D" parent="Chassis/FrontFrame/ArmPivot/BucketPivot"]
-transform = Transform3D(1.000000, 0.000000, 0.000000, 0.000000, 1.000000, 0.000000, 0.000000, 0.000000, 1.000000, 1.590000, -0.150000, -0.750000)
-mesh = SubResource("m16")
-
-[node name="Lip" type="MeshInstance3D" parent="Chassis/FrontFrame/ArmPivot/BucketPivot"]
-transform = Transform3D(1.000000, 0.000000, 0.000000, 0.000000, 1.000000, 0.000000, 0.000000, 0.000000, 1.000000, 0.000000, -0.970000, -1.620000)
-mesh = SubResource("m17")
-
-[node name="Tooth0" type="MeshInstance3D" parent="Chassis/FrontFrame/ArmPivot/BucketPivot"]
-transform = Transform3D(1.000000, 0.000000, 0.000000, 0.000000, 1.000000, 0.000000, 0.000000, 0.000000, 1.000000, -1.330000, -0.970000, -1.850000)
-mesh = SubResource("m18")
-
-[node name="Tooth1" type="MeshInstance3D" parent="Chassis/FrontFrame/ArmPivot/BucketPivot"]
-transform = Transform3D(1.000000, 0.000000, 0.000000, 0.000000, 1.000000, 0.000000, 0.000000, 0.000000, 1.000000, -0.950000, -0.970000, -1.850000)
-mesh = SubResource("m18")
-
-[node name="Tooth2" type="MeshInstance3D" parent="Chassis/FrontFrame/ArmPivot/BucketPivot"]
-transform = Transform3D(1.000000, 0.000000, 0.000000, 0.000000, 1.000000, 0.000000, 0.000000, 0.000000, 1.000000, -0.570000, -0.970000, -1.850000)
-mesh = SubResource("m18")
-
-[node name="Tooth3" type="MeshInstance3D" parent="Chassis/FrontFrame/ArmPivot/BucketPivot"]
-transform = Transform3D(1.000000, 0.000000, 0.000000, 0.000000, 1.000000, 0.000000, 0.000000, 0.000000, 1.000000, -0.190000, -0.970000, -1.850000)
-mesh = SubResource("m18")
-
-[node name="Tooth4" type="MeshInstance3D" parent="Chassis/FrontFrame/ArmPivot/BucketPivot"]
-transform = Transform3D(1.000000, 0.000000, 0.000000, 0.000000, 1.000000, 0.000000, 0.000000, 0.000000, 1.000000, 0.190000, -0.970000, -1.850000)
-mesh = SubResource("m18")
-
-[node name="Tooth5" type="MeshInstance3D" parent="Chassis/FrontFrame/ArmPivot/BucketPivot"]
-transform = Transform3D(1.000000, 0.000000, 0.000000, 0.000000, 1.000000, 0.000000, 0.000000, 0.000000, 1.000000, 0.570000, -0.970000, -1.850000)
-mesh = SubResource("m18")
-
-[node name="Tooth6" type="MeshInstance3D" parent="Chassis/FrontFrame/ArmPivot/BucketPivot"]
-transform = Transform3D(1.000000, 0.000000, 0.000000, 0.000000, 1.000000, 0.000000, 0.000000, 0.000000, 1.000000, 0.950000, -0.970000, -1.850000)
-mesh = SubResource("m18")
-
-[node name="Tooth7" type="MeshInstance3D" parent="Chassis/FrontFrame/ArmPivot/BucketPivot"]
-transform = Transform3D(1.000000, 0.000000, 0.000000, 0.000000, 1.000000, 0.000000, 0.000000, 0.000000, 1.000000, 1.330000, -0.970000, -1.850000)
-mesh = SubResource("m18")
-
-[node name="TiltLug" type="MeshInstance3D" parent="Chassis/FrontFrame/ArmPivot/BucketPivot"]
-transform = Transform3D(1.000000, 0.000000, 0.000000, 0.000000, 1.000000, 0.000000, 0.000000, 0.000000, 1.000000, 0.000000, 0.350000, 0.050000)
-mesh = SubResource("m19")
+[node name="Shell" type="MeshInstance3D" parent="Chassis/FrontFrame/ArmPivot/BucketPivot"]
+script = ExtResource("8")
+width = 3.1
+depth = 1.7
+height = 1.45
+teeth = 8
+color = Color(0.44, 0.44, 0.47, 1)
+edge_color = Color(0.62, 0.63, 0.66, 1)
 
 [node name="TiltRamEnd" type="Marker3D" parent="Chassis/FrontFrame/ArmPivot/BucketPivot"]
-transform = Transform3D(1.000000, 0.000000, 0.000000, 0.000000, 1.000000, 0.000000, 0.000000, 0.000000, 1.000000, 0.000000, 0.450000, 0.050000)
+transform = Transform3D(1.000000, 0.000000, 0.000000, 0.000000, 1.000000, 0.000000, 0.000000, 0.000000, 1.000000, 0.000000, 0.350000, 0.100000)
 
 [node name="Tip" type="Marker3D" parent="Chassis/FrontFrame/ArmPivot/BucketPivot"]
-transform = Transform3D(1.000000, 0.000000, 0.000000, 0.000000, 1.000000, 0.000000, 0.000000, 0.000000, 1.000000, 0.000000, -0.970000, -1.700000)
+transform = Transform3D(1.000000, 0.000000, 0.000000, 0.000000, 1.000000, 0.000000, 0.000000, 0.000000, 1.000000, 0.000000, -1.400000, -1.900000)
 
 [node name="LiftRamL" type="Node3D" parent="Chassis/FrontFrame"]
 script = ExtResource("4")
@@ -496,12 +333,9 @@ end_path = NodePath("../ArmPivot/LiftRamEndR")
 [node name="TiltRam" type="Node3D" parent="Chassis/FrontFrame"]
 script = ExtResource("4")
 base_path = NodePath("../ArmPivot/TiltRamBase")
-end_path = NodePath("../ArmPivot/BucketPivot/TiltRamEnd")
+end_path = NodePath("../ArmPivot/TiltLeverTop")
 barrel_radius = 0.12
 rod_radius = 0.065
-
-[node name="RearPivot" type="Node3D" parent="Chassis"]
-transform = Transform3D(1.000000, 0.000000, 0.000000, 0.000000, 1.000000, 0.000000, 0.000000, 0.000000, 1.000000, 0.000000, 0.200000, 0.000000)
 
 [node name="WheelRL" type="Node3D" parent="Chassis/RearPivot"]
 transform = Transform3D(1.000000, 0.000000, 0.000000, 0.000000, 1.000000, 0.000000, 0.000000, 0.000000, 1.000000, -1.320000, 0.800000, 1.600000)
@@ -510,8 +344,8 @@ transform = Transform3D(1.000000, 0.000000, 0.000000, 0.000000, 1.000000, 0.0000
 script = ExtResource("3")
 radius = 1
 width = 0.9
-segments = 20
-lug_depth = 0.09
+segments = 26
+lug_depth = 0.045
 
 [node name="WheelRR" type="Node3D" parent="Chassis/RearPivot"]
 transform = Transform3D(1.000000, 0.000000, 0.000000, 0.000000, 1.000000, 0.000000, 0.000000, 0.000000, 1.000000, 1.320000, 0.800000, 1.600000)
@@ -520,253 +354,318 @@ transform = Transform3D(1.000000, 0.000000, 0.000000, 0.000000, 1.000000, 0.0000
 script = ExtResource("3")
 radius = 1
 width = 0.9
-segments = 20
-lug_depth = 0.09
-
-[node name="RearChassis" type="MeshInstance3D" parent="Chassis/RearPivot"]
-transform = Transform3D(1.000000, 0.000000, 0.000000, 0.000000, 1.000000, 0.000000, 0.000000, 0.000000, 1.000000, 0.000000, 0.950000, 1.750000)
-mesh = SubResource("m20")
-
-[node name="Deck" type="MeshInstance3D" parent="Chassis/RearPivot"]
-transform = Transform3D(1.000000, 0.000000, 0.000000, 0.000000, 1.000000, 0.000000, 0.000000, 0.000000, 1.000000, 0.000000, 1.800000, 0.850000)
-mesh = SubResource("m21")
-
-[node name="Hood" type="MeshInstance3D" parent="Chassis/RearPivot"]
-transform = Transform3D(1.000000, 0.000000, 0.000000, 0.000000, 1.000000, 0.000000, 0.000000, 0.000000, 1.000000, 0.000000, 2.200000, 2.350000)
-mesh = SubResource("m22")
-
-[node name="HoodTop" type="MeshInstance3D" parent="Chassis/RearPivot"]
-transform = Transform3D(1.000000, 0.000000, 0.000000, 0.000000, 1.000000, 0.000000, 0.000000, 0.000000, 1.000000, 0.000000, 2.720000, 2.400000)
-mesh = SubResource("m23")
-
-[node name="HoodSlope" type="MeshInstance3D" parent="Chassis/RearPivot"]
-transform = Transform3D(1.000000, 0.000000, 0.000000, 0.000000, 0.825336, -0.564642, 0.000000, 0.564642, 0.825336, 0.000000, 2.550000, 1.350000)
-mesh = SubResource("m24")
-
-[node name="Grille" type="MeshInstance3D" parent="Chassis/RearPivot"]
-transform = Transform3D(1.000000, 0.000000, 0.000000, 0.000000, 1.000000, 0.000000, 0.000000, 0.000000, 1.000000, 0.000000, 2.150000, 3.420000)
-mesh = SubResource("m25")
-
-[node name="Counterweight" type="MeshInstance3D" parent="Chassis/RearPivot"]
-transform = Transform3D(1.000000, 0.000000, 0.000000, 0.000000, 1.000000, 0.000000, 0.000000, 0.000000, 1.000000, 0.000000, 1.350000, 3.550000)
-mesh = SubResource("m26")
-
-[node name="CounterweightBand" type="MeshInstance3D" parent="Chassis/RearPivot"]
-transform = Transform3D(1.000000, 0.000000, 0.000000, 0.000000, 1.000000, 0.000000, 0.000000, 0.000000, 1.000000, 0.000000, 1.750000, 3.550000)
-mesh = SubResource("m27")
-
-[node name="Bumper" type="MeshInstance3D" parent="Chassis/RearPivot"]
-transform = Transform3D(1.000000, 0.000000, 0.000000, 0.000000, 1.000000, 0.000000, 0.000000, 0.000000, 1.000000, 0.000000, 0.850000, 3.750000)
-mesh = SubResource("m28")
-
-[node name="TailLightL" type="MeshInstance3D" parent="Chassis/RearPivot"]
-transform = Transform3D(1.000000, 0.000000, 0.000000, 0.000000, 1.000000, 0.000000, 0.000000, 0.000000, 1.000000, -1.000000, 1.450000, 3.900000)
-mesh = SubResource("m29")
+segments = 26
+lug_depth = 0.045
 
 [node name="RearFenderL" type="MeshInstance3D" parent="Chassis/RearPivot"]
-transform = Transform3D(1.000000, 0.000000, 0.000000, 0.000000, 1.000000, 0.000000, 0.000000, 0.000000, 1.000000, -1.320000, 1.950000, 1.600000)
-mesh = SubResource("m3")
-
-[node name="RearFenderLipL" type="MeshInstance3D" parent="Chassis/RearPivot"]
-transform = Transform3D(1.000000, 0.000000, 0.000000, 0.000000, 0.877583, -0.479426, 0.000000, 0.479426, 0.877583, -1.320000, 1.750000, 2.750000)
-mesh = SubResource("m4")
-
-[node name="VentL" type="MeshInstance3D" parent="Chassis/RearPivot"]
-transform = Transform3D(1.000000, 0.000000, 0.000000, 0.000000, 1.000000, 0.000000, 0.000000, 0.000000, 1.000000, -0.970000, 2.250000, 3.000000)
-mesh = SubResource("m30")
-
-[node name="RailL" type="MeshInstance3D" parent="Chassis/RearPivot"]
-transform = Transform3D(1.000000, 0.000000, 0.000000, 0.000000, 1.000000, 0.000000, 0.000000, 0.000000, 1.000000, -1.020000, 3.200000, 2.300000)
-mesh = SubResource("m31")
-
-[node name="PostL0" type="MeshInstance3D" parent="Chassis/RearPivot"]
-transform = Transform3D(1.000000, 0.000000, 0.000000, 0.000000, 1.000000, 0.000000, 0.000000, 0.000000, 1.000000, -1.020000, 2.950000, 1.300000)
-mesh = SubResource("m32")
-
-[node name="PostL1" type="MeshInstance3D" parent="Chassis/RearPivot"]
-transform = Transform3D(1.000000, 0.000000, 0.000000, 0.000000, 1.000000, 0.000000, 0.000000, 0.000000, 1.000000, -1.020000, 2.950000, 2.300000)
-mesh = SubResource("m32")
-
-[node name="PostL2" type="MeshInstance3D" parent="Chassis/RearPivot"]
-transform = Transform3D(1.000000, 0.000000, 0.000000, 0.000000, 1.000000, 0.000000, 0.000000, 0.000000, 1.000000, -1.020000, 2.950000, 3.350000)
-mesh = SubResource("m32")
-
-[node name="TailLightR" type="MeshInstance3D" parent="Chassis/RearPivot"]
-transform = Transform3D(1.000000, 0.000000, 0.000000, 0.000000, 1.000000, 0.000000, 0.000000, 0.000000, 1.000000, 1.000000, 1.450000, 3.900000)
-mesh = SubResource("m29")
+transform = Transform3D(1.000000, 0.000000, 0.000000, 0.000000, 1.000000, 0.000000, 0.000000, 0.000000, 1.000000, -1.320000, 0.800000, 1.600000)
+script = ExtResource("7")
+radius = 1.12
+width = 1
+start_deg = 45
+end_deg = 165
+segments = 7
+color = Color(0.24, 0.25, 0.27, 1)
 
 [node name="RearFenderR" type="MeshInstance3D" parent="Chassis/RearPivot"]
-transform = Transform3D(1.000000, 0.000000, 0.000000, 0.000000, 1.000000, 0.000000, 0.000000, 0.000000, 1.000000, 1.320000, 1.950000, 1.600000)
+transform = Transform3D(1.000000, 0.000000, 0.000000, 0.000000, 1.000000, 0.000000, 0.000000, 0.000000, 1.000000, 1.320000, 0.800000, 1.600000)
+script = ExtResource("7")
+radius = 1.12
+width = 1
+start_deg = 45
+end_deg = 165
+segments = 7
+color = Color(0.24, 0.25, 0.27, 1)
+
+[node name="RearChassis" type="MeshInstance3D" parent="Chassis/RearPivot"]
+transform = Transform3D(1.000000, 0.000000, 0.000000, 0.000000, 1.000000, 0.000000, 0.000000, 0.000000, 1.000000, 0.000000, 0.950000, 2.100000)
+script = ExtResource("6")
+size = Vector3(1.2, 0.8, 3.4)
+chamfer = 0.12
+color = Color(0.24, 0.25, 0.27, 1)
+
+[node name="AxleHousingR" type="MeshInstance3D" parent="Chassis/RearPivot"]
+transform = Transform3D(1.000000, 0.000000, 0.000000, 0.000000, 1.000000, 0.000000, 0.000000, 0.000000, 1.000000, 0.000000, 0.800000, 1.600000)
+script = ExtResource("6")
+size = Vector3(2.2, 0.35, 0.45)
+chamfer = 0.1
+color = Color(0.24, 0.25, 0.27, 1)
+
+[node name="HingeRear" type="MeshInstance3D" parent="Chassis/RearPivot"]
+transform = Transform3D(1.000000, 0.000000, 0.000000, 0.000000, 1.000000, 0.000000, 0.000000, 0.000000, 1.000000, 0.000000, 1.000000, 0.300000)
+script = ExtResource("6")
+size = Vector3(0.55, 0.45, 0.55)
+chamfer = 0.08
+color = Color(0.42, 0.43, 0.46, 1)
+
+[node name="Deck" type="MeshInstance3D" parent="Chassis/RearPivot"]
+transform = Transform3D(1.000000, 0.000000, 0.000000, 0.000000, 1.000000, 0.000000, 0.000000, 0.000000, 1.000000, 0.000000, 1.850000, 1.200000)
+script = ExtResource("6")
+size = Vector3(2.5, 0.14, 1.7)
+chamfer = 0.05
+color = Color(0.24, 0.25, 0.27, 1)
+
+[node name="Hood" type="MeshInstance3D" parent="Chassis/RearPivot"]
+transform = Transform3D(1.000000, 0.000000, 0.000000, 0.000000, 1.000000, 0.000000, 0.000000, 0.000000, 1.000000, 0.000000, 2.500000, 3.000000)
+script = ExtResource("6")
+size = Vector3(1.9, 1.2, 2.3)
+chamfer = 0.22
+color = Color(0.98, 0.77, 0.1, 1)
+top_scale = Vector2(0.86, 0.8)
+top_shift_z = -0.15
+
+[node name="HoodGrille" type="MeshInstance3D" parent="Chassis/RearPivot"]
+transform = Transform3D(1.000000, 0.000000, 0.000000, 0.000000, 1.000000, 0.000000, 0.000000, 0.000000, 1.000000, 0.000000, 3.110000, 2.900000)
+script = ExtResource("6")
+size = Vector3(1.3, 0.05, 1.1)
+chamfer = 0.02
+color = Color(0.24, 0.25, 0.27, 1)
+
+[node name="Counterweight" type="MeshInstance3D" parent="Chassis/RearPivot"]
+transform = Transform3D(1.000000, 0.000000, 0.000000, 0.000000, 1.000000, 0.000000, 0.000000, 0.000000, 1.000000, 0.000000, 1.550000, 4.350000)
+script = ExtResource("6")
+size = Vector3(2.55, 1.25, 0.85)
+chamfer = 0.3
+color = Color(0.98, 0.77, 0.1, 1)
+top_scale = Vector2(0.95, 0.75)
+
+[node name="RearGrille" type="MeshInstance3D" parent="Chassis/RearPivot"]
+transform = Transform3D(1.000000, 0.000000, 0.000000, 0.000000, 1.000000, 0.000000, 0.000000, 0.000000, 1.000000, 0.000000, 2.550000, 4.160000)
+script = ExtResource("6")
+size = Vector3(1.5, 0.75, 0.08)
+chamfer = 0.02
+color = Color(0.1, 0.1, 0.11, 1)
+
+[node name="Bumper" type="MeshInstance3D" parent="Chassis/RearPivot"]
+transform = Transform3D(1.000000, 0.000000, 0.000000, 0.000000, 1.000000, 0.000000, 0.000000, 0.000000, 1.000000, 0.000000, 0.800000, 4.750000)
+script = ExtResource("6")
+size = Vector3(2.6, 0.3, 0.35)
+chamfer = 0.08
+color = Color(0.24, 0.25, 0.27, 1)
+
+[node name="SidePodL" type="MeshInstance3D" parent="Chassis/RearPivot"]
+transform = Transform3D(1.000000, 0.000000, 0.000000, 0.000000, 1.000000, 0.000000, 0.000000, 0.000000, 1.000000, -1.000000, 1.450000, 3.200000)
+script = ExtResource("6")
+size = Vector3(0.25, 0.6, 1.6)
+chamfer = 0.06
+color = Color(0.24, 0.25, 0.27, 1)
+
+[node name="SidePodR" type="MeshInstance3D" parent="Chassis/RearPivot"]
+transform = Transform3D(1.000000, 0.000000, 0.000000, 0.000000, 1.000000, 0.000000, 0.000000, 0.000000, 1.000000, 1.000000, 1.450000, 3.200000)
+script = ExtResource("6")
+size = Vector3(0.25, 0.6, 1.6)
+chamfer = 0.06
+color = Color(0.24, 0.25, 0.27, 1)
+
+[node name="TailLightL" type="MeshInstance3D" parent="Chassis/RearPivot"]
+transform = Transform3D(1.000000, 0.000000, 0.000000, 0.000000, 1.000000, 0.000000, 0.000000, 0.000000, 1.000000, -1.000000, 1.950000, 4.790000)
+mesh = SubResource("m2")
+
+[node name="RailL" type="MeshInstance3D" parent="Chassis/RearPivot"]
+transform = Transform3D(1.000000, 0.000000, 0.000000, 0.000000, 1.000000, 0.000000, 0.000000, 0.000000, 1.000000, -1.020000, 3.550000, 3.000000)
 mesh = SubResource("m3")
 
-[node name="RearFenderLipR" type="MeshInstance3D" parent="Chassis/RearPivot"]
-transform = Transform3D(1.000000, 0.000000, 0.000000, 0.000000, 0.877583, -0.479426, 0.000000, 0.479426, 0.877583, 1.320000, 1.750000, 2.750000)
+[node name="PostL0" type="MeshInstance3D" parent="Chassis/RearPivot"]
+transform = Transform3D(1.000000, 0.000000, 0.000000, 0.000000, 1.000000, 0.000000, 0.000000, 0.000000, 1.000000, -1.020000, 3.250000, 2.000000)
 mesh = SubResource("m4")
 
-[node name="VentR" type="MeshInstance3D" parent="Chassis/RearPivot"]
-transform = Transform3D(1.000000, 0.000000, 0.000000, 0.000000, 1.000000, 0.000000, 0.000000, 0.000000, 1.000000, 0.970000, 2.250000, 3.000000)
-mesh = SubResource("m30")
+[node name="PostL1" type="MeshInstance3D" parent="Chassis/RearPivot"]
+transform = Transform3D(1.000000, 0.000000, 0.000000, 0.000000, 1.000000, 0.000000, 0.000000, 0.000000, 1.000000, -1.020000, 3.250000, 3.000000)
+mesh = SubResource("m4")
+
+[node name="PostL2" type="MeshInstance3D" parent="Chassis/RearPivot"]
+transform = Transform3D(1.000000, 0.000000, 0.000000, 0.000000, 1.000000, 0.000000, 0.000000, 0.000000, 1.000000, -1.020000, 3.250000, 4.000000)
+mesh = SubResource("m4")
+
+[node name="TailLightR" type="MeshInstance3D" parent="Chassis/RearPivot"]
+transform = Transform3D(1.000000, 0.000000, 0.000000, 0.000000, 1.000000, 0.000000, 0.000000, 0.000000, 1.000000, 1.000000, 1.950000, 4.790000)
+mesh = SubResource("m2")
 
 [node name="RailR" type="MeshInstance3D" parent="Chassis/RearPivot"]
-transform = Transform3D(1.000000, 0.000000, 0.000000, 0.000000, 1.000000, 0.000000, 0.000000, 0.000000, 1.000000, 1.020000, 3.200000, 2.300000)
-mesh = SubResource("m31")
+transform = Transform3D(1.000000, 0.000000, 0.000000, 0.000000, 1.000000, 0.000000, 0.000000, 0.000000, 1.000000, 1.020000, 3.550000, 3.000000)
+mesh = SubResource("m3")
 
 [node name="PostR0" type="MeshInstance3D" parent="Chassis/RearPivot"]
-transform = Transform3D(1.000000, 0.000000, 0.000000, 0.000000, 1.000000, 0.000000, 0.000000, 0.000000, 1.000000, 1.020000, 2.950000, 1.300000)
-mesh = SubResource("m32")
+transform = Transform3D(1.000000, 0.000000, 0.000000, 0.000000, 1.000000, 0.000000, 0.000000, 0.000000, 1.000000, 1.020000, 3.250000, 2.000000)
+mesh = SubResource("m4")
 
 [node name="PostR1" type="MeshInstance3D" parent="Chassis/RearPivot"]
-transform = Transform3D(1.000000, 0.000000, 0.000000, 0.000000, 1.000000, 0.000000, 0.000000, 0.000000, 1.000000, 1.020000, 2.950000, 2.300000)
-mesh = SubResource("m32")
+transform = Transform3D(1.000000, 0.000000, 0.000000, 0.000000, 1.000000, 0.000000, 0.000000, 0.000000, 1.000000, 1.020000, 3.250000, 3.000000)
+mesh = SubResource("m4")
 
 [node name="PostR2" type="MeshInstance3D" parent="Chassis/RearPivot"]
-transform = Transform3D(1.000000, 0.000000, 0.000000, 0.000000, 1.000000, 0.000000, 0.000000, 0.000000, 1.000000, 1.020000, 2.950000, 3.350000)
-mesh = SubResource("m32")
-
-[node name="LadderStile0" type="MeshInstance3D" parent="Chassis/RearPivot"]
-transform = Transform3D(1.000000, 0.000000, 0.000000, 0.000000, 1.000000, 0.000000, 0.000000, 0.000000, 1.000000, -1.300000, 1.050000, 0.100000)
-mesh = SubResource("m33")
-
-[node name="LadderStile1" type="MeshInstance3D" parent="Chassis/RearPivot"]
-transform = Transform3D(1.000000, 0.000000, 0.000000, 0.000000, 1.000000, 0.000000, 0.000000, 0.000000, 1.000000, -1.300000, 1.050000, 0.550000)
-mesh = SubResource("m33")
-
-[node name="LadderRung0" type="MeshInstance3D" parent="Chassis/RearPivot"]
-transform = Transform3D(1.000000, 0.000000, 0.000000, 0.000000, 1.000000, 0.000000, 0.000000, 0.000000, 1.000000, -1.300000, 0.450000, 0.330000)
-mesh = SubResource("m34")
-
-[node name="LadderRung1" type="MeshInstance3D" parent="Chassis/RearPivot"]
-transform = Transform3D(1.000000, 0.000000, 0.000000, 0.000000, 1.000000, 0.000000, 0.000000, 0.000000, 1.000000, -1.300000, 0.830000, 0.330000)
-mesh = SubResource("m34")
-
-[node name="LadderRung2" type="MeshInstance3D" parent="Chassis/RearPivot"]
-transform = Transform3D(1.000000, 0.000000, 0.000000, 0.000000, 1.000000, 0.000000, 0.000000, 0.000000, 1.000000, -1.300000, 1.210000, 0.330000)
-mesh = SubResource("m34")
-
-[node name="LadderRung3" type="MeshInstance3D" parent="Chassis/RearPivot"]
-transform = Transform3D(1.000000, 0.000000, 0.000000, 0.000000, 1.000000, 0.000000, 0.000000, 0.000000, 1.000000, -1.300000, 1.590000, 0.330000)
-mesh = SubResource("m34")
-
-[node name="LadderRail" type="MeshInstance3D" parent="Chassis/RearPivot"]
-transform = Transform3D(1.000000, 0.000000, 0.000000, 0.000000, 1.000000, 0.000000, 0.000000, 0.000000, 1.000000, -1.300000, 2.250000, 0.100000)
-mesh = SubResource("m35")
-
-[node name="Cab" type="Node3D" parent="Chassis/RearPivot"]
-transform = Transform3D(1.000000, 0.000000, 0.000000, 0.000000, 1.000000, 0.000000, 0.000000, 0.000000, 1.000000, 0.000000, 0.000000, 0.850000)
-
-[node name="CabBase" type="MeshInstance3D" parent="Chassis/RearPivot/Cab"]
-transform = Transform3D(1.000000, 0.000000, 0.000000, 0.000000, 1.000000, 0.000000, 0.000000, 0.000000, 1.000000, 0.000000, 2.030000, 0.000000)
-mesh = SubResource("m36")
-
-[node name="Pillar0" type="MeshInstance3D" parent="Chassis/RearPivot/Cab"]
-transform = Transform3D(1.000000, 0.000000, 0.000000, 0.000000, 1.000000, 0.000000, 0.000000, 0.000000, 1.000000, -0.820000, 2.950000, -0.820000)
-mesh = SubResource("m37")
-
-[node name="Pillar1" type="MeshInstance3D" parent="Chassis/RearPivot/Cab"]
-transform = Transform3D(1.000000, 0.000000, 0.000000, 0.000000, 1.000000, 0.000000, 0.000000, 0.000000, 1.000000, 0.820000, 2.950000, -0.820000)
-mesh = SubResource("m37")
-
-[node name="Pillar2" type="MeshInstance3D" parent="Chassis/RearPivot/Cab"]
-transform = Transform3D(1.000000, 0.000000, 0.000000, 0.000000, 1.000000, 0.000000, 0.000000, 0.000000, 1.000000, -0.820000, 2.950000, 0.820000)
-mesh = SubResource("m37")
-
-[node name="Pillar3" type="MeshInstance3D" parent="Chassis/RearPivot/Cab"]
-transform = Transform3D(1.000000, 0.000000, 0.000000, 0.000000, 1.000000, 0.000000, 0.000000, 0.000000, 1.000000, 0.820000, 2.950000, 0.820000)
-mesh = SubResource("m37")
-
-[node name="GlassFront" type="MeshInstance3D" parent="Chassis/RearPivot/Cab"]
-transform = Transform3D(1.000000, 0.000000, 0.000000, 0.000000, 1.000000, 0.000000, 0.000000, 0.000000, 1.000000, 0.000000, 2.950000, -0.820000)
-mesh = SubResource("m38")
-
-[node name="GlassBack" type="MeshInstance3D" parent="Chassis/RearPivot/Cab"]
-transform = Transform3D(1.000000, 0.000000, 0.000000, 0.000000, 1.000000, 0.000000, 0.000000, 0.000000, 1.000000, 0.000000, 2.950000, 0.820000)
-mesh = SubResource("m38")
-
-[node name="GlassL" type="MeshInstance3D" parent="Chassis/RearPivot/Cab"]
-transform = Transform3D(1.000000, 0.000000, 0.000000, 0.000000, 1.000000, 0.000000, 0.000000, 0.000000, 1.000000, -0.820000, 2.950000, 0.000000)
-mesh = SubResource("m39")
-
-[node name="GlassR" type="MeshInstance3D" parent="Chassis/RearPivot/Cab"]
-transform = Transform3D(1.000000, 0.000000, 0.000000, 0.000000, 1.000000, 0.000000, 0.000000, 0.000000, 1.000000, 0.820000, 2.950000, 0.000000)
-mesh = SubResource("m39")
-
-[node name="Roof" type="MeshInstance3D" parent="Chassis/RearPivot/Cab"]
-transform = Transform3D(1.000000, 0.000000, 0.000000, 0.000000, 1.000000, 0.000000, 0.000000, 0.000000, 1.000000, 0.000000, 3.800000, 0.000000)
-mesh = SubResource("m40")
-
-[node name="Visor" type="MeshInstance3D" parent="Chassis/RearPivot/Cab"]
-transform = Transform3D(1.000000, 0.000000, 0.000000, 0.000000, 1.000000, 0.000000, 0.000000, 0.000000, 1.000000, 0.000000, 3.720000, -1.120000)
-mesh = SubResource("m41")
-
-[node name="MirrorL" type="MeshInstance3D" parent="Chassis/RearPivot/Cab"]
-transform = Transform3D(1.000000, 0.000000, 0.000000, 0.000000, 1.000000, 0.000000, 0.000000, 0.000000, 1.000000, -1.100000, 3.300000, -0.750000)
-mesh = SubResource("m42")
-
-[node name="MirrorR" type="MeshInstance3D" parent="Chassis/RearPivot/Cab"]
-transform = Transform3D(1.000000, 0.000000, 0.000000, 0.000000, 1.000000, 0.000000, 0.000000, 0.000000, 1.000000, 1.100000, 3.300000, -0.750000)
-mesh = SubResource("m42")
-
-[node name="WorkLightL" type="MeshInstance3D" parent="Chassis/RearPivot/Cab"]
-transform = Transform3D(1.000000, 0.000000, 0.000000, 0.000000, 1.000000, 0.000000, 0.000000, 0.000000, 1.000000, -0.650000, 3.970000, -0.850000)
-mesh = SubResource("m43")
-
-[node name="RearWorkLightL" type="MeshInstance3D" parent="Chassis/RearPivot/Cab"]
-transform = Transform3D(1.000000, 0.000000, 0.000000, 0.000000, 1.000000, 0.000000, 0.000000, 0.000000, 1.000000, -0.650000, 3.970000, 0.850000)
-mesh = SubResource("m43")
-
-[node name="WorkLightR" type="MeshInstance3D" parent="Chassis/RearPivot/Cab"]
-transform = Transform3D(1.000000, 0.000000, 0.000000, 0.000000, 1.000000, 0.000000, 0.000000, 0.000000, 1.000000, 0.650000, 3.970000, -0.850000)
-mesh = SubResource("m43")
-
-[node name="RearWorkLightR" type="MeshInstance3D" parent="Chassis/RearPivot/Cab"]
-transform = Transform3D(1.000000, 0.000000, 0.000000, 0.000000, 1.000000, 0.000000, 0.000000, 0.000000, 1.000000, 0.650000, 3.970000, 0.850000)
-mesh = SubResource("m43")
-
-[node name="Beacon" type="Node3D" parent="Chassis/RearPivot/Cab"]
-transform = Transform3D(1.000000, 0.000000, 0.000000, 0.000000, 1.000000, 0.000000, 0.000000, 0.000000, 1.000000, -0.650000, 3.980000, 0.550000)
-script = ExtResource("5")
-
-[node name="Seat" type="MeshInstance3D" parent="Chassis/RearPivot/Cab"]
-transform = Transform3D(1.000000, 0.000000, 0.000000, 0.000000, 1.000000, 0.000000, 0.000000, 0.000000, 1.000000, 0.000000, 2.450000, 0.250000)
-mesh = SubResource("m44")
-
-[node name="Torso" type="MeshInstance3D" parent="Chassis/RearPivot/Cab"]
-transform = Transform3D(1.000000, 0.000000, 0.000000, 0.000000, 1.000000, 0.000000, 0.000000, 0.000000, 1.000000, 0.000000, 2.780000, 0.150000)
-mesh = SubResource("m45")
-
-[node name="Head" type="MeshInstance3D" parent="Chassis/RearPivot/Cab"]
-transform = Transform3D(1.000000, 0.000000, 0.000000, 0.000000, 1.000000, 0.000000, 0.000000, 0.000000, 1.000000, 0.000000, 3.200000, 0.100000)
-mesh = SubResource("m46")
-
-[node name="Cap" type="MeshInstance3D" parent="Chassis/RearPivot/Cab"]
-transform = Transform3D(1.000000, 0.000000, 0.000000, 0.000000, 1.000000, 0.000000, 0.000000, 0.000000, 1.000000, 0.000000, 3.360000, 0.060000)
-mesh = SubResource("m47")
-
-[node name="Wheel" type="MeshInstance3D" parent="Chassis/RearPivot/Cab"]
-transform = Transform3D(1.000000, 0.000000, 0.000000, 0.000000, 0.696707, 0.717356, 0.000000, -0.717356, 0.696707, 0.000000, 2.750000, -0.250000)
-mesh = SubResource("m48")
+transform = Transform3D(1.000000, 0.000000, 0.000000, 0.000000, 1.000000, 0.000000, 0.000000, 0.000000, 1.000000, 1.020000, 3.250000, 4.000000)
+mesh = SubResource("m4")
 
 [node name="Exhaust" type="MeshInstance3D" parent="Chassis/RearPivot"]
-transform = Transform3D(1.000000, 0.000000, 0.000000, 0.000000, 1.000000, 0.000000, 0.000000, 0.000000, 1.000000, 0.550000, 3.000000, 2.900000)
-mesh = SubResource("m49")
+transform = Transform3D(1.000000, 0.000000, 0.000000, 0.000000, 1.000000, 0.000000, 0.000000, 0.000000, 1.000000, 0.500000, 3.500000, 2.300000)
+mesh = SubResource("m5")
 
 [node name="ModelLeft" type="Label3D" parent="Chassis/RearPivot"]
-transform = Transform3D(0.000000, 0.000000, -1.000000, 0.000000, 1.000000, 0.000000, 1.000000, 0.000000, 0.000000, -0.965000, 2.250000, 2.000000)
+transform = Transform3D(0.000000, 0.000000, -1.000000, 0.000000, 1.000000, 0.000000, 1.000000, 0.000000, 0.000000, -1.140000, 1.800000, 3.350000)
 text = "DW-90"
-font_size = 72
+font_size = 80
 pixel_size = 0.005
-modulate = Color(0.12, 0.12, 0.13, 1)
+modulate = Color(0.08, 0.08, 0.09, 1)
 outline_size = 0
 double_sided = false
 
 [node name="ModelRight" type="Label3D" parent="Chassis/RearPivot"]
-transform = Transform3D(0.000000, 0.000000, 1.000000, 0.000000, 1.000000, 0.000000, -1.000000, 0.000000, 0.000000, 0.965000, 2.250000, 2.000000)
+transform = Transform3D(0.000000, 0.000000, 1.000000, 0.000000, 1.000000, 0.000000, -1.000000, 0.000000, 0.000000, 1.140000, 1.800000, 3.350000)
 text = "DW-90"
-font_size = 72
+font_size = 80
 pixel_size = 0.005
-modulate = Color(0.12, 0.12, 0.13, 1)
+modulate = Color(0.08, 0.08, 0.09, 1)
 outline_size = 0
 double_sided = false
+
+[node name="LadderStile0" type="MeshInstance3D" parent="Chassis/RearPivot"]
+transform = Transform3D(1.000000, 0.000000, 0.000000, 0.000000, 1.000000, 0.000000, 0.000000, 0.000000, 1.000000, -1.100000, 0.950000, 0.350000)
+mesh = SubResource("m6")
+
+[node name="LadderStile1" type="MeshInstance3D" parent="Chassis/RearPivot"]
+transform = Transform3D(1.000000, 0.000000, 0.000000, 0.000000, 1.000000, 0.000000, 0.000000, 0.000000, 1.000000, -1.100000, 0.950000, 0.750000)
+mesh = SubResource("m6")
+
+[node name="LadderRung0" type="MeshInstance3D" parent="Chassis/RearPivot"]
+transform = Transform3D(1.000000, 0.000000, 0.000000, 0.000000, 1.000000, 0.000000, 0.000000, 0.000000, 1.000000, -1.100000, 0.300000, 0.550000)
+mesh = SubResource("m7")
+
+[node name="LadderRung1" type="MeshInstance3D" parent="Chassis/RearPivot"]
+transform = Transform3D(1.000000, 0.000000, 0.000000, 0.000000, 1.000000, 0.000000, 0.000000, 0.000000, 1.000000, -1.100000, 0.720000, 0.550000)
+mesh = SubResource("m7")
+
+[node name="LadderRung2" type="MeshInstance3D" parent="Chassis/RearPivot"]
+transform = Transform3D(1.000000, 0.000000, 0.000000, 0.000000, 1.000000, 0.000000, 0.000000, 0.000000, 1.000000, -1.100000, 1.140000, 0.550000)
+mesh = SubResource("m7")
+
+[node name="LadderRung3" type="MeshInstance3D" parent="Chassis/RearPivot"]
+transform = Transform3D(1.000000, 0.000000, 0.000000, 0.000000, 1.000000, 0.000000, 0.000000, 0.000000, 1.000000, -1.100000, 1.560000, 0.550000)
+mesh = SubResource("m7")
+
+[node name="Cab" type="Node3D" parent="Chassis/RearPivot"]
+transform = Transform3D(1.000000, 0.000000, 0.000000, 0.000000, 1.000000, 0.000000, 0.000000, 0.000000, 1.000000, 0.000000, 0.000000, 1.150000)
+
+[node name="CabBase" type="MeshInstance3D" parent="Chassis/RearPivot/Cab"]
+transform = Transform3D(1.000000, 0.000000, 0.000000, 0.000000, 1.000000, 0.000000, 0.000000, 0.000000, 1.000000, 0.000000, 2.050000, 0.000000)
+script = ExtResource("6")
+size = Vector3(1.8, 0.35, 1.75)
+chamfer = 0.08
+color = Color(0.24, 0.25, 0.27, 1)
+
+[node name="Pillar0" type="MeshInstance3D" parent="Chassis/RearPivot/Cab"]
+transform = Transform3D(1.000000, 0.000000, 0.000000, 0.000000, 1.000000, 0.000000, 0.000000, 0.000000, 1.000000, -0.840000, 3.000000, -0.800000)
+script = ExtResource("6")
+size = Vector3(0.13, 1.6, 0.13)
+chamfer = 0.04
+color = Color(0.98, 0.77, 0.1, 1)
+
+[node name="Pillar1" type="MeshInstance3D" parent="Chassis/RearPivot/Cab"]
+transform = Transform3D(1.000000, 0.000000, 0.000000, 0.000000, 1.000000, 0.000000, 0.000000, 0.000000, 1.000000, 0.840000, 3.000000, -0.800000)
+script = ExtResource("6")
+size = Vector3(0.13, 1.6, 0.13)
+chamfer = 0.04
+color = Color(0.98, 0.77, 0.1, 1)
+
+[node name="Pillar2" type="MeshInstance3D" parent="Chassis/RearPivot/Cab"]
+transform = Transform3D(1.000000, 0.000000, 0.000000, 0.000000, 1.000000, 0.000000, 0.000000, 0.000000, 1.000000, -0.840000, 3.000000, 0.820000)
+script = ExtResource("6")
+size = Vector3(0.13, 1.6, 0.13)
+chamfer = 0.04
+color = Color(0.98, 0.77, 0.1, 1)
+
+[node name="Pillar3" type="MeshInstance3D" parent="Chassis/RearPivot/Cab"]
+transform = Transform3D(1.000000, 0.000000, 0.000000, 0.000000, 1.000000, 0.000000, 0.000000, 0.000000, 1.000000, 0.840000, 3.000000, 0.820000)
+script = ExtResource("6")
+size = Vector3(0.13, 1.6, 0.13)
+chamfer = 0.04
+color = Color(0.98, 0.77, 0.1, 1)
+
+[node name="GlassFront" type="MeshInstance3D" parent="Chassis/RearPivot/Cab"]
+transform = Transform3D(1.000000, 0.000000, 0.000000, 0.000000, 0.998201, -0.059964, 0.000000, 0.059964, 0.998201, 0.000000, 3.000000, -0.800000)
+mesh = SubResource("m8")
+
+[node name="GlassBack" type="MeshInstance3D" parent="Chassis/RearPivot/Cab"]
+transform = Transform3D(1.000000, 0.000000, 0.000000, 0.000000, 1.000000, 0.000000, 0.000000, 0.000000, 1.000000, 0.000000, 3.000000, 0.820000)
+mesh = SubResource("m8")
+
+[node name="GlassL" type="MeshInstance3D" parent="Chassis/RearPivot/Cab"]
+transform = Transform3D(1.000000, 0.000000, 0.000000, 0.000000, 1.000000, 0.000000, 0.000000, 0.000000, 1.000000, -0.840000, 3.000000, 0.000000)
+mesh = SubResource("m9")
+
+[node name="GlassR" type="MeshInstance3D" parent="Chassis/RearPivot/Cab"]
+transform = Transform3D(1.000000, 0.000000, 0.000000, 0.000000, 1.000000, 0.000000, 0.000000, 0.000000, 1.000000, 0.840000, 3.000000, 0.000000)
+mesh = SubResource("m9")
+
+[node name="Roof" type="MeshInstance3D" parent="Chassis/RearPivot/Cab"]
+transform = Transform3D(1.000000, 0.000000, 0.000000, 0.000000, 1.000000, 0.000000, 0.000000, 0.000000, 1.000000, 0.000000, 3.880000, 0.000000)
+script = ExtResource("6")
+size = Vector3(2.0, 0.2, 2.0)
+chamfer = 0.08
+color = Color(0.98, 0.77, 0.1, 1)
+
+[node name="RoofCap" type="MeshInstance3D" parent="Chassis/RearPivot/Cab"]
+transform = Transform3D(1.000000, 0.000000, 0.000000, 0.000000, 1.000000, 0.000000, 0.000000, 0.000000, 1.000000, 0.000000, 4.020000, 0.050000)
+script = ExtResource("6")
+size = Vector3(1.6, 0.1, 1.5)
+chamfer = 0.05
+color = Color(0.98, 0.77, 0.1, 1)
+
+[node name="WorkLightL" type="MeshInstance3D" parent="Chassis/RearPivot/Cab"]
+transform = Transform3D(1.000000, 0.000000, 0.000000, 0.000000, 1.000000, 0.000000, 0.000000, 0.000000, 1.000000, -0.700000, 3.800000, -1.020000)
+mesh = SubResource("m10")
+
+[node name="RearWorkLightL" type="MeshInstance3D" parent="Chassis/RearPivot/Cab"]
+transform = Transform3D(1.000000, 0.000000, 0.000000, 0.000000, 1.000000, 0.000000, 0.000000, 0.000000, 1.000000, -0.700000, 3.800000, 1.020000)
+mesh = SubResource("m10")
+
+[node name="MirrorL" type="MeshInstance3D" parent="Chassis/RearPivot/Cab"]
+transform = Transform3D(1.000000, 0.000000, 0.000000, 0.000000, 1.000000, 0.000000, 0.000000, 0.000000, 1.000000, -1.120000, 3.350000, -0.750000)
+mesh = SubResource("m11")
+
+[node name="MirrorArmL" type="MeshInstance3D" parent="Chassis/RearPivot/Cab"]
+transform = Transform3D(1.000000, 0.000000, 0.000000, 0.000000, 1.000000, 0.000000, 0.000000, 0.000000, 1.000000, -0.980000, 3.350000, -0.750000)
+mesh = SubResource("m12")
+
+[node name="WorkLightR" type="MeshInstance3D" parent="Chassis/RearPivot/Cab"]
+transform = Transform3D(1.000000, 0.000000, 0.000000, 0.000000, 1.000000, 0.000000, 0.000000, 0.000000, 1.000000, 0.700000, 3.800000, -1.020000)
+mesh = SubResource("m10")
+
+[node name="RearWorkLightR" type="MeshInstance3D" parent="Chassis/RearPivot/Cab"]
+transform = Transform3D(1.000000, 0.000000, 0.000000, 0.000000, 1.000000, 0.000000, 0.000000, 0.000000, 1.000000, 0.700000, 3.800000, 1.020000)
+mesh = SubResource("m10")
+
+[node name="MirrorR" type="MeshInstance3D" parent="Chassis/RearPivot/Cab"]
+transform = Transform3D(1.000000, 0.000000, 0.000000, 0.000000, 1.000000, 0.000000, 0.000000, 0.000000, 1.000000, 1.120000, 3.350000, -0.750000)
+mesh = SubResource("m11")
+
+[node name="MirrorArmR" type="MeshInstance3D" parent="Chassis/RearPivot/Cab"]
+transform = Transform3D(1.000000, 0.000000, 0.000000, 0.000000, 1.000000, 0.000000, 0.000000, 0.000000, 1.000000, 0.980000, 3.350000, -0.750000)
+mesh = SubResource("m12")
+
+[node name="Beacon" type="Node3D" parent="Chassis/RearPivot/Cab"]
+transform = Transform3D(1.000000, 0.000000, 0.000000, 0.000000, 1.000000, 0.000000, 0.000000, 0.000000, 1.000000, -0.600000, 4.100000, 0.500000)
+script = ExtResource("5")
+
+[node name="Seat" type="MeshInstance3D" parent="Chassis/RearPivot/Cab"]
+transform = Transform3D(1.000000, 0.000000, 0.000000, 0.000000, 1.000000, 0.000000, 0.000000, 0.000000, 1.000000, 0.000000, 2.500000, 0.300000)
+mesh = SubResource("m13")
+
+[node name="Torso" type="MeshInstance3D" parent="Chassis/RearPivot/Cab"]
+transform = Transform3D(1.000000, 0.000000, 0.000000, 0.000000, 1.000000, 0.000000, 0.000000, 0.000000, 1.000000, 0.000000, 2.850000, 0.200000)
+mesh = SubResource("m14")
+
+[node name="Head" type="MeshInstance3D" parent="Chassis/RearPivot/Cab"]
+transform = Transform3D(1.000000, 0.000000, 0.000000, 0.000000, 1.000000, 0.000000, 0.000000, 0.000000, 1.000000, 0.000000, 3.280000, 0.150000)
+mesh = SubResource("m15")
+
+[node name="Cap" type="MeshInstance3D" parent="Chassis/RearPivot/Cab"]
+transform = Transform3D(1.000000, 0.000000, 0.000000, 0.000000, 1.000000, 0.000000, 0.000000, 0.000000, 1.000000, 0.000000, 3.440000, 0.100000)
+mesh = SubResource("m16")
+
+[node name="SteeringWheel" type="MeshInstance3D" parent="Chassis/RearPivot/Cab"]
+transform = Transform3D(1.000000, 0.000000, 0.000000, 0.000000, 0.696707, 0.717356, 0.000000, -0.717356, 0.696707, 0.000000, 2.800000, -0.250000)
+mesh = SubResource("m17")
 
 [node name="PlayerInput" type="Node" parent="."]
 script = ExtResource("2")

@@ -60,7 +60,7 @@ func _rebuild() -> void:
 			_side_quad(b, m0, m1, i1, i0, s, Palette.TIRE.lightened(0.05))
 			# Rim dish + hub.
 			var c := Vector3(xo - s * 0.06, 0, 0)
-			var rim_col := rim_color if i % 2 == 0 else rim_color.darkened(0.08)
+			var rim_col := rim_color if i % 3 != 0 else rim_color.darkened(0.05)
 			_side_tri(b, i0, i1, c + d1 * radius * 0.22, s, rim_col)
 			_side_tri(b, i0, c + d1 * radius * 0.22, c + d0 * radius * 0.22, s, rim_col)
 			_side_tri(b, c + d0 * radius * 0.22, c + d1 * radius * 0.22, c + Vector3(s * 0.08, 0, 0), s, Palette.MACHINE_DARK)
