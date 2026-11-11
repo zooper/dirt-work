@@ -58,6 +58,8 @@ func _test_quarry_drive() -> void:
 	for n in world.get_children():
 		if n is GeometryInstance3D:
 			draw_nodes += 1
+	var site := level.get_node("Site")
+	_check(site.get_node("Collision").get_child_count() > 20, "site props have colliders")
 	_check(draw_nodes <= 10, "scenery batched into %d mesh nodes" % draw_nodes)
 	_check(loader.is_on_floor(), "loader settles on the floor")
 	var tire := loader.get_node("Chassis/FrontFrame/WheelFL/Tire") as MeshInstance3D
