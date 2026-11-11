@@ -1,0 +1,17 @@
+name: Godot headless checks
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  import-and-start:
+    runs-on: ubuntu-latest
+    container:
+      image: barichello/godot-ci:4.3
+    steps:
+      - uses: actions/checkout@v4
+      - name: Import project
+        run: godot --headless --path . --editor --import --quit
+      - name: Start main scene
+        run: godot --headless --path . --quit-after 60
