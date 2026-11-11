@@ -8,6 +8,8 @@ extends SceneTree
 const SHOTS := {
 	"concept": [Vector3(-7.5, 2.2, 3.0), Vector3(1.0, 2.0, 9.0)],
 	"overview": [Vector3(-30, 22, 60), Vector3(0, 2, -10)],
+	"side": [Vector3(-13.0, 2.4, 10.0), Vector3(0.0, 1.9, 10.0)],
+	"front34": [Vector3(6.5, 3.0, 2.0), Vector3(0.0, 1.8, 9.0)],
 }
 
 

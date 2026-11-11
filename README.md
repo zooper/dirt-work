@@ -12,19 +12,24 @@ Linux server over SSH, Claude Code for implementation, macOS for hands-on playte
 M1 in progress: drivable wheel loader in a blockout quarry (`scenes/levels/quarry.tscn`). Not yet playtested on macOS.
 
 ## Controls
-| Action | Keyboard | Gamepad (Xbox layout) |
+Defaults follow Farming Simulator conventions.
+
+| Action | Keyboard / mouse | Gamepad (Xbox layout) |
 |---|---|---|
-| Throttle | W / Up | RT |
-| Brake / reverse | S / Down | LT |
-| Steer | A, D / Left, Right | Left stick X |
+| Accelerate | W | RT |
+| Brake / reverse | S | LT |
+| Steer | A / D | Left stick |
+| Front loader arm up / down | J / N, or hold left mouse + move mouse up/down | Hold LB + right stick up/down |
+| Bucket curl / dump | K / M, or hold left mouse + move mouse left/right | Hold LB + right stick left/right |
+| Look around | Mouse, arrow keys | Right stick |
+| Switch camera (chase / cab) | C | Right stick click (R3) |
+| Zoom camera | Mouse wheel, Page Up / Page Down | D-pad up / down |
+| Cruise control on / off | 3 | Y |
+| Cruise speed slower / faster | 1 / 2 | D-pad left / right |
 | Handbrake | Space | A |
-| Lift arms up / down | I / K | Right stick Y |
-| Curl bucket / dump | J / L | Right stick X |
-| Orbit camera | Q / E | LB / RB |
-| Reset camera | C | R3 |
 | Screenshot | F12 | View |
 
-Holding brake when nearly stopped reverses; throttle while reversing brakes.
+Holding brake when nearly stopped reverses; throttle while reversing brakes. The mouse is captured while playing; Esc releases it, a click recaptures it.
 
 ## Checks
 ```bash
