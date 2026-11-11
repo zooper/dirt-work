@@ -1,0 +1,251 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scripts/vehicles/wheel_loader.gd" id="1"]
+[ext_resource type="Script" path="res://scripts/vehicles/player_loader_input.gd" id="2"]
+
+[sub_resource type="StandardMaterial3D" id="paint"]
+albedo_color = Color(0.96, 0.68, 0.08, 1)
+roughness = 0.55
+
+[sub_resource type="StandardMaterial3D" id="steel"]
+albedo_color = Color(0.22, 0.22, 0.24, 1)
+roughness = 0.6
+
+[sub_resource type="StandardMaterial3D" id="tire"]
+albedo_color = Color(0.08, 0.08, 0.09, 1)
+roughness = 0.95
+
+[sub_resource type="StandardMaterial3D" id="glass"]
+albedo_color = Color(0.15, 0.22, 0.28, 1)
+roughness = 0.2
+
+[sub_resource type="StandardMaterial3D" id="rim"]
+albedo_color = Color(0.9, 0.62, 0.07, 1)
+roughness = 0.6
+
+[sub_resource type="CylinderMesh" id="tirem"]
+top_radius = 0.8
+bottom_radius = 0.8
+height = 0.65
+radial_segments = 10
+rings = 1
+material = SubResource("tire")
+
+[sub_resource type="CylinderMesh" id="rimm"]
+top_radius = 0.42
+bottom_radius = 0.42
+height = 0.7
+radial_segments = 8
+rings = 1
+material = SubResource("rim")
+
+[sub_resource type="CylinderMesh" id="exh"]
+top_radius = 0.08
+bottom_radius = 0.1
+height = 0.8
+radial_segments = 6
+rings = 1
+material = SubResource("steel")
+
+[sub_resource type="BoxShape3D" id="front_shape"]
+size = Vector3(2.8, 1.4, 2.4)
+
+[sub_resource type="BoxShape3D" id="rear_shape"]
+size = Vector3(2.6, 1.8, 2.8)
+
+[sub_resource type="BoxMesh" id="box0"]
+size = Vector3(1.3, 0.7, 2.4)
+material = SubResource("paint")
+
+[sub_resource type="BoxMesh" id="box1"]
+size = Vector3(2.9, 0.12, 1.4)
+material = SubResource("steel")
+
+[sub_resource type="BoxMesh" id="box2"]
+size = Vector3(0.7, 0.6, 0.7)
+material = SubResource("steel")
+
+[sub_resource type="BoxMesh" id="box3"]
+size = Vector3(0.25, 0.4, 2.9)
+material = SubResource("paint")
+
+[sub_resource type="BoxMesh" id="box4"]
+size = Vector3(1.75, 0.28, 0.28)
+material = SubResource("paint")
+
+[sub_resource type="BoxMesh" id="box5"]
+size = Vector3(2.9, 1.0, 0.1)
+material = SubResource("steel")
+
+[sub_resource type="BoxMesh" id="box6"]
+size = Vector3(2.9, 0.1, 1.2)
+material = SubResource("steel")
+
+[sub_resource type="BoxMesh" id="box7"]
+size = Vector3(0.1, 0.9, 1.2)
+material = SubResource("steel")
+
+[sub_resource type="BoxMesh" id="box8"]
+size = Vector3(2.9, 0.06, 0.2)
+material = SubResource("rim")
+
+[sub_resource type="BoxMesh" id="box9"]
+size = Vector3(2.0, 1.2, 2.6)
+material = SubResource("paint")
+
+[sub_resource type="BoxMesh" id="box10"]
+size = Vector3(2.4, 0.9, 0.5)
+material = SubResource("steel")
+
+[sub_resource type="BoxMesh" id="box11"]
+size = Vector3(1.6, 0.2, 1.6)
+material = SubResource("steel")
+
+[sub_resource type="BoxMesh" id="box12"]
+size = Vector3(1.5, 1.5, 1.5)
+material = SubResource("glass")
+
+[sub_resource type="BoxMesh" id="box13"]
+size = Vector3(1.7, 0.12, 1.7)
+material = SubResource("paint")
+
+[node name="WheelLoader" type="CharacterBody3D"]
+script = ExtResource("1")
+
+[node name="FrontShape" type="CollisionShape3D" parent="."]
+transform = Transform3D(1.0, 0.0, 0, -0.0, 1.0, 0, 0, 0, 1, 0, 0.7, -1.5)
+shape = SubResource("front_shape")
+
+[node name="RearShape" type="CollisionShape3D" parent="."]
+transform = Transform3D(1.0, 0.0, 0, -0.0, 1.0, 0, 0, 0, 1, 0, 0.9, 1.6)
+shape = SubResource("rear_shape")
+
+[node name="Chassis" type="Node3D" parent="."]
+
+[node name="FrontFrame" type="Node3D" parent="Chassis"]
+
+[node name="FrameMesh" type="MeshInstance3D" parent="Chassis/FrontFrame"]
+transform = Transform3D(1.0, 0.0, 0, -0.0, 1.0, 0, 0, 0, 1, 0, 1.1, -1.3)
+mesh = SubResource("box0")
+
+[node name="Fender" type="MeshInstance3D" parent="Chassis/FrontFrame"]
+transform = Transform3D(1.0, 0.0, 0, -0.0, 1.0, 0, 0, 0, 1, 0, 1.75, -1.6)
+mesh = SubResource("box1")
+
+[node name="Hinge" type="MeshInstance3D" parent="Chassis/FrontFrame"]
+transform = Transform3D(1.0, 0.0, 0, -0.0, 1.0, 0, 0, 0, 1, 0, 1.0, 0)
+mesh = SubResource("box2")
+
+[node name="WheelFL" type="Node3D" parent="Chassis/FrontFrame"]
+transform = Transform3D(1.0, 0.0, 0, -0.0, 1.0, 0, 0, 0, 1, -1.15, 0.8, -1.6)
+
+[node name="Tire" type="MeshInstance3D" parent="Chassis/FrontFrame/WheelFL"]
+transform = Transform3D(0.0, 1.0, 0, -1.0, 0.0, 0, 0, 0, 1, 0, 0, 0)
+mesh = SubResource("tirem")
+
+[node name="Rim" type="MeshInstance3D" parent="Chassis/FrontFrame/WheelFL"]
+transform = Transform3D(0.0, 1.0, 0, -1.0, 0.0, 0, 0, 0, 1, 0, 0, 0)
+mesh = SubResource("rimm")
+
+[node name="WheelFR" type="Node3D" parent="Chassis/FrontFrame"]
+transform = Transform3D(1.0, 0.0, 0, -0.0, 1.0, 0, 0, 0, 1, 1.15, 0.8, -1.6)
+
+[node name="Tire" type="MeshInstance3D" parent="Chassis/FrontFrame/WheelFR"]
+transform = Transform3D(0.0, 1.0, 0, -1.0, 0.0, 0, 0, 0, 1, 0, 0, 0)
+mesh = SubResource("tirem")
+
+[node name="Rim" type="MeshInstance3D" parent="Chassis/FrontFrame/WheelFR"]
+transform = Transform3D(0.0, 1.0, 0, -1.0, 0.0, 0, 0, 0, 1, 0, 0, 0)
+mesh = SubResource("rimm")
+
+[node name="ArmPivot" type="Node3D" parent="Chassis/FrontFrame"]
+transform = Transform3D(1.0, 0.0, 0, -0.0, 1.0, 0, 0, 0, 1, 0, 1.7, -1.0)
+
+[node name="ArmL" type="MeshInstance3D" parent="Chassis/FrontFrame/ArmPivot"]
+transform = Transform3D(1.0, 0.0, 0, -0.0, 1.0, 0, 0, 0, 1, -0.75, 0, -1.4)
+mesh = SubResource("box3")
+
+[node name="ArmR" type="MeshInstance3D" parent="Chassis/FrontFrame/ArmPivot"]
+transform = Transform3D(1.0, 0.0, 0, -0.0, 1.0, 0, 0, 0, 1, 0.75, 0, -1.4)
+mesh = SubResource("box3")
+
+[node name="CrossTube" type="MeshInstance3D" parent="Chassis/FrontFrame/ArmPivot"]
+transform = Transform3D(1.0, 0.0, 0, -0.0, 1.0, 0, 0, 0, 1, 0, 0, -1.7)
+mesh = SubResource("box4")
+
+[node name="BucketPivot" type="Node3D" parent="Chassis/FrontFrame/ArmPivot"]
+transform = Transform3D(1.0, 0.0, 0, -0.0, 1.0, 0, 0, 0, 1, 0, 0, -2.8)
+
+[node name="BackPlate" type="MeshInstance3D" parent="Chassis/FrontFrame/ArmPivot/BucketPivot"]
+transform = Transform3D(1.0, 0.0, 0, -0.0, 1.0, 0, 0, 0, 1, 0, -0.4, -0.05)
+mesh = SubResource("box5")
+
+[node name="BottomPlate" type="MeshInstance3D" parent="Chassis/FrontFrame/ArmPivot/BucketPivot"]
+transform = Transform3D(1.0, 0.0, 0, -0.0, 1.0, 0, 0, 0, 1, 0, -0.88, -0.6)
+mesh = SubResource("box6")
+
+[node name="SideL" type="MeshInstance3D" parent="Chassis/FrontFrame/ArmPivot/BucketPivot"]
+transform = Transform3D(1.0, 0.0, 0, -0.0, 1.0, 0, 0, 0, 1, -1.42, -0.45, -0.6)
+mesh = SubResource("box7")
+
+[node name="SideR" type="MeshInstance3D" parent="Chassis/FrontFrame/ArmPivot/BucketPivot"]
+transform = Transform3D(1.0, 0.0, 0, -0.0, 1.0, 0, 0, 0, 1, 1.42, -0.45, -0.6)
+mesh = SubResource("box7")
+
+[node name="Lip" type="MeshInstance3D" parent="Chassis/FrontFrame/ArmPivot/BucketPivot"]
+transform = Transform3D(1.0, 0.0, 0, -0.0, 1.0, 0, 0, 0, 1, 0, -0.9, -1.25)
+mesh = SubResource("box8")
+
+[node name="Tip" type="Marker3D" parent="Chassis/FrontFrame/ArmPivot/BucketPivot"]
+transform = Transform3D(1.0, 0.0, 0, -0.0, 1.0, 0, 0, 0, 1, 0, -0.9, -1.3)
+
+[node name="RearPivot" type="Node3D" parent="Chassis"]
+
+[node name="RearBody" type="MeshInstance3D" parent="Chassis/RearPivot"]
+transform = Transform3D(1.0, 0.0, 0, -0.0, 1.0, 0, 0, 0, 1, 0, 1.4, 1.8)
+mesh = SubResource("box9")
+
+[node name="Counterweight" type="MeshInstance3D" parent="Chassis/RearPivot"]
+transform = Transform3D(1.0, 0.0, 0, -0.0, 1.0, 0, 0, 0, 1, 0, 1.25, 3.2)
+mesh = SubResource("box10")
+
+[node name="CabFloor" type="MeshInstance3D" parent="Chassis/RearPivot"]
+transform = Transform3D(1.0, 0.0, 0, -0.0, 1.0, 0, 0, 0, 1, 0, 2.1, 0.7)
+mesh = SubResource("box11")
+
+[node name="Cab" type="MeshInstance3D" parent="Chassis/RearPivot"]
+transform = Transform3D(1.0, 0.0, 0, -0.0, 1.0, 0, 0, 0, 1, 0, 2.95, 0.7)
+mesh = SubResource("box12")
+
+[node name="Roof" type="MeshInstance3D" parent="Chassis/RearPivot"]
+transform = Transform3D(1.0, 0.0, 0, -0.0, 1.0, 0, 0, 0, 1, 0, 3.75, 0.7)
+mesh = SubResource("box13")
+
+[node name="Exhaust" type="MeshInstance3D" parent="Chassis/RearPivot"]
+transform = Transform3D(1.0, 0.0, 0, -0.0, 1.0, 0, 0, 0, 1, 0.6, 2.4, 2.6)
+mesh = SubResource("exh")
+
+[node name="WheelRL" type="Node3D" parent="Chassis/RearPivot"]
+transform = Transform3D(1.0, 0.0, 0, -0.0, 1.0, 0, 0, 0, 1, -1.15, 0.8, 1.6)
+
+[node name="Tire" type="MeshInstance3D" parent="Chassis/RearPivot/WheelRL"]
+transform = Transform3D(0.0, 1.0, 0, -1.0, 0.0, 0, 0, 0, 1, 0, 0, 0)
+mesh = SubResource("tirem")
+
+[node name="Rim" type="MeshInstance3D" parent="Chassis/RearPivot/WheelRL"]
+transform = Transform3D(0.0, 1.0, 0, -1.0, 0.0, 0, 0, 0, 1, 0, 0, 0)
+mesh = SubResource("rimm")
+
+[node name="WheelRR" type="Node3D" parent="Chassis/RearPivot"]
+transform = Transform3D(1.0, 0.0, 0, -0.0, 1.0, 0, 0, 0, 1, 1.15, 0.8, 1.6)
+
+[node name="Tire" type="MeshInstance3D" parent="Chassis/RearPivot/WheelRR"]
+transform = Transform3D(0.0, 1.0, 0, -1.0, 0.0, 0, 0, 0, 1, 0, 0, 0)
+mesh = SubResource("tirem")
+
+[node name="Rim" type="MeshInstance3D" parent="Chassis/RearPivot/WheelRR"]
+transform = Transform3D(0.0, 1.0, 0, -1.0, 0.0, 0, 0, 0, 1, 0, 0, 0)
+mesh = SubResource("rimm")
+
+[node name="PlayerInput" type="Node" parent="."]
+script = ExtResource("2")
