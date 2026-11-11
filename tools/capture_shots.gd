@@ -44,6 +44,12 @@ func _run() -> void:
 		for i in 20:
 			await process_frame
 		_save("%s/%s.png" % [out, shot])
+	# In-cab view as the player sees it.
+	follow.set_process(true)
+	(follow as FollowCamera).mode = FollowCamera.Mode.CAB
+	for i in 20:
+		await process_frame
+	_save(out + "/cab.png")
 	quit()
 
 

@@ -325,11 +325,11 @@ def build_bucket():
         dz, dy = z1 - z0, y1 - y0
         ln = math.hypot(dz, dy) or 1.0
         inner.append((z - dy / ln * t, y + dz / ln * t))
-    p.prism(shell + list(reversed(inner)), -W / 2 + 0.08, W / 2 - 0.08, BUCKET, bevel=0.015)
+    p.prism(shell + list(reversed(inner)), -W / 2 + 0.02, W / 2 - 0.02, BUCKET, bevel=0.015)
     # Side plates (closed profile of the opening) slightly proud of the shell.
     side = [(-D * 0.45, 0.05), (0.18, 0.12)] + [(z, y) for z, y in back[1:]] + [(-D, -H), (-D * 0.85, -H + 0.25)]
     for s in (-1, 1):
-        p.prism(side, s * (W / 2 - 0.09), s * (W / 2 + 0.01), BUCKET, bevel=0.02)
+        p.prism(side, s * (W / 2 - 0.06), s * (W / 2 + 0.03), BUCKET, bevel=0.02)
         p.prism([(-D * 0.4, -0.05), (-D * 0.95, -H + 0.05), (-D * 0.85, -H + 0.3), (-D * 0.35, 0.1)],
                 s * (W / 2 + 0.01), s * (W / 2 + 0.06), WEAR, bevel=0.01)       # side cutter
     # Wear strips under the floor, top spill guard, pin brackets.
@@ -421,9 +421,9 @@ def build_rear():
     # Interior: seat, console, steering wheel, operator in hi-vis.
     p.box((0.6, 0.5, 0.55), (0, 2.68, cz + 0.3), SEAT, bevel=0.05)
     p.box((0.6, 0.7, 0.15), (0, 3.05, cz + 0.6), SEAT, bevel=0.04)
-    p.box((0.5, 0.55, 0.35), (0, 2.65, cz - 0.45), DARK, bevel=0.04)
-    p.cylinder(0.04, 0.5, (0, 2.95, cz - 0.35), "y", BLACK, segments=6)
-    p.cylinder(0.19, 0.04, (0, 3.2, cz - 0.3), "y", BLACK, segments=12)
+    p.box((0.5, 0.45, 0.3), (0, 2.62, cz - 0.5), DARK, bevel=0.04)
+    p.cylinder(0.04, 0.3, (0, 2.95, cz - 0.42), "y", BLACK, segments=6)
+    p.cylinder(0.17, 0.04, (0, 3.1, cz - 0.4), "y", BLACK, segments=12)
     p.box((0.5, 0.6, 0.32), (0, 3.15, cz + 0.32), HIVIS, bevel=0.06, segments=2)
     p.box((0.13, 0.42, 0.13), (-0.3, 3.15, cz + 0.1), HIVIS, bevel=0.04)
     p.box((0.13, 0.42, 0.13), (0.3, 3.15, cz + 0.1), HIVIS, bevel=0.04)
