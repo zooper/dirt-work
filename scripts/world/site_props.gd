@@ -30,7 +30,7 @@ func _ready() -> void:
 	var glow := _glow.to_instance("SiteGlow", false)
 	var m := LowPolyBatch.material().duplicate() as StandardMaterial3D
 	m.emission_enabled = true
-	m.emission = Palette.LAMP
+	m.emission = Palette.render(Palette.LAMP)
 	m.emission_energy_multiplier = 1.6
 	glow.material_override = m
 	add_child(glow)

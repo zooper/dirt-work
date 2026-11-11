@@ -114,7 +114,7 @@ func _test_quarry_drive() -> void:
 
 	# Ramp: drive from its foot up onto the first tier.
 	loader.lift_input = 0.0
-	loader.global_transform = Transform3D(Basis.IDENTITY, Vector3(20, 0.05, -14))
+	loader.global_transform = Transform3D(Basis.IDENTITY, Vector3(20, 0.05, -6))
 	loader.speed = 0.0
 	loader.articulation = 0.0
 	loader.throttle = 1.0

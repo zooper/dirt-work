@@ -20,9 +20,9 @@ func _ready() -> void:
 	dome.radial_segments = 8
 	dome.rings = 1
 	_mat = StandardMaterial3D.new()
-	_mat.albedo_color = color
+	_mat.albedo_color = Palette.render(color)
 	_mat.emission_enabled = true
-	_mat.emission = color
+	_mat.emission = Palette.render(color)
 	dome.material = _mat
 	var mi := MeshInstance3D.new()
 	mi.mesh = dome

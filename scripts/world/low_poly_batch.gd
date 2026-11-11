@@ -19,7 +19,8 @@ static func material() -> StandardMaterial3D:
 	if _shared_material == null:
 		_shared_material = StandardMaterial3D.new()
 		_shared_material.vertex_color_use_as_albedo = true
-		_shared_material.vertex_color_is_srgb = true
+		# add_tri() converts colours via Palette.render() (renderer-aware).
+		_shared_material.vertex_color_is_srgb = false
 		_shared_material.roughness = 0.92
 	return _shared_material
 
@@ -33,7 +34,7 @@ func add_tri(a: Vector3, b: Vector3, c: Vector3, color: Color) -> void:
 	if n.length_squared() < 1e-12:
 		return
 	_st.set_normal(n.normalized())
-	_st.set_color(color)
+	_st.set_color(Palette.render(color))
 	# Godot treats clockwise as front-facing, so emit reversed.
 	_st.add_vertex(a)
 	_st.add_vertex(c)
@@ -135,14 +136,14 @@ func add_rock(center: Vector3, size: float, rng: RandomNumberGenerator, color: C
 func add_mound(center: Vector3, radius: float, height: float, segments: int, rings: int,
 		rng: RandomNumberGenerator, color_fn: Callable, jitter := 0.12) -> PackedVector3Array:
 	var levels: Array = []
+	var offs := rng.randf() * TAU
 	for r in rings:
 		var t := float(r) / rings
 		var ring := PackedVector3Array()
 		var rr := radius * (1.0 - t) * (1.0 - 0.15 * t)
 		var y := height * (1.0 - pow(1.0 - t, 1.0 + 0.4 * t)) if r > 0 else 0.0
-		var offs := rng.randf() * TAU
 		for i in segments:
-			var a := TAU * i / segments + offs + rng.randf_range(-jitter, jitter)
+			var a := TAU * i / segments + offs + rng.randf_range(-jitter, jitter) * 0.5
 			var rj := rr * rng.randf_range(1.0 - jitter, 1.0 + jitter)
 			ring.append(center + Vector3(cos(a) * rj, y + (rng.randf_range(-jitter, jitter) * height * 0.3 if r > 0 else 0.0), sin(a) * rj))
 		levels.append(ring)
@@ -156,14 +157,25 @@ func add_mound(center: Vector3, radius: float, height: float, segments: int, rin
 			if r + 1 < rings:
 				var hi: PackedVector3Array = levels[r + 1]
 				# Rings have different random offsets; connect by index (fine for low-poly).
-				var c1: Color = color_fn.call((lo[i] + lo[j] + hi[i]) / 3.0, Vector3.UP)
-				add_tri(lo[i], hi[i], lo[j], c1)
-				var c2: Color = color_fn.call((lo[j] + hi[i] + hi[j]) / 3.0, Vector3.UP)
-				add_tri(lo[j], hi[i], hi[j], c2)
+				var c1: Color = color_fn.call((lo[i] + lo[j] + hi[i]) / 3.0, _face_normal(lo[i], hi[i], lo[j], center))
+				add_tri_facing(lo[i], hi[i], lo[j], _outward(lo[i], lo[j], hi[i], center), c1)
+				var c2: Color = color_fn.call((lo[j] + hi[i] + hi[j]) / 3.0, _face_normal(lo[j], hi[i], hi[j], center))
+				add_tri_facing(lo[j], hi[i], hi[j], _outward(lo[j], hi[i], hi[j], center), c2)
 			else:
-				add_tri(lo[i], apex, lo[j], color_fn.call((lo[i] + lo[j] + apex) / 3.0, Vector3.UP))
+				add_tri_facing(lo[i], apex, lo[j], _outward(lo[i], lo[j], apex, center), color_fn.call((lo[i] + lo[j] + apex) / 3.0, _face_normal(lo[i], lo[j], apex, center)))
 	hull_pts.append(apex)
 	return hull_pts
+
+
+static func _face_normal(a: Vector3, b: Vector3, c: Vector3, center: Vector3) -> Vector3:
+	var n := (b - a).cross(c - a).normalized()
+	return n if n.dot(_outward(a, b, c, center)) >= 0.0 else -n
+
+
+## Outward direction for a mound face: away from the mound axis, tilted up.
+static func _outward(a: Vector3, b: Vector3, c: Vector3, center: Vector3) -> Vector3:
+	var m := (a + b + c) / 3.0 - center
+	return Vector3(m.x, 0.0, m.z).normalized() + Vector3.UP * 0.3
 
 
 func commit() -> ArrayMesh:

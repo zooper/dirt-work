@@ -13,7 +13,7 @@ extends Node3D
 
 const PIT_HALF := 40.0
 ## [inner distance from centre, top height] per bench; the last is the plateau.
-const TIERS := [[40.0, 4.0], [48.0, 8.0], [56.0, 12.0]]
+const TIERS := [[40.0, 7.0], [50.0, 14.0], [60.0, 20.0]]
 const PLATEAU_OUTER := 170.0
 const YARD_SOUTH := 100.0
 const RAMP_X := 20.0
@@ -51,6 +51,7 @@ func _ready() -> void:
 	add_child(_build_clouds().to_instance("Clouds", false))
 	_build_forest()
 	_build_rubble()
+	_build_pebbles()
 
 
 # --- Ground -----------------------------------------------------------------
@@ -62,7 +63,7 @@ func _build_ground(b: LowPolyBatch) -> void:
 	var g := 700.0
 	b.add_quad(Vector3(-g, -0.06, g), Vector3(g, -0.06, g), Vector3(g, -0.06, -g), Vector3(-g, -0.06, -g), Palette.GRASS)
 	# Faceted gravel floor for pit + yard: a jittered-colour triangle grid.
-	var cell := 6.0
+	var cell := 10.0
 	var x0 := -PIT_HALF - 0.0
 	var x1 := PIT_HALF
 	var z0 := -PIT_HALF
@@ -79,8 +80,8 @@ func _build_ground(b: LowPolyBatch) -> void:
 			var d := Vector3(x, 0.01, z)
 			var yard := z > PIT_HALF
 			var base := Palette.GRAVEL_FLOOR.lerp(Palette.GRASS_DARK, 0.15) if yard else Palette.GRAVEL_FLOOR
-			b.add_tri(a, bb, c, _tint(base, 0.05))
-			b.add_tri(a, c, d, _tint(base, 0.05))
+			b.add_tri(a, bb, c, _tint(base, 0.025))
+			b.add_tri(a, c, d, _tint(base, 0.025))
 			z += cell
 		x += cell
 	# Yard extends beyond the pit width to the east and west.
@@ -137,20 +138,20 @@ func _slab_face(b: LowPolyBatch, start: Vector3, along: Vector3, out_dir: Vector
 	var s := 0.0
 	var yaw := atan2(along.x, along.z)
 	while s < length:
-		var w := _rng.randf_range(2.6, 5.0)
-		var stack := 2 if height > 3.5 and _rng.randf() < 0.55 else 1
+		var w := _rng.randf_range(4.5, 9.0)
+		var stack := clampi(int(height / 5.0 + _rng.randf() * 0.8), 1, 3)
 		var y := start.y
 		for k in stack:
 			var hh := height / stack * _rng.randf_range(0.95, 1.15)
 			if k == stack - 1:
 				hh = start.y + height + _rng.randf_range(-0.4, 0.5) - y
-			var depth := _rng.randf_range(2.0, 3.2)
-			var protrude := _rng.randf_range(0.25, 0.9)
+			var depth := _rng.randf_range(3.0, 5.0)
+			var protrude := _rng.randf_range(0.3, 1.4)
 			var center := start + along * (s + w * 0.5) + out_dir * (protrude - depth * 0.5) + Vector3.UP * (y - start.y + hh * 0.5)
 			var basis := Basis(Vector3.UP, yaw + _rng.randf_range(-0.12, 0.12)).rotated(along, _rng.randf_range(-0.08, 0.04))
 			var tone := [Palette.ROCK, Palette.ROCK_COOL, Palette.ROCK_WARM][_rng.randi() % 3] as Color
 			var rng := _rng
-			b.add_slab(center, Vector3(depth, hh, w * 1.08), basis, 0.35, _rng, tone,
+			b.add_slab(center, Vector3(depth, hh, w * 1.08), basis, 0.7, _rng, tone,
 				func(_c, n): return LowPolyBatch._shade(tone, n, rng))
 			y += hh
 		s += w
@@ -160,7 +161,7 @@ func _build_ramp(ground: LowPolyBatch, cliffs: LowPolyBatch) -> void:
 	var inner: float = TIERS[0][0]
 	var height: float = TIERS[0][1]
 	var hw := 4.0
-	var length := 16.0
+	var length := 28.0
 	var z0 := -inner + length
 	var z1 := -inner
 	var pts := PackedVector3Array([
@@ -187,12 +188,12 @@ func _build_ramp(ground: LowPolyBatch, cliffs: LowPolyBatch) -> void:
 func _build_piles(b: LowPolyBatch) -> void:
 	var spots := [Vector3(-22, 0, -22), Vector3(-6, 0, -30), Vector3(-27, 0, -2), Vector3(26, 0, 4)]
 	for p in spots:
-		var r := _rng.randf_range(5.5, 7.5)
-		var h := r * _rng.randf_range(0.55, 0.65)
+		var r := _rng.randf_range(8.5, 11.0)
+		var h := r * _rng.randf_range(0.6, 0.7)
 		var base := Palette.GRAVEL_PILE if _rng.randf() < 0.6 else Palette.GRAVEL_PILE_WARM
 		var rng := _rng
 		var hull := b.add_mound(p, r, h, 14, 4, _rng,
-			func(c, _n): return base.lerp(Palette.ROCK_COOL, clampf(c.y / h, 0.0, 1.0) * 0.25).lightened(rng.randf_range(-0.07, 0.07)))
+			func(c, n): return LowPolyBatch._shade(base.lerp(Palette.ROCK_COOL, clampf(c.y / h, 0.0, 1.0) * 0.25), n, rng))
 		_add_convex_shape(hull)
 		piles.append({"center": p, "radius": r, "height": h})
 
@@ -238,15 +239,29 @@ func _build_rubble() -> void:
 	for pile in piles:
 		var r: float = pile.radius
 		var h: float = pile.height
-		for i in 150:
+		for i in 220:
 			var a := _rng.randf() * TAU
 			var d := sqrt(_rng.randf()) * r * 1.15
 			var y := maxf(h * (1.0 - d / r), 0.0) * 0.92
 			var pos: Vector3 = pile.center + Vector3(cos(a) * d, y, sin(a) * d)
-			var s := _rng.randf_range(0.25, 0.7) * (1.0 if d < r else 0.6)
+			var s := _rng.randf_range(0.35, 1.0) * (1.0 if d < r else 0.6)
 			xforms.append(Transform3D(Basis.from_euler(Vector3(_rng.randf() * TAU, _rng.randf() * TAU, 0)).scaled(Vector3.ONE * s), pos))
 			colors.append(Palette.GRAVEL_PILE.lerp(Palette.ROCK_WARM, _rng.randf()).lightened(_rng.randf_range(-0.1, 0.12)))
 	add_child(_multimesh("Rubble", chunk.commit(), xforms, colors, true))
+
+
+## Gravel texture: small stones scattered over the pit floor and yard.
+func _build_pebbles() -> void:
+	var chunk := LowPolyBatch.new()
+	chunk.add_rock(Vector3.ZERO, 0.5, _rng, Color.WHITE, 0.6)
+	var xforms: Array[Transform3D] = []
+	var colors: Array[Color] = []
+	for i in 2600:
+		var p := Vector3(_rng.randf_range(-PIT_HALF + 1, PIT_HALF - 1), 0.0, _rng.randf_range(-PIT_HALF + 1, YARD_SOUTH - 2))
+		var s := _rng.randf_range(0.12, 0.4) if _rng.randf() < 0.85 else _rng.randf_range(0.45, 0.8)
+		xforms.append(Transform3D(Basis.from_euler(Vector3(0, _rng.randf() * TAU, 0)).scaled(Vector3(s, s, s)), p))
+		colors.append(Palette.GRAVEL_PILE.lerp(Palette.GRAVEL_FLOOR, _rng.randf()).darkened(_rng.randf_range(0.0, 0.2)))
+	add_child(_multimesh("Pebbles", chunk.commit(), xforms, colors, false))
 
 
 # --- Forest, backdrop, sky --------------------------------------------------
@@ -342,30 +357,32 @@ func _build_mountains(b: LowPolyBatch) -> void:
 		var dist := _rng.randf_range(620, 760)
 		var c := Vector3(sin(ang) * dist, 0, cos(ang) * dist)
 		var r := _rng.randf_range(150, 240)
-		var h := _rng.randf_range(110, 190)
+		var h := _rng.randf_range(80, 150)
 		b.add_mound(c, r, h, 9, 4, _rng, _mountain_color.bind(h), 0.2)
 
 
 func _mountain_color(cen: Vector3, _n: Vector3, h: float) -> Color:
 	var t := cen.y / h
-	if t > 0.62 + _rng.randf_range(-0.06, 0.06):
-		return Palette.SNOW.darkened(_rng.randf_range(0.0, 0.08))
+	if t > 0.74 + _rng.randf_range(-0.05, 0.05):
+		return Palette.SNOW.darkened(_rng.randf_range(0.05, 0.18))
 	return Palette.MOUNTAIN.lerp(Palette.PINE, (1.0 - t) * 0.5).lightened(_rng.randf_range(-0.04, 0.06))
 
 
 func _build_clouds() -> LowPolyBatch:
 	var b := LowPolyBatch.new()
-	for i in 16:
-		var c := Vector3(_rng.randf_range(-500, 500), _rng.randf_range(140, 200), _rng.randf_range(-500, 500))
-		for k in 4:
-			var off := Vector3(_rng.randf_range(-25, 25), _rng.randf_range(-3, 4), _rng.randf_range(-10, 10))
+	for i in 11:
+		var c := Vector3(_rng.randf_range(-450, 450), _rng.randf_range(110, 160), _rng.randf_range(-500, 300))
+		var puffs := _rng.randi_range(4, 7)
+		for k in puffs:
+			var t := (k - puffs * 0.5) / puffs
+			var r := _rng.randf_range(7, 13) * (1.0 - absf(t) * 0.8)
+			var off := Vector3(t * 40.0, _rng.randf_range(-1, 3) + (1.0 - absf(t)) * 4.0, _rng.randf_range(-6, 6))
 			var pts := PackedVector3Array()
-			var size := Vector3(_rng.randf_range(18, 32), _rng.randf_range(5, 9), _rng.randf_range(10, 18))
-			for d in 14:
-				var v := Vector3(_rng.randf_range(-1, 1), _rng.randf_range(-0.4, 1), _rng.randf_range(-1, 1)).normalized()
-				pts.append(c + off + v * size)
+			for d in 18:
+				var v := Vector3(_rng.randf_range(-1, 1), _rng.randf_range(-0.2, 1), _rng.randf_range(-1, 1)).normalized()
+				pts.append(c + off + Vector3(v.x * r * 1.4, v.y * r, v.z * r))
 			var rng := _rng
-			b.add_hull(pts, Color.WHITE, func(_cc, n): return Color(1.0, 0.97, 0.95).darkened(0.12 * maxf(-n.y, 0.0) + rng.randf() * 0.03))
+			b.add_hull(pts, Color.WHITE, func(_cc, n): return Color(1.0, 0.96, 0.93).lerp(Color(0.85, 0.8, 0.88), clampf(-n.y, 0.0, 1.0) * 0.8 + rng.randf() * 0.04))
 	return b
 
 
@@ -403,7 +420,7 @@ func _multimesh(n: String, mesh: Mesh, xforms: Array[Transform3D], colors: Array
 	mm.instance_count = xforms.size()
 	for i in xforms.size():
 		mm.set_instance_transform(i, xforms[i])
-		mm.set_instance_color(i, colors[i])
+		mm.set_instance_color(i, Palette.render(colors[i]))
 	var mmi := MultiMeshInstance3D.new()
 	mmi.name = n
 	mmi.multimesh = mm
