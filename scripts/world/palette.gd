@@ -1,3 +1,4 @@
+@tool
 class_name Palette
 extends RefCounted
 ## Single source of truth for the stylised, saturated colour scheme

@@ -1,3 +1,4 @@
+@tool
 class_name LowPolyBatch
 extends RefCounted
 ## Accumulates flat-shaded, vertex-coloured triangles into ONE ArrayMesh so a
@@ -38,6 +39,19 @@ func add_tri(a: Vector3, b: Vector3, c: Vector3, color: Color) -> void:
 	_st.add_vertex(c)
 	_st.add_vertex(b)
 	_count += 1
+
+
+## Like add_tri but orients the face so its normal points along `outward`.
+func add_tri_facing(a: Vector3, b: Vector3, c: Vector3, outward: Vector3, color: Color) -> void:
+	if (b - a).cross(c - a).dot(outward) >= 0.0:
+		add_tri(a, b, c, color)
+	else:
+		add_tri(a, c, b, color)
+
+
+func add_quad_facing(a: Vector3, b: Vector3, c: Vector3, d: Vector3, outward: Vector3, color: Color) -> void:
+	add_tri_facing(a, b, c, outward, color)
+	add_tri_facing(a, c, d, outward, color)
 
 
 func add_quad(a: Vector3, b: Vector3, c: Vector3, d: Vector3, color: Color) -> void:

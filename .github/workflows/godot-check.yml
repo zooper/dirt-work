@@ -11,9 +11,5 @@ jobs:
       image: barichello/godot-ci:4.3
     steps:
       - uses: actions/checkout@v4
-      - name: Import project
-        run: godot --headless --path . --editor --import --quit
-      - name: Start main scene
-        run: godot --headless --path . --quit-after 60
-      - name: Run headless tests
-        run: godot --headless --path . -s tests/run_tests.gd
+      - name: Import, boot and test (fails on any script error)
+        run: tests/check.sh

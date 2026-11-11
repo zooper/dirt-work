@@ -60,6 +60,10 @@ func _test_quarry_drive() -> void:
 			draw_nodes += 1
 	_check(draw_nodes <= 10, "scenery batched into %d mesh nodes" % draw_nodes)
 	_check(loader.is_on_floor(), "loader settles on the floor")
+	var tire := loader.get_node("Chassis/FrontFrame/WheelFL/Tire") as MeshInstance3D
+	_check(tire.mesh != null and tire.mesh.get_surface_count() > 0, "procedural tyre has geometry")
+	var ram := loader.get_node("Chassis/FrontFrame/LiftRamL") as Node3D
+	_check(ram.get_child_count() == 2, "lift ram built barrel + rod")
 	var start := loader.global_position
 
 	loader.throttle = 1.0
@@ -90,6 +94,9 @@ func _test_quarry_drive() -> void:
 	loader.lift_input = 0.0
 	_check(is_equal_approx(loader.lift_angle, loader.lift_max_deg), "lift reaches max")
 	_check(loader.get_bucket_tip_global().y > tip0 + 2.0, "raising arms raises bucket tip")
+	var rod := ram.get_child(1) as Node3D
+	var rod_end := loader.get_node("Chassis/FrontFrame/ArmPivot/LiftRamEndL") as Node3D
+	_check(rod.global_position.distance_to(rod_end.global_position) < 1.5, "lift ram follows raised arm (%.2f m)" % rod.global_position.distance_to(rod_end.global_position))
 	loader.tilt_input = 1.0
 	await _frames(180)
 	_check(is_equal_approx(loader.tilt_angle, loader.tilt_max_deg), "bucket dumps to max")
