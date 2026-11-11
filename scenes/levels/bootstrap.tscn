@@ -1,0 +1,17 @@
+[gd_scene load_steps=2 format=3]
+
+[sub_resource type="Environment" id="Environment_1"]
+background_mode = 2
+background_color = Color(0.55, 0.73, 0.87, 1)
+
+[node name="Bootstrap" type="Node3D"]
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_1")
+
+[node name="Camera3D" type="Camera3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 0.894427, -0.447214, 0, 0.447214, 0.894427, 0, 5, 10)
+current = true
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+rotation_degrees = Vector3(-45, -30, 0)
