@@ -10,7 +10,7 @@ Build a playable, performant low-poly heavy-equipment game in Godot 4 (GDScript)
 - Keep gameplay, presentation, input, and persistence separate.
 - No licensed brand names, proprietary vehicle meshes, or downloaded assets without provenance.
 - Make every feature work with keyboard AND controller through InputMap actions, not hard-coded device keys.
-- For visual changes, follow the render/compare/iterate process in docs/ART_DIRECTION.md and record real before/after screenshots; headless tests alone are not visual QA.
+- For visual changes, use the approved reference image at `docs/image.png`, follow the render/compare/iterate process in `docs/ART_DIRECTION.md`, and record real before/after screenshots; headless tests alone are not visual QA.
 - Run headless import and scene smoke tests after changes. Never claim gameplay has been visually verified unless actually played or captured.
 - Do not implement thousands of rigid bodies for gravel. Start with abstract volume/weight and visually deformable piles.
 - Keep a changelog of decisions in docs/DECISIONS.md; update docs/ROADMAP.md when milestones change.
