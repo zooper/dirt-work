@@ -26,3 +26,9 @@
 
 ## Later
 Seasons, snow, more machines, company progression, console port investigation.
+
+### Material prototype review (2026-11-12)
+- Implemented mass-conserving bulk scoop/carry/tip and material slope/flow parameters.
+- Headless actual-drive scoop/dump and per-material conservation tests added.
+- Before calling M2 complete: visual/play review, Mac frame-time profiling, finite
+  receiver overflow behavior, yard/bench support, ballistic spill and rigid stones.

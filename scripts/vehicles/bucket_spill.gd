@@ -34,7 +34,7 @@ func _process(_delta: float) -> void:
 	var fill := clampf(_loader.bucket_fill, 0.0, 1.0)
 	_heap.visible = fill > 0.02
 	_heap.scale = Vector3(1.0, maxf(fill, 0.05), 1.0)
-	var pouring := fill > 0.02 and _loader.tilt_angle > dump_tilt_deg
+	var pouring := _loader.material_flow if _loader.material_gameplay else (fill > 0.02 and _loader.tilt_angle > dump_tilt_deg)
 	if pouring != _was_pouring:
 		_rocks.emitting = pouring
 		_dust.emitting = pouring

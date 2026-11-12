@@ -34,3 +34,20 @@
 - 2026-11-12: A Blender-built crawler excavator (`tools/blender/build_excavator.py`, a single posed prop with no collision) and a second hauler stand on the y=14 bench above the bay, at a blasted-rock heap. Both are background dressing and can't be reached in play.
 - 2026-11-12: Loader lift max raised to 60° and the DW-40 dump rim lowered to 2.8 m, so a dump into the hauler shows the rock stream above the rim (presentation scale over real proportions, as in the reference).
 - 2026-11-12: Machine wear is a shared world-space overlay shader (`MachineGrime`) rather than per-model textures: no UVs or texture assets are needed, and it adapts automatically to any Blender-built machine.
+
+## 2026-11-12: bulk material gameplay prototype
+
+Authoritative per-material cubic metres live in a 1 m quarry-floor grid, the
+bucket, or the hauler receiver. Scoop transfers remove actual column volume;
+tipping restores it to the world or receiver. Sand/gravel/stone use tunable bulk
+density, repose, flow and resistance. Particles remain non-authoritative visuals.
+Bucket retention responds to tilt, acceleration and lifting; payload reduces
+acceleration and lift speed. Existing keyboard/controller controls are unchanged.
+
+This is NOT granular rigid-body simulation: stone is bulk material, columns are
+well mixed, and deposition is an instantaneous vertical transfer guarded by a
+ray, not a ballistic flight model. Supported ground is the flat pit [-38,38).
+Outside it or above an obstacle, material remains in the bucket. The receiver
+holds 20 m³ and retains excess in the bucket. No below-grade excavation,
+overhangs, individual boulders, terrain persistence, or verified Mac performance.
+Full field mesh/collision rebuild is throttled to 5 Hz but needs profiling.

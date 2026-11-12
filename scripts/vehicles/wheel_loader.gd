@@ -20,6 +20,10 @@ var cruise_speed := 4.0    ## m/s
 ## 0..1 how full the bucket is. Presentation hook for now (BucketSpill shows the
 ## load and pours it when tipped); M2 volume accounting will drive it.
 var bucket_fill := 0.0
+var material_gameplay := false
+var material_flow := false
+var payload_kg := 0.0
+var dig_resistance := 0.0
 
 @export_group("Drive")
 @export var max_forward_speed := 8.0     ## m/s
@@ -112,7 +116,7 @@ func _update_speed(delta: float) -> void:
 		t = maxf(t, clampf((cruise_speed - speed) * 0.8, 0.0, 1.0))
 	var drive := 0.0
 	if t > 0.0 and speed >= -reverse_threshold:
-		drive += t * acceleration
+		drive += t * acceleration / (1.0 + payload_kg / 14000.0) * (1.0 - dig_resistance * 0.65)
 	if brake > 0.0:
 		if speed > reverse_threshold:
 			drive -= brake * brake_deceleration
@@ -147,7 +151,7 @@ func _update_heading(delta: float) -> void:
 
 
 func _update_hydraulics(delta: float) -> void:
-	lift_angle = clampf(lift_angle + lift_input * lift_rate_deg * delta, lift_min_deg, lift_max_deg)
+	lift_angle = clampf(lift_angle + lift_input * lift_rate_deg * delta / (1.0 + payload_kg / 10000.0), lift_min_deg, lift_max_deg)
 	tilt_angle = clampf(tilt_angle + tilt_input * tilt_rate_deg * delta, tilt_min_deg, tilt_max_deg)
 	_apply_hydraulics()
 

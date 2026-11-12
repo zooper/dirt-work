@@ -8,6 +8,8 @@
 [ext_resource type="PackedScene" path="res://assets/models/excavator/excavator.glb" id="6"]
 [ext_resource type="Script" path="res://scripts/vehicles/machine_grime.gd" id="7"]
 
+[ext_resource type="Script" path="res://scripts/gameplay/material_handling.gd" id="8"]
+
 [sub_resource type="ProceduralSkyMaterial" id="SkyMat"]
 sky_top_color = Color(0.36, 0.55, 0.82, 1)
 sky_horizon_color = Color(0.98, 0.76, 0.6, 1)
@@ -100,3 +102,6 @@ look_height = 2.6
 current = true
 fov = 58.0
 far = 1500.0
+
+[node name="MaterialHandling" type="Node3D" parent="."]
+script = ExtResource("8")

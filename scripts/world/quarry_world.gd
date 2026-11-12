@@ -265,16 +265,18 @@ func _build_ramp(ground: LowPolyBatch, cliffs: LowPolyBatch) -> void:
 
 # --- Piles, rocks, rubble ---------------------------------------------------
 
-func _build_piles(b: LowPolyBatch) -> void:
+func _build_piles(_b: LowPolyBatch) -> void:
 	var spots := [Vector3(-24, 0, -24), Vector3(-29, 0, 22), Vector3(-27, 0, -2), Vector3(26, 0, 4)]
 	for p in spots:
 		var r := _rng.randf_range(8.5, 11.0)
 		var h := r * _rng.randf_range(0.6, 0.7)
 		var base := Palette.GRAVEL_PILE if _rng.randf() < 0.6 else Palette.GRAVEL_PILE_WARM
 		var rng := _rng
-		var hull := b.add_mound(p, r, h, 14, 4, _rng,
+		# Consume the same generator stream so unrelated scenery stays put.
+		var discarded := LowPolyBatch.new()
+		discarded.add_mound(p, r, h, 14, 4, _rng,
 			func(c, n): return LowPolyBatch._shade(base.lerp(Palette.ROCK_COOL, clampf(c.y / h, 0.0, 1.0) * 0.25), n, rng))
-		_add_convex_shape(hull)
+		# Loose piles are now authoritative, deformable MaterialField columns.
 		piles.append({"center": p, "radius": r, "height": h})
 
 
@@ -334,7 +336,10 @@ func _build_rubble() -> void:
 			var s := _rng.randf_range(0.35, 1.0) * (1.0 if d < r else 0.6)
 			xforms.append(Transform3D(Basis.from_euler(Vector3(_rng.randf() * TAU, _rng.randf() * TAU, 0)).scaled(Vector3.ONE * s), pos))
 			colors.append(Palette.GRAVEL_PILE.lerp(Palette.ROCK_WARM, _rng.randf()).lightened(_rng.randf_range(-0.1, 0.12)))
-	add_child(_multimesh("Rubble", chunk.commit(), xforms, colors, true))
+	var rubble := _multimesh("Rubble", chunk.commit(), xforms, colors, true)
+	# Static decorative stones would float when authoritative columns are dug away.
+	rubble.visible = false
+	add_child(rubble)
 
 
 ## Gravel texture: small stones scattered over the pit floor and yard.
