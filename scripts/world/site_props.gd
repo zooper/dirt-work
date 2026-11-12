@@ -233,7 +233,7 @@ func _pit_plant() -> void:
 	_box(tower + Vector3(0, 6.2, 0), Vector3(4.2, 0.15, 4.2), Palette.MACHINE_STEEL)
 	_rails(tower + Vector3(0, 6.25, 0), 4.2, 4.2)
 	_conveyor(tower + Vector3(1.5, 4.6, 0.5), tower + Vector3(14.0, 1.0, 1.5))   # out along the bench
-	_cabin(Vector3(-19, 0, -13), -0.42)
+	_cabin(Vector3(-19, 0, -13), PI - 0.42)   # windows face the pit
 	_floodlight(Vector3(-22, 0, -18))
 
 

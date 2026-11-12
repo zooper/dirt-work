@@ -92,9 +92,9 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.05, 10)
 [node name="FollowCamera" type="Node3D" parent="."]
 script = ExtResource("3")
 target_path = NodePath("../WheelLoader")
-distance = 9.5
-height = 3.4
-look_height = 2.2
+distance = 12.5
+height = 4.4
+look_height = 2.6
 
 [node name="Camera3D" type="Camera3D" parent="FollowCamera"]
 current = true
