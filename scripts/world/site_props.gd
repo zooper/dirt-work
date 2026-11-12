@@ -25,6 +25,7 @@ func _ready() -> void:
 		_floodlight(p)
 	_crusher_plant(Vector3(-52, 0, 72))
 	_yard_clutter(Vector3(22, 0, 60))
+	_loading_bay(Vector3(-20, 0, 66))
 
 	add_child(_solid.to_instance("SiteSolid"))
 	var glow := _glow.to_instance("SiteGlow", false)
@@ -160,6 +161,46 @@ func _conveyor(from: Vector3, to: Vector3) -> void:
 		while k + 1.6 < h:
 			_box(Vector3(p.x, k + 0.8, p.z), Vector3(0.08, 2.0, 0.08), Palette.MACHINE_STEEL, Basis(Vector3.UP, yaw) * Basis(Vector3.BACK, 0.75 if int(k) % 2 == 0 else -0.75))
 			k += 1.6
+
+
+## Dressing around the hauler loading spot (the reference showcase): a chunky
+## angular rock stockpile, big boulders, a lone pine and a floodlight.
+func _loading_bay(hauler: Vector3) -> void:
+	# Cobble stockpile (east of the hauler's nose): big angular stones heaped up.
+	var c := hauler + Vector3(7.5, 0, -3.5)
+	var hull := PackedVector3Array()
+	for i in 90:
+		var a := _rng.randf() * TAU
+		var d := sqrt(_rng.randf()) * 3.6
+		var h := maxf(2.0 * (1.0 - d / 3.8), 0.0)
+		var p := c + Vector3(cos(a) * d, h * _rng.randf_range(0.7, 1.0), sin(a) * d)
+		_solid.add_rock(p, _rng.randf_range(0.32, 0.62), _rng, Palette.GRAVEL_PILE.lerp(Palette.ROCK_COOL, _rng.randf()).darkened(_rng.randf_range(0.2, 0.4)), 0.8)
+	for k in 10:
+		var a := TAU * k / 10.0
+		hull.append(c + Vector3(cos(a) * 3.8, 0, sin(a) * 3.8))
+	hull.append(c + Vector3(0, 1.9, 0))
+	var cs := CollisionShape3D.new()
+	var shape := ConvexPolygonShape3D.new()
+	shape.points = hull
+	cs.shape = shape
+	_body.add_child(cs)
+	# Big boulders by the bay entrance.
+	for off in [Vector3(13.5, 0, 4.0), Vector3(15.0, 0, 6.5), Vector3(12.0, 0, 8.0)]:
+		var size := _rng.randf_range(0.9, 1.6)
+		var pts := _solid.add_rock(hauler + off + Vector3.UP * size * 0.45, size, _rng, Palette.ROCK_COOL.darkened(0.2), 0.75)
+		var bcs := CollisionShape3D.new()
+		var bs := ConvexPolygonShape3D.new()
+		bs.points = pts
+		bcs.shape = bs
+		_body.add_child(bcs)
+	# A lone pine at the bay edge, and a floodlight among the site buildings.
+	var pine := MeshInstance3D.new()
+	pine.mesh = QuarryWorld.build_pine_mesh(_rng)
+	pine.position = hauler + Vector3(12.5, 0, 10.5)
+	pine.scale = Vector3.ONE * 1.6
+	add_child(pine)
+	_collider(pine.position + Vector3(0, 2.0, 0), Vector3(0.6, 4.0, 0.6))
+	_floodlight(hauler + Vector3(-10.0, 0, 16.0))
 
 
 func _rails(center: Vector3, sx: float, sz: float) -> void:
