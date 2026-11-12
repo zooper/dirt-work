@@ -10,7 +10,7 @@ extends SceneTree
 
 const SHOTS := [
 	# name, camera, target, lift, tilt
-	["hero", Vector3(-13.5, 1.7, 12.5), Vector3(0.0, 2.9, 6.5), 45.0, 30.0],     # reference angle (near side-on from the rear quarter), bucket up dumping
+	["hero", Vector3(-2.8, 1.9, 64.0), Vector3(-18.5, 2.9, 70.5), 45.0, 30.0],  # reference composition: loader dumping into the hauler
 	["side", Vector3(-14.0, 2.3, 10.0), Vector3(0.0, 2.0, 10.0), 0.0, 0.0],
 	["front34", Vector3(7.5, 3.0, 1.5), Vector3(0.0, 1.9, 8.5), 0.0, -10.0],
 	["front", Vector3(0.0, 2.6, -5.0), Vector3(0.0, 2.0, 8.0), 5.0, -10.0],
@@ -45,7 +45,12 @@ func _run() -> void:
 	var follow := level.get_node("FollowCamera") as FollowCamera
 	follow.set_process(false)
 	var cam := level.get_node("FollowCamera/Camera3D") as Camera3D
+	var spawn := loader.global_transform
+	# Loading pose next to the parked hauler (reference composition).
+	var loading := Transform3D(Basis(Vector3.UP, 0.95), Vector3(-15.2, 0.05, 74.0))
 	for shot in SHOTS:
+		loader.global_transform = loading if shot[0] == "hero" else spawn
+		loader.speed = 0.0
 		loader.lift_angle = shot[3]
 		loader.tilt_angle = shot[4]
 		cam.global_position = shot[1]

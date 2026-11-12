@@ -19,7 +19,7 @@ func _ready() -> void:
 	_body.name = "Collision"
 	add_child(_body)
 
-	_cabin(Vector3(30, 0, 64), PI * 0.1)
+	_cabin(Vector3(-40, 0, 88), PI * 0.5)   # by the crusher, behind the loading spot
 	_cabin(Vector3(41, 0, 70), PI * 0.1)
 	for p in [Vector3(-14, 0, 46), Vector3(22, 0, 48), Vector3(-34, 0, -30), Vector3(34, 0, -26)]:
 		_floodlight(p)

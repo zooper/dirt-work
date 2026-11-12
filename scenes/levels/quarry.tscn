@@ -4,6 +4,7 @@
 [ext_resource type="PackedScene" path="res://scenes/vehicles/wheel_loader.tscn" id="2"]
 [ext_resource type="Script" path="res://scripts/core/follow_camera.gd" id="3"]
 [ext_resource type="Script" path="res://scripts/world/site_props.gd" id="4"]
+[ext_resource type="PackedScene" path="res://scenes/vehicles/hauler.tscn" id="5"]
 
 [sub_resource type="ProceduralSkyMaterial" id="SkyMat"]
 sky_top_color = Color(0.36, 0.55, 0.82, 1)
@@ -56,7 +57,7 @@ adjustment_contrast = 1.04
 environment = SubResource("Environment_1")
 
 [node name="Sun" type="DirectionalLight3D" parent="."]
-transform = Transform3D(0.748588, 0.238217, -0.618764, 0, 0.933229, 0.359282, 0.663035, -0.268954, 0.698604, 0, 40, 0)
+transform = Transform3D(0.603443, -0.295321, 0.740704, 0, 0.928891, 0.370352, -0.797406, -0.223486, 0.560533, 0, 40, 0)
 light_color = Color(1, 0.8, 0.58, 1)
 light_energy = 1.9
 shadow_enabled = true
@@ -70,6 +71,9 @@ script = ExtResource("1")
 
 [node name="Site" type="Node3D" parent="."]
 script = ExtResource("4")
+
+[node name="Hauler" parent="." instance=ExtResource("5")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -20, 0, 66)
 
 [node name="WheelLoader" parent="." instance=ExtResource("2")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.05, 10)
