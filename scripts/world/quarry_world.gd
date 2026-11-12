@@ -131,59 +131,45 @@ func _build_benches(ground: LowPolyBatch, cliffs: LowPolyBatch) -> void:
 		_slab_face(cliffs, Vector3(inner, 0.0, south_end), Vector3.RIGHT, Vector3.BACK, depth, top)
 
 
-## Builds one continuous rock face: a jittered grid pushed back into the rock
-## by stretched cellular (Voronoi) noise, so the face breaks into tall angular
-## blocks and fracture planes. `along` runs along the face, `out_dir` points
-## out of the rock. The face meets the bench top flush (no recess at the top).
+## Builds a rock face as a row of overlapping, irregular prismatic columns that
+## span the full bench height: flat fracture planes at varied angles, broken
+## uneven tops, sunlit fronts and darker side planes (reference: large faceted
+## blocks with a coherent vertical fracture direction). `along` runs along the
+## face, `out_dir` points out of the rock.
 func _slab_face(b: LowPolyBatch, start: Vector3, along: Vector3, out_dir: Vector3, length: float, height: float) -> void:
-	var cell := FastNoiseLite.new()
-	cell.seed = _rng.randi()
-	cell.noise_type = FastNoiseLite.TYPE_CELLULAR
-	cell.cellular_return_type = FastNoiseLite.RETURN_CELL_VALUE
-	cell.cellular_jitter = 1.0
-	cell.frequency = 1.0
-	var fbm := FastNoiseLite.new()
-	fbm.seed = _rng.randi()
-	fbm.frequency = 0.22
-	var step_u := 2.4
-	var step_v := 1.6
-	var nu := maxi(int(ceil(length / step_u)), 1)
-	var nv := maxi(int(ceil(height / step_v)), 1)
-	var pts := []
-	var cells := []
-	for j in nv + 1:
-		var row := []
-		var crow := []
-		for i in nu + 1:
-			var u := length * i / nu
-			var v := height * j / nv
-			if i > 0 and i < nu:
-				u += _rng.randf_range(-0.35, 0.35) * step_u
-			if j > 0 and j < nv:
-				v += _rng.randf_range(-0.3, 0.3) * step_v
-			var c := cell.get_noise_2d(u * 0.055, v * 0.022)   # tall cells = rock columns
-			var depth := (c * 0.5 + 0.5) * 3.0 + fbm.get_noise_2d(u, v * 1.6) * 0.15
-			var top_fade := clampf((height - v) / 1.0, 0.0, 1.0)
-			var bottom := clampf((v + 0.3) / 1.5, 0.35, 1.0)
-			var ends := clampf(minf(u, length - u) / 2.0, 0.0, 1.0)  # pinned where faces meet
-			row.append(start + along * u + Vector3.UP * v - out_dir * depth * top_fade * bottom * ends)
-			crow.append(c)
-		pts.append(row)
-		cells.append(crow)
-	for j in nv:
-		for i in nu:
-			var a: Vector3 = pts[j][i]
-			var bb: Vector3 = pts[j][i + 1]
-			var c: Vector3 = pts[j + 1][i + 1]
-			var d: Vector3 = pts[j + 1][i]
-			var cv: float = (cells[j][i] + cells[j][i + 1] + cells[j + 1][i] + cells[j + 1][i + 1]) * 0.25
-			var tone := Palette.ROCK_COOL.lerp(Palette.ROCK_WARM, clampf(cv * 0.5 + 0.5, 0.0, 1.0))
-			if (i + j) % 2 == 0:
-				_rock_tri(b, a, bb, c, out_dir, tone)
-				_rock_tri(b, a, c, d, out_dir, tone)
-			else:
-				_rock_tri(b, a, bb, d, out_dir, tone)
-				_rock_tri(b, bb, c, d, out_dir, tone)
+	var s := -1.0
+	while s < length:
+		var w := _rng.randf_range(3.0, 7.5)
+		var back := -_rng.randf_range(2.5, 4.0)              # into the rock
+		var pf_l := _rng.randf_range(-0.2, 1.8)              # front protrusion, left/right, bottom/top
+		var pf_r := pf_l + _rng.randf_range(-1.2, 1.2)
+		var lean := _rng.randf_range(-0.9, 0.3)              # tops lean back (negative) more often
+		var top_l := height + _rng.randf_range(-1.2, 0.6)
+		var top_r := top_l + _rng.randf_range(-1.0, 1.0)
+		if start.y + top_l < start.y + 0.5:
+			top_l = height
+		var x0 := s
+		var x1 := minf(s + w * 1.2, length + 1.0)
+		var pts := PackedVector3Array()
+		for corner in [[x0, 0.0, pf_l], [x1, 0.0, pf_r], [x0, top_l, pf_l + lean], [x1, top_r, pf_r + lean],
+				[x0, 0.0, back], [x1, 0.0, back], [x0, top_l - 0.4, back], [x1, top_r - 0.4, back]]:
+			var u: float = clampf(corner[0], 0.0, length)
+			var v: float = clampf(corner[1], 0.0, height + 1.0)
+			pts.append(start + along * u + Vector3.UP * v + out_dir * corner[2])
+		# A chamfer point breaks the front into two fracture planes.
+		var mid_v := height * _rng.randf_range(0.3, 0.7)
+		var mid_u := lerpf(x0, x1, _rng.randf_range(0.3, 0.7))
+		pts.append(start + along * clampf(mid_u, 0.0, length) + Vector3.UP * mid_v + out_dir * (maxf(pf_l, pf_r) + _rng.randf_range(0.2, 0.8)))
+		var tone := Palette.ROCK_COOL.lerp(Palette.ROCK_WARM, _rng.randf()).lerp(Palette.ROCK, 0.4)
+		var od := out_dir
+		b.add_hull(pts, tone, func(_c, n: Vector3) -> Color:
+			return tone.lightened(0.18 * maxf(n.dot(od), 0.0) * 0.6 + 0.12 * maxf(n.y, 0.0)).darkened(0.22 * (1.0 - absf(n.dot(od))) * (1.0 - maxf(n.y, 0.0))))
+		s += w
+	# Talus: a few fallen blocks at the foot.
+	for k in int(length / 9.0):
+		var u := _rng.randf_range(1.0, length - 1.0)
+		var p := start + along * u + out_dir * _rng.randf_range(1.0, 2.5) + Vector3.UP * 0.4
+		b.add_rock(p, _rng.randf_range(0.6, 1.4), _rng, Palette.ROCK.lerp(Palette.ROCK_COOL, _rng.randf()), 0.75)
 
 
 func _rock_tri(b: LowPolyBatch, a: Vector3, bb: Vector3, c: Vector3, out_dir: Vector3, tone: Color) -> void:
