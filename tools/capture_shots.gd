@@ -10,7 +10,7 @@ extends SceneTree
 
 const SHOTS := [
 	# name, camera, target, lift, tilt
-	["hero", Vector3(-10.5, 1.9, 14.5), Vector3(0.5, 2.6, 7.0), 42.0, 25.0],     # reference angle, bucket up
+	["hero", Vector3(-13.5, 1.7, 12.5), Vector3(0.0, 2.9, 6.5), 45.0, 30.0],     # reference angle (near side-on from the rear quarter), bucket up dumping
 	["side", Vector3(-14.0, 2.3, 10.0), Vector3(0.0, 2.0, 10.0), 0.0, 0.0],
 	["front34", Vector3(7.5, 3.0, 1.5), Vector3(0.0, 1.9, 8.5), 0.0, -10.0],
 	["front", Vector3(0.0, 2.6, -5.0), Vector3(0.0, 2.0, 8.0), 5.0, -10.0],

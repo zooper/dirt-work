@@ -66,8 +66,8 @@ size = Vector3(2.6, 1.8, 2.8)
 [node name="WheelLoader" type="CharacterBody3D"]
 script = ExtResource("1")
 wheel_radius = 1.15
-lift_min_deg = -23
-lift_max_deg = 50
+lift_min_deg = -12
+lift_max_deg = 48
 hinge_to_front_axle = 1.75
 hinge_to_rear_axle = 1.75
 
@@ -98,30 +98,30 @@ transform = Transform3D(1.000000, 0.000000, 0.000000, 0.000000, 1.000000, 0.0000
 [node name="Tire" parent="Chassis/FrontFrame/WheelFR" instance=ExtResource("14")]
 
 [node name="LiftRamBaseL" type="Marker3D" parent="Chassis/FrontFrame"]
-transform = Transform3D(1.000000, 0.000000, 0.000000, 0.000000, 1.000000, 0.000000, 0.000000, 0.000000, 1.000000, -0.500000, 1.450000, -1.950000)
+transform = Transform3D(1.000000, 0.000000, 0.000000, 0.000000, 1.000000, 0.000000, 0.000000, 0.000000, 1.000000, -0.580000, 1.550000, -2.600000)
 
 [node name="LiftRamBaseR" type="Marker3D" parent="Chassis/FrontFrame"]
-transform = Transform3D(1.000000, 0.000000, 0.000000, 0.000000, 1.000000, 0.000000, 0.000000, 0.000000, 1.000000, 0.500000, 1.450000, -1.950000)
+transform = Transform3D(1.000000, 0.000000, 0.000000, 0.000000, 1.000000, 0.000000, 0.000000, 0.000000, 1.000000, 0.580000, 1.550000, -2.600000)
 
 [node name="TiltRamBase" type="Marker3D" parent="Chassis/FrontFrame"]
-transform = Transform3D(1.000000, 0.000000, 0.000000, 0.000000, 1.000000, 0.000000, 0.000000, 0.000000, 1.000000, 0.000000, 3.200000, -1.150000)
+transform = Transform3D(1.000000, 0.000000, 0.000000, 0.000000, 1.000000, 0.000000, 0.000000, 0.000000, 1.000000, 0.000000, 2.600000, -1.750000)
 
 [node name="ArmPivot" type="Node3D" parent="Chassis/FrontFrame"]
-transform = Transform3D(1.000000, 0.000000, 0.000000, 0.000000, 1.000000, 0.000000, 0.000000, 0.000000, 1.000000, 0.000000, 2.950000, -0.700000)
+transform = Transform3D(1.000000, 0.000000, 0.000000, 0.000000, 1.000000, 0.000000, 0.000000, 0.000000, 1.000000, 0.000000, 2.450000, -1.000000)
 
 [node name="Model" parent="Chassis/FrontFrame/ArmPivot" instance=ExtResource("12")]
 
 [node name="LiftRamEndL" type="Marker3D" parent="Chassis/FrontFrame/ArmPivot"]
-transform = Transform3D(1.000000, 0.000000, 0.000000, 0.000000, 1.000000, 0.000000, 0.000000, 0.000000, 1.000000, -0.500000, -0.620000, -1.900000)
+transform = Transform3D(1.000000, 0.000000, 0.000000, 0.000000, 1.000000, 0.000000, 0.000000, 0.000000, 1.000000, -0.600000, -0.680000, -2.100000)
 
 [node name="LiftRamEndR" type="Marker3D" parent="Chassis/FrontFrame/ArmPivot"]
-transform = Transform3D(1.000000, 0.000000, 0.000000, 0.000000, 1.000000, 0.000000, 0.000000, 0.000000, 1.000000, 0.500000, -0.620000, -1.900000)
+transform = Transform3D(1.000000, 0.000000, 0.000000, 0.000000, 1.000000, 0.000000, 0.000000, 0.000000, 1.000000, 0.600000, -0.680000, -2.100000)
 
 [node name="TiltLeverTop" type="Marker3D" parent="Chassis/FrontFrame/ArmPivot"]
-transform = Transform3D(1.000000, 0.000000, 0.000000, 0.000000, 1.000000, 0.000000, 0.000000, 0.000000, 1.000000, 0.000000, 1.200000, -2.050000)
+transform = Transform3D(1.000000, 0.000000, 0.000000, 0.000000, 1.000000, 0.000000, 0.000000, 0.000000, 1.000000, 0.000000, 1.300000, -2.352000)
 
 [node name="BucketPivot" type="Node3D" parent="Chassis/FrontFrame/ArmPivot"]
-transform = Transform3D(1.000000, 0.000000, 0.000000, 0.000000, 1.000000, 0.000000, 0.000000, 0.000000, 1.000000, 0.000000, 0.000000, -3.450000)
+transform = Transform3D(1.000000, 0.000000, 0.000000, 0.000000, 1.000000, 0.000000, 0.000000, 0.000000, 1.000000, 0.000000, 0.000000, -4.200000)
 
 [node name="Model" parent="Chassis/FrontFrame/ArmPivot/BucketPivot" instance=ExtResource("13")]
 

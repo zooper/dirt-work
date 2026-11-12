@@ -33,8 +33,8 @@ WHEEL_R = 1.15
 TYRE_W = 1.05
 TRACK = 1.38
 AXLE = 1.75
-ARM_PIVOT = (0.0, 2.95, -0.7)    # in front-frame space
-ARM_LEN = 3.45                    # pivot -> bucket pin along -z
+ARM_PIVOT = (0.0, 2.45, -1.0)   # in front-frame space (low on the tower, like the reference)
+ARM_LEN = 4.2                     # pivot -> bucket pin along -z (long reach)
 
 
 def srgb_to_linear(c):
@@ -295,15 +295,16 @@ def build_front():
     p.prism([(-0.25, 0.85), (-2.9, 0.85), (-3.15, 1.15), (-3.0, 1.75), (-1.3, 1.85), (-0.25, 1.7)],
             -0.6, 0.6, DARK, bevel=0.07)
     # Loader tower: tall upright carrying the boom pivots, with work lights.
-    p.prism([(-0.35, 1.55), (-1.15, 1.55), (-1.35, 2.55), (-1.05, 3.3), (-0.45, 3.3), (-0.3, 2.6)],
+    p.prism([(-0.35, 1.55), (-1.75, 1.55), (-1.95, 2.15), (-1.6, 2.78), (-0.75, 2.82), (-0.3, 2.3)],
             -0.95, 0.95, YELLOW, bevel=0.1, segments=2)
-    p.prism([(-1.2, 1.7), (-1.9, 1.7), (-2.0, 2.15), (-1.3, 2.4)], -0.7, 0.7, YELLOW, bevel=0.08)   # nose block
+    p.prism([(-1.7, 1.7), (-2.35, 1.7), (-2.45, 2.1), (-1.8, 2.3)], -0.7, 0.7, YELLOW, bevel=0.08)   # nose block
     for s in (-1, 1):
-        p.box((0.28, 0.22, 0.14), (s * 0.7, 3.42, -1.0), DARK, bevel=0.03)
-        p.box((0.22, 0.15, 0.04), (s * 0.7, 3.42, -1.08), LAMP, bevel=0.01)
+        p.box((0.28, 0.22, 0.14), (s * 0.72, 2.9, -1.62), DARK, bevel=0.03)
+        p.box((0.22, 0.15, 0.04), (s * 0.72, 2.9, -1.7), LAMP, bevel=0.01)
+        p.tube([(s * 0.72, 2.75, -1.55), (s * 0.72, 2.85, -1.6)], 0.03, BLACK)
         p.box((0.24, 0.16, 0.05), (s * 0.55, 2.2, -2.02), LAMP, bevel=0.01)
         p.box((0.3, 0.22, 0.12), (s * 0.55, 2.2, -1.97), DARK, bevel=0.02)
-        p.box((0.2, 0.32, 0.32), (s * 0.5, 1.45, -1.95), STEEL, bevel=0.03)   # lift ram clevis
+        p.box((0.2, 0.34, 0.34), (s * 0.58, 1.55, -2.6), STEEL, bevel=0.03)   # lift ram clevis
     p.box((2.5, 0.42, 0.5), (0, Y0, -AXLE), DARK, bevel=0.07)                     # axle housing
     for s in (-1, 1):
         p.cylinder(0.28, 0.35, (s * 1.05, Y0, -AXLE), "x", STEEL, segments=12)
@@ -326,19 +327,22 @@ def build_arm():
     One massive banana-shaped beam per side plus a Z-bar tilt lever."""
     p = Part("Arm")
     L = ARM_LEN
-    top = [(0.3, 0.32), (-0.9, 0.22), (-1.9, -0.05), (-2.8, -0.12), (-L - 0.22, 0.25)]
-    bot = [(-L - 0.25, -0.25), (-2.8, -0.75), (-1.9, -0.82), (-0.9, -0.55), (0.3, -0.32)]
+    top = [(0.32, 0.34), (-0.26 * L, 0.27), (-0.55 * L, 0.0), (-0.8 * L, -0.08), (-L - 0.24, 0.3)]
+    bot = [(-L - 0.27, -0.27), (-0.8 * L, -0.8), (-0.55 * L, -0.88), (-0.26 * L, -0.62), (0.32, -0.34)]
     for s in (-1, 1):
-        p.prism(top + bot, s * 0.62, s * 1.02, YELLOW, bevel=0.07, segments=2)
-        p.cylinder(0.26, 0.5, (s * 0.82, 0, 0), "x", DARK, segments=14, bevel=0.02)     # pivot boss
-        p.cylinder(0.2, 0.5, (s * 0.82, 0, -L), "x", DARK, segments=14, bevel=0.02)     # bucket pin boss
-        p.cylinder(0.13, 0.46, (s * 0.82, -0.62, -1.9), "x", STEEL, segments=10)       # lift ram pin
+        p.prism(top + bot, s * 0.62, s * 1.04, YELLOW, bevel=0.08, segments=2)
+        p.cylinder(0.27, 0.52, (s * 0.83, 0, 0), "x", DARK, segments=16, bevel=0.02)       # pivot boss
+        p.cylinder(0.21, 0.52, (s * 0.83, 0, -L), "x", DARK, segments=16, bevel=0.02)      # bucket pin boss
+        p.cylinder(0.14, 0.5, (s * 0.6, -0.68, -0.5 * L), "x", STEEL, segments=10)        # lift ram pin
+        p.box((0.06, 0.4, 1.2), (s * 1.06, -0.3, -0.55 * L), YELLOW, bevel=0.02)          # stiffener plate
+        p.tube([(s * 1.07, -0.1, -0.15 * L), (s * 1.07, -0.35, -0.5 * L), (s * 1.07, -0.3, -0.8 * L)], 0.025, BLACK)  # hose
     # Cross tube and the big Z-bar tilt lever.
-    p.prism([(-1.85, -0.7), (-2.4, -0.72), (-2.45, -0.15), (-1.8, -0.1)], -0.64, 0.64, YELLOW, bevel=0.06)
-    p.prism([(-1.95, -0.45), (-2.45, -0.5), (-2.25, 1.25), (-1.85, 1.25)], -0.22, 0.22, YELLOW, bevel=0.06, segments=2)
-    p.cylinder(0.13, 0.56, (0, 1.2, -2.05), "x", DARK, segments=10)
+    p.prism([(-0.52 * L, -0.74), (-0.62 * L, -0.76), (-0.63 * L, -0.15), (-0.51 * L, -0.1)], -0.64, 0.64, YELLOW, bevel=0.06)
+    p.prism([(-0.54 * L, -0.5), (-0.64 * L, -0.55), (-0.6 * L, 1.35), (-0.52 * L, 1.35)], -0.24, 0.24, YELLOW, bevel=0.06, segments=2)
+    p.cylinder(0.14, 0.6, (0, 1.3, -0.56 * L), "x", DARK, segments=10)
+    p.cylinder(0.14, 0.6, (0, -0.48, -0.6 * L), "x", DARK, segments=10)
     # Tilt link: lever bottom -> bucket top.
-    p.prism([(-2.3, -0.62), (-L + 0.15, 0.2), (-L + 0.05, 0.45), (-2.2, -0.35)], -0.14, 0.14, DARK, bevel=0.035)
+    p.prism([(-0.6 * L, -0.62), (-L + 0.15, 0.2), (-L + 0.05, 0.45), (-0.58 * L, -0.35)], -0.15, 0.15, DARK, bevel=0.035)
     export(p.to_object(), "arm.glb")
 
 

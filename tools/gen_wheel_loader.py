@@ -123,7 +123,7 @@ def model(name, parent, ext, transform=None):
 
 subs.append(('[sub_resource type="BoxShape3D" id="front_shape"]', dict(size="Vector3(2.8, 1.4, 2.4)")))
 subs.append(('[sub_resource type="BoxShape3D" id="rear_shape"]', dict(size="Vector3(2.6, 1.8, 2.8)")))
-node("WheelLoader", "CharacterBody3D", None, script='ExtResource("1")', wheel_radius=WHEEL_R, lift_min_deg=-23.0, lift_max_deg=50.0, hinge_to_front_axle=AXLE, hinge_to_rear_axle=AXLE)
+node("WheelLoader", "CharacterBody3D", None, script='ExtResource("1")', wheel_radius=WHEEL_R, lift_min_deg=-12.0, lift_max_deg=48.0, hinge_to_front_axle=AXLE, hinge_to_rear_axle=AXLE)
 node("FrontShape", "CollisionShape3D", ".", transform=T(0, 0.7, -1.5), shape='SubResource("front_shape")')
 node("RearShape", "CollisionShape3D", ".", transform=T(0, 0.9, 1.6), shape='SubResource("rear_shape")')
 node("Chassis", "Node3D", ".")
@@ -139,15 +139,15 @@ def wheel(name, parent, x, z):
 model("Model", F, "10")
 wheel("WheelFL", F, -TRACK, -AXLE); wheel("WheelFR", F, TRACK, -AXLE)
 for s, n in [(-1, "L"), (1, "R")]:
-    marker(f"LiftRamBase{n}", F, (s * 0.5, 1.45, -1.95))
-marker("TiltRamBase", F, (0, 3.2, -1.15))
+    marker(f"LiftRamBase{n}", F, (s * 0.58, 1.55, -2.6))
+marker("TiltRamBase", F, (0, 2.6, -1.75))
 A = F + "/ArmPivot"
-node("ArmPivot", "Node3D", F, transform=T(0, 2.95, -0.7))
+node("ArmPivot", "Node3D", F, transform=T(0, 2.45, -1.0))
 model("Model", A, "12")
-ARM = 3.45
+ARM = 4.2
 for s, n in [(-1, "L"), (1, "R")]:
-    node(f"LiftRamEnd{n}", "Marker3D", A, transform=T(s * 0.5, -0.62, -1.9))
-node("TiltLeverTop", "Marker3D", A, transform=T(0, 1.2, -2.05))
+    node(f"LiftRamEnd{n}", "Marker3D", A, transform=T(s * 0.6, -0.68, -0.5 * ARM))
+node("TiltLeverTop", "Marker3D", A, transform=T(0, 1.3, -0.56 * ARM))
 B = A + "/BucketPivot"
 node("BucketPivot", "Node3D", A, transform=T(0, 0, -ARM))
 model("Model", B, "13")
