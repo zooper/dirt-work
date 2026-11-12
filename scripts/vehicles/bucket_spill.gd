@@ -48,7 +48,7 @@ func _rock_mesh() -> ArrayMesh:
 	var rng := RandomNumberGenerator.new()
 	rng.seed = 77
 	var b := LowPolyBatch.new()
-	b.add_rock(Vector3.ZERO, 0.16, rng, Palette.GRAVEL_PILE, 0.8)
+	b.add_rock(Vector3.ZERO, 0.2, rng, Palette.GRAVEL_PILE, 0.8)
 	return b.commit()
 
 
@@ -75,9 +75,9 @@ func _build_heap() -> MeshInstance3D:
 func _build_rocks() -> CPUParticles3D:
 	# CPU particles: identical on every renderer (incl. software Vulkan previews).
 	var p := CPUParticles3D.new()
-	p.amount = 200
-	p.lifetime = 0.85
-	p.preprocess = 0.85
+	p.amount = 320
+	p.lifetime = 1.1
+	p.preprocess = 1.1
 	p.randomness = 0.6
 	p.emitting = false
 	p.local_coords = false
@@ -87,26 +87,26 @@ func _build_rocks() -> CPUParticles3D:
 	p.emission_box_extents = Vector3(lip_width * 0.45, 0.25, 0.3)
 	p.direction = Vector3(0, 0.2, -1)   # out over the lip, then gravity
 	p.spread = 25.0
-	p.initial_velocity_min = 1.2
-	p.initial_velocity_max = 2.6
+	p.initial_velocity_min = 1.8
+	p.initial_velocity_max = 3.4
 	p.local_coords = false
 	p.gravity = Vector3(0, -9.8, 0)
 	p.angular_velocity_min = -180.0
 	p.angular_velocity_max = 180.0
-	p.scale_amount_min = 0.6
-	p.scale_amount_max = 2.0
+	p.scale_amount_min = 0.7
+	p.scale_amount_max = 2.2
 	return p
 
 
 func _build_dust() -> CPUParticles3D:
 	var p := CPUParticles3D.new()
-	p.amount = 18
-	p.lifetime = 2.5
+	p.amount = 34
+	p.lifetime = 2.8
 	p.preprocess = 2.0
 	p.emitting = false
 	p.local_coords = false
 	var quad := QuadMesh.new()
-	quad.size = Vector2(1.8, 1.8)
+	quad.size = Vector2(2.2, 2.2)
 	var grad := Gradient.new()
 	grad.offsets = PackedFloat32Array([0.0, 1.0])
 	grad.colors = PackedColorArray([Color(1, 1, 1, 1), Color(1, 1, 1, 0)])
@@ -122,7 +122,7 @@ func _build_dust() -> CPUParticles3D:
 	mat.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
 	mat.billboard_mode = BaseMaterial3D.BILLBOARD_PARTICLES
 	mat.albedo_texture = tex
-	mat.albedo_color = Palette.render(Color(0.86, 0.76, 0.64, 0.22))
+	mat.albedo_color = Palette.render(Color(0.86, 0.76, 0.64, 0.34))
 	mat.vertex_color_use_as_albedo = true
 	mat.depth_draw_mode = BaseMaterial3D.DEPTH_DRAW_DISABLED
 	quad.material = mat

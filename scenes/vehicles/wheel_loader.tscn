@@ -72,7 +72,7 @@ size = Vector3(2.6, 1.8, 2.8)
 script = ExtResource("1")
 wheel_radius = 1.15
 lift_min_deg = -12
-lift_max_deg = 55
+lift_max_deg = 60
 hinge_to_front_axle = 1.75
 hinge_to_rear_axle = 1.75
 

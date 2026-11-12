@@ -31,7 +31,7 @@ for k, z in enumerate(REAR_AXLES):
 for n, x, z in wheels:
     out += [f'[node name="{n}" parent="." instance=ExtResource("3")]', f'transform = {T(x, WHEEL_R, z)}', '']
 for s, n in [(-1, "Left"), (1, "Right")]:
-    out += [f'[node name="Model{n}" type="Label3D" parent="."]', f'transform = {T(s * 1.56, 2.55, 1.25, s * math.pi / 2)}',
+    out += [f'[node name="Model{n}" type="Label3D" parent="."]', f'transform = {T(s * 1.56, 2.3, 1.25, s * math.pi / 2)}',
             'text = "DW-40"', 'font_size = 96', 'pixel_size = 0.005', 'modulate = Color(0.95, 0.95, 0.93, 1)',
             'outline_size = 0', 'double_sided = false', '']
 open("scenes/vehicles/hauler.tscn", "w").write("\n".join(out))

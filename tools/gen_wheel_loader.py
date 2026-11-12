@@ -126,7 +126,7 @@ def model(name, parent, ext, transform=None):
 
 subs.append(('[sub_resource type="BoxShape3D" id="front_shape"]', dict(size="Vector3(2.8, 1.4, 2.4)")))
 subs.append(('[sub_resource type="BoxShape3D" id="rear_shape"]', dict(size="Vector3(2.6, 1.8, 2.8)")))
-node("WheelLoader", "CharacterBody3D", None, script='ExtResource("1")', wheel_radius=WHEEL_R, lift_min_deg=-12.0, lift_max_deg=55.0, hinge_to_front_axle=AXLE, hinge_to_rear_axle=AXLE)
+node("WheelLoader", "CharacterBody3D", None, script='ExtResource("1")', wheel_radius=WHEEL_R, lift_min_deg=-12.0, lift_max_deg=60.0, hinge_to_front_axle=AXLE, hinge_to_rear_axle=AXLE)
 node("FrontShape", "CollisionShape3D", ".", transform=T(0, 0.7, -1.5), shape='SubResource("front_shape")')
 node("RearShape", "CollisionShape3D", ".", transform=T(0, 0.9, 1.6), shape='SubResource("rear_shape")')
 node("Chassis", "Node3D", ".")

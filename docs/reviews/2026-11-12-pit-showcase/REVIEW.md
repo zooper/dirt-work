@@ -26,3 +26,8 @@ Reference: [`docs/image.png`](../../image.png).
 ## Follow-up: in-pit feed line
 - `SiteProps._pit_plant()` adds a feeder hopper by the west pile, a conveyor over the first bench to a railed transfer tower, and a second conveyor running out along the bench. A red site cabin and a floodlight stand in the pit's west side.
 - `hero.jpg`: the yellow conveyors now climb behind the loader at the back left, as in the reference. The cabin is hidden behind the pine in this frame but shows in play.
+
+## Follow-up: a visible pour
+- Measured with a headless probe: at full lift and 48° tilt the bucket lip sat at y 3.2, level with the hauler rim (3.3), so the rock stream fell behind the near body wall and never showed. The particles themselves render fine (checked in a close-up debug capture).
+- Changes: the hauler dump body is shallower (rim 3.15 → 2.8 m, load and side plate follow `BODY_YT`). Loader `lift_max_deg` went from 55 to 60. The rock stream got bigger, heavier and longer-lived, and the dust has more, larger and denser puffs. The hero and pour poses are now 60° lift and 40° tilt, with a longer settle time so the stream fills in.
+- `pour.jpg` (new close-up) and `hero.jpg`: rock chunks and dust are visible between the lip and the rim.
