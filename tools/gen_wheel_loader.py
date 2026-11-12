@@ -118,7 +118,7 @@ EXT = [("1", "Script", "res://scripts/vehicles/wheel_loader.gd"), ("2", "Script"
        ("13", "PackedScene", GLB + "bucket.glb"), ("14", "PackedScene", GLB + "wheel.glb"),
        ("6", "Script", "res://scripts/vehicles/bucket_spill.gd"), ("15", "PackedScene", GLB + "operator.glb"),
        ("16", "PackedScene", GLB + "steering_wheel.glb"), ("17", "PackedScene", GLB + "joystick.glb"),
-       ("18", "Script", "res://scripts/vehicles/cab_controls.gd")]
+       ("18", "Script", "res://scripts/vehicles/cab_controls.gd"), ("19", "Script", "res://scripts/vehicles/machine_grime.gd")]
 
 def model(name, parent, ext, transform=None):
     hdr = f'[node name="{name}" parent="{parent}" instance=ExtResource("{ext}")]'
@@ -179,6 +179,7 @@ for s, n, ry in [(-1, "Left", -math.pi / 2), (1, "Right", math.pi / 2)]:
          pixel_size=0.005, modulate="Color(0.06, 0.06, 0.07, 1)", outline_size=0, double_sided="false")
 node("PlayerInput", "Node", ".", script='ExtResource("2")')
 node("CabControls", "Node", ".", script='ExtResource("18")')
+node("Grime", "Node", ".", script='ExtResource("19")')
 
 out = "[gd_scene format=3]\n\n"
 for i, typ, pth in EXT:

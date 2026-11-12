@@ -4,6 +4,7 @@
 [ext_resource type="PackedScene" path="res://assets/models/hauler/rear.glb" id="2"]
 [ext_resource type="PackedScene" path="res://assets/models/hauler/wheel.glb" id="3"]
 [ext_resource type="PackedScene" path="res://assets/models/hauler/load.glb" id="4"]
+[ext_resource type="Script" path="res://scripts/vehicles/machine_grime.gd" id="9"]
 
 [sub_resource type="BoxShape3D" id="front_box"]
 size = Vector3(2.6, 3.6, 4.9)
@@ -62,3 +63,6 @@ pixel_size = 0.005
 modulate = Color(0.95, 0.95, 0.93, 1)
 outline_size = 0
 double_sided = false
+
+[node name="Grime" type="Node" parent="."]
+script = ExtResource("9")

@@ -17,6 +17,7 @@ G = "res://assets/models/hauler/"
 out = ['[gd_scene format=3]', '']
 for i, f in enumerate(["front", "rear", "wheel", "load"], 1):
     out.append(f'[ext_resource type="PackedScene" path="{G}{f}.glb" id="{i}"]')
+out.append('[ext_resource type="Script" path="res://scripts/vehicles/machine_grime.gd" id="9"]')
 out += ['', '[sub_resource type="BoxShape3D" id="front_box"]', 'size = Vector3(2.6, 3.6, 4.9)', '',
         '[sub_resource type="BoxShape3D" id="rear_box"]', 'size = Vector3(3.2, 3.6, 6.2)', '',
         '[node name="Hauler" type="StaticBody3D"]', '',
@@ -34,5 +35,6 @@ for s, n in [(-1, "Left"), (1, "Right")]:
     out += [f'[node name="Model{n}" type="Label3D" parent="."]', f'transform = {T(s * 1.56, 2.3, 1.25, s * math.pi / 2)}',
             'text = "DW-40"', 'font_size = 96', 'pixel_size = 0.005', 'modulate = Color(0.95, 0.95, 0.93, 1)',
             'outline_size = 0', 'double_sided = false', '']
+out += ['[node name="Grime" type="Node" parent="."]', 'script = ExtResource("9")', '']
 open("scenes/vehicles/hauler.tscn", "w").write("\n".join(out))
 print("wrote scenes/vehicles/hauler.tscn")

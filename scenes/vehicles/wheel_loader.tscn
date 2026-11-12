@@ -14,6 +14,7 @@
 [ext_resource type="PackedScene" path="res://assets/models/wheel_loader/steering_wheel.glb" id="16"]
 [ext_resource type="PackedScene" path="res://assets/models/wheel_loader/joystick.glb" id="17"]
 [ext_resource type="Script" path="res://scripts/vehicles/cab_controls.gd" id="18"]
+[ext_resource type="Script" path="res://scripts/vehicles/machine_grime.gd" id="19"]
 
 [sub_resource type="StandardMaterial3D" id="glass"]
 albedo_color = Color(0.45, 0.62, 0.75, 0.35)
@@ -210,4 +211,7 @@ script = ExtResource("2")
 
 [node name="CabControls" type="Node" parent="."]
 script = ExtResource("18")
+
+[node name="Grime" type="Node" parent="."]
+script = ExtResource("19")
 
