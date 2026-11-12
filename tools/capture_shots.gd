@@ -79,6 +79,8 @@ func _run() -> void:
 		await process_frame
 	_save(out + "/cab.jpg")
 	follow.head_pitch = -0.6   # looking down at the controls
+	loader.articulation = deg_to_rad(20.0)   # wheel turned, stick pulled
+	loader.lift_input = 1.0
 	for i in 10:
 		await process_frame
 	_save(out + "/cab_dash.jpg")

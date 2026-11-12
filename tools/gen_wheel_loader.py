@@ -116,7 +116,9 @@ EXT = [("1", "Script", "res://scripts/vehicles/wheel_loader.gd"), ("2", "Script"
        ("4", "Script", "res://scripts/vehicles/hydraulic_ram.gd"), ("5", "Script", "res://scripts/vehicles/beacon.gd"),
        ("10", "PackedScene", GLB + "front.glb"), ("11", "PackedScene", GLB + "rear.glb"), ("12", "PackedScene", GLB + "arm.glb"),
        ("13", "PackedScene", GLB + "bucket.glb"), ("14", "PackedScene", GLB + "wheel.glb"),
-       ("6", "Script", "res://scripts/vehicles/bucket_spill.gd"), ("15", "PackedScene", GLB + "operator.glb")]
+       ("6", "Script", "res://scripts/vehicles/bucket_spill.gd"), ("15", "PackedScene", GLB + "operator.glb"),
+       ("16", "PackedScene", GLB + "steering_wheel.glb"), ("17", "PackedScene", GLB + "joystick.glb"),
+       ("18", "Script", "res://scripts/vehicles/cab_controls.gd")]
 
 def model(name, parent, ext, transform=None):
     hdr = f'[node name="{name}" parent="{parent}" instance=ExtResource("{ext}")]'
@@ -162,6 +164,9 @@ scripted("TiltRam", "Node3D", F, "4", base_path='NodePath("../TiltRamBase")',
 # Rear frame + cab
 model("Model", R, "11")
 model("Operator", R, "15")   # hidden (shadow only) by FollowCamera in cab view
+# Moving cab controls (pivots must match build_wheel_loader.py STEER_WHEEL_POS / JOYSTICK_POS).
+model("SteeringWheel", R, "16", transform=T(0.0, 2.4 + 0.93, 1.1 - 0.3, math.atan2(0.6, 0.8)))
+model("Joystick", R, "17", transform=T(0.43, 2.4 + 0.7, 1.1 - 0.08))
 wheel("WheelRL", R, -TRACK, AXLE); wheel("WheelRR", R, TRACK, AXLE)
 C = R + "/Cab"
 node("Cab", "Node3D", R, transform=T(0, 0, 1.1))
@@ -173,6 +178,7 @@ for s, n, ry in [(-1, "Left", -math.pi / 2), (1, "Right", math.pi / 2)]:
     node(f"Model{n}", "Label3D", R, transform=T(s * 1.075, 3.0, 2.95, 0, ry, 0), text='"DW-90"', font_size=110,
          pixel_size=0.005, modulate="Color(0.06, 0.06, 0.07, 1)", outline_size=0, double_sided="false")
 node("PlayerInput", "Node", ".", script='ExtResource("2")')
+node("CabControls", "Node", ".", script='ExtResource("18")')
 
 out = "[gd_scene format=3]\n\n"
 for i, typ, pth in EXT:

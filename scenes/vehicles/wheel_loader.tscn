@@ -11,6 +11,9 @@
 [ext_resource type="PackedScene" path="res://assets/models/wheel_loader/wheel.glb" id="14"]
 [ext_resource type="Script" path="res://scripts/vehicles/bucket_spill.gd" id="6"]
 [ext_resource type="PackedScene" path="res://assets/models/wheel_loader/operator.glb" id="15"]
+[ext_resource type="PackedScene" path="res://assets/models/wheel_loader/steering_wheel.glb" id="16"]
+[ext_resource type="PackedScene" path="res://assets/models/wheel_loader/joystick.glb" id="17"]
+[ext_resource type="Script" path="res://scripts/vehicles/cab_controls.gd" id="18"]
 
 [sub_resource type="StandardMaterial3D" id="glass"]
 albedo_color = Color(0.45, 0.62, 0.75, 0.35)
@@ -154,6 +157,12 @@ rod_radius = 0.065
 
 [node name="Operator" parent="Chassis/RearPivot" instance=ExtResource("15")]
 
+[node name="SteeringWheel" parent="Chassis/RearPivot" instance=ExtResource("16")]
+transform = Transform3D(1.000000, 0.000000, 0.000000, 0.000000, 0.800000, -0.600000, 0.000000, 0.600000, 0.800000, 0.000000, 3.330000, 0.800000)
+
+[node name="Joystick" parent="Chassis/RearPivot" instance=ExtResource("17")]
+transform = Transform3D(1.000000, 0.000000, 0.000000, 0.000000, 1.000000, 0.000000, 0.000000, 0.000000, 1.000000, 0.430000, 3.100000, 1.020000)
+
 [node name="WheelRL" type="Node3D" parent="Chassis/RearPivot"]
 transform = Transform3D(1.000000, 0.000000, 0.000000, 0.000000, 1.000000, 0.000000, 0.000000, 0.000000, 1.000000, -1.380000, 1.150000, 1.750000)
 
@@ -198,4 +207,7 @@ double_sided = false
 
 [node name="PlayerInput" type="Node" parent="."]
 script = ExtResource("2")
+
+[node name="CabControls" type="Node" parent="."]
+script = ExtResource("18")
 

@@ -89,10 +89,11 @@ func _test_quarry_drive() -> void:
 	_check(loader.is_on_floor(), "loader settles on the floor")
 	var meshes := 0
 	for part in ["Chassis/FrontFrame/Model", "Chassis/RearPivot/Model", "Chassis/FrontFrame/ArmPivot/Model",
-			"Chassis/FrontFrame/ArmPivot/BucketPivot/Model", "Chassis/FrontFrame/WheelFL/Tire"]:
+			"Chassis/FrontFrame/ArmPivot/BucketPivot/Model", "Chassis/FrontFrame/WheelFL/Tire",
+			"Chassis/RearPivot/Operator", "Chassis/RearPivot/SteeringWheel", "Chassis/RearPivot/Joystick"]:
 		if not loader.get_node(part).find_children("*", "MeshInstance3D").is_empty():
 			meshes += 1
-	_check(meshes == 5, "all 5 Blender model parts loaded (%d)" % meshes)
+	_check(meshes == 8, "all 8 Blender model parts loaded (%d)" % meshes)
 	var ram := loader.get_node("Chassis/FrontFrame/LiftRamL") as Node3D
 	_check(ram.get_child_count() == 2, "lift ram built barrel + rod")
 	var start := loader.global_position
@@ -111,6 +112,9 @@ func _test_quarry_drive() -> void:
 	var front := loader.get_node("Chassis/FrontFrame") as Node3D
 	var rear := loader.get_node("Chassis/RearPivot") as Node3D
 	_check(front.rotation.y < 0.0 and rear.rotation.y > 0.0 and is_equal_approx(-front.rotation.y, rear.rotation.y), "both frames bend symmetrically around the hinge")
+	var sw := loader.get_node("Chassis/RearPivot/SteeringWheel") as Node3D
+	var spoke := sw.basis * Vector3.RIGHT
+	_check(spoke.dot(Vector3.RIGHT) < 0.9, "cab steering wheel turns with the articulation")
 	loader.steer = 0.0
 	loader.throttle = 0.0
 	loader.brake = 1.0

@@ -241,15 +241,6 @@ def cab_interior(p, cz, FL, ROOF):
     u = Vector((1, 0, 0))
     v = n.cross(u).normalized()
     p.tube([(0, FL + 0.62, cz - 0.46), tuple(wc - n * 0.04)], 0.035, TRIM, segments=8)
-    rw = 0.175
-    ring = [tuple(wc + (u * math.cos(2 * math.pi * k / 24) + v * math.sin(2 * math.pi * k / 24)) * rw) for k in range(25)]
-    p.tube(ring, 0.021, GRIP, segments=8)
-    p.tube([tuple(wc - n * 0.02), tuple(wc + n * 0.025)], 0.055, TRIM, segments=10)          # hub
-    for ang in (math.pi * 0.15, math.pi * 0.85, math.pi * 1.5):
-        d = u * math.cos(ang) + v * math.sin(ang)
-        p.tube([tuple(wc + d * 0.05), tuple(wc + d * (rw - 0.01))], 0.013, TRIM, segments=5)
-    knob = wc + (u * math.cos(-0.5) + v * math.sin(-0.5)) * rw
-    p.tube([tuple(knob), tuple(knob + n * 0.08)], 0.02, GRIP, segments=8)                    # spinner knob
     for x in (-0.13, 0.13):                                                                   # pedals
         p.box((0.1, 0.03, 0.18), (x, FL + 0.14, cz - 0.5), GRIP, bevel=0.0, rot=Matrix.Rotation(0.7, 4, "X"))
     p.box((0.12, 0.03, 0.2), (-0.38, FL + 0.12, cz - 0.48), GRIP, bevel=0.0, rot=Matrix.Rotation(0.7, 4, "X"))  # brake
@@ -262,9 +253,7 @@ def cab_interior(p, cz, FL, ROOF):
     p.box((0.22, 0.5, 0.7), (0.43, FL + 0.38, cz + 0.12), INTERIOR, bevel=0.03)              # console body
     p.box((0.2, 0.06, 0.62), (0.43, FL + 0.66, cz + 0.14), TRIM, bevel=0.02)                 # armrest top
     p.box((0.09, 0.04, 0.1), (0.43, FL + 0.7, cz + 0.32), GRIP, bevel=0.015)                 # armrest pad
-    p.cylinder(0.02, 0.12, (0.43, FL + 0.74, cz - 0.08), "y", GRIP, segments=6)
-    p.box((0.08, 0.11, 0.09), (0.43, FL + 0.84, cz - 0.09), GRIP, bevel=0.025)                # joystick
-    p.box((0.03, 0.02, 0.03), (0.43, FL + 0.9, cz - 0.11), LED_A, bevel=0.0)                 # joystick button
+    p.cylinder(0.04, 0.025, (0.43, FL + 0.7, cz - 0.08), "y", GRIP, segments=8)             # joystick boot
     for k in range(3):
         p.box((0.025, 0.02, 0.045), (0.38 + k * 0.05, FL + 0.7, cz + 0.07), GRIP, bevel=0.005)  # rollers
     for k in range(6):
@@ -289,6 +278,34 @@ def cab_interior(p, cz, FL, ROOF):
     # Fire extinguisher behind the seat, left.
     p.cylinder(0.065, 0.42, (-0.6, FL + 0.32, cz + 0.68), "y", EXTING, segments=10)
     p.box((0.05, 0.06, 0.08), (-0.6, FL + 0.56, cz + 0.68), BLACK, bevel=0.01)
+
+
+STEER_WHEEL_POS = (0.0, CAB_FL + 0.93, CAB_Z - 0.3)   # gen_wheel_loader.py: RearPivot/SteeringWheel
+STEER_WHEEL_TILT = math.atan2(0.6, 0.8)               # rotation about X: local +Y -> column axis
+JOYSTICK_POS = (0.43, CAB_FL + 0.7, CAB_Z - 0.08)      # gen_wheel_loader.py: RearPivot/Joystick
+
+
+def build_cab_controls():
+    """Moving controls as separate parts, origin at their pivot.
+    steering_wheel.glb: rim in the local XZ plane, column axis +Y.  joystick.glb: stick along +Y."""
+    p = Part("SteeringWheel")
+    rw = 0.175
+    ring = [(math.cos(2 * math.pi * k / 24) * rw, 0.0, math.sin(2 * math.pi * k / 24) * rw) for k in range(25)]
+    p.tube(ring, 0.021, GRIP, segments=8)
+    p.tube([(0, -0.02, 0), (0, 0.025, 0)], 0.055, TRIM, segments=10)                          # hub
+    p.box((0.05, 0.012, 0.03), (0, 0.032, 0.0), YELLOW, bevel=0.0)                             # horn badge
+    for ang in (math.pi * 0.15, math.pi * 0.85, math.pi * 1.5):
+        d = (math.cos(ang), 0.0, math.sin(ang))
+        p.tube([(d[0] * 0.05, 0, d[2] * 0.05), (d[0] * (rw - 0.01), 0, d[2] * (rw - 0.01))], 0.013, TRIM, segments=5)
+    k = (math.cos(-0.5) * rw, 0.0, math.sin(-0.5) * rw)
+    p.tube([k, (k[0], 0.08, k[2])], 0.02, GRIP, segments=8)                                    # spinner knob
+    export(p.to_object(), "steering_wheel.glb")
+    j = Part("Joystick")
+    j.cylinder(0.02, 0.12, (0, 0.06, 0), "y", GRIP, segments=6)
+    j.box((0.08, 0.11, 0.09), (0, 0.15, -0.01), GRIP, bevel=0.025)
+    j.box((0.03, 0.02, 0.03), (0, 0.21, -0.03), LED_A, bevel=0.0)                              # button
+    j.box((0.02, 0.03, 0.02), (-0.035, 0.17, -0.05), TRIM, bevel=0.0)                          # thumb roller
+    export(j.to_object(), "joystick.glb")
 
 
 def build_operator():
@@ -434,4 +451,5 @@ build_arm()
 build_bucket()
 build_rear()
 build_operator()
+build_cab_controls()
 print("DONE", dw_blender.OUT)
