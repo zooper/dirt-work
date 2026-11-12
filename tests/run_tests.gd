@@ -115,7 +115,7 @@ func _test_quarry_drive() -> void:
 	loader.throttle = 0.0
 	loader.brake = 1.0
 	await _frames(240)
-	_check(loader.speed < 0.0, "brake stops then reverses (speed %.2f)" % loader.speed)
+	_check(loader.speed < 0.0, "brake stops then reverses (speed %.2f at %s, wall=%s)" % [loader.speed, loader.global_position, loader.is_on_wall()])
 	loader.brake = 0.0
 	loader.cruise_speed = 3.0
 	loader.cruise_active = true

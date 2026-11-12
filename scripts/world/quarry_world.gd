@@ -44,8 +44,12 @@ func _ready() -> void:
 	_build_mountains(far)
 	_build_bounds()
 
-	add_child(ground.to_instance("Ground"))
-	add_child(cliffs.to_instance("Cliffs"))
+	var ground_mi := ground.to_instance("Ground")
+	ground_mi.material_override = _grain_material(0.55, 0.78, 3.0)
+	add_child(ground_mi)
+	var cliffs_mi := cliffs.to_instance("Cliffs")
+	cliffs_mi.material_override = _grain_material(0.18, 0.82, 5.0)
+	add_child(cliffs_mi)
 	add_child(props.to_instance("Piles"))
 	add_child(far.to_instance("Backdrop", false))
 	add_child(_build_clouds().to_instance("Clouds", false))
@@ -118,11 +122,6 @@ func _build_benches(ground: LowPolyBatch, cliffs: LowPolyBatch) -> void:
 			var xb: float = s * outer
 			ground.add_quad(Vector3(minf(xa, xb), y, south_end), Vector3(maxf(xa, xb), y, south_end),
 				Vector3(maxf(xa, xb), y, -inner), Vector3(minf(xa, xb), y, -inner), top_col)
-		# Grass lip along the edge of lower benches for colour contrast.
-		if i < TIERS.size() - 1:
-			var lip := 1.6
-			ground.add_quad(Vector3(-outer, y + 0.01, -outer + lip), Vector3(outer, y + 0.01, -outer + lip),
-				Vector3(outer, y + 0.01, -outer), Vector3(-outer, y + 0.01, -outer), Palette.GRASS_DARK)
 		# Cliff faces: north, west, east, plus the exposed south ends.
 		var h := top - bottom
 		_slab_face(cliffs, Vector3(-inner, bottom, -inner), Vector3.RIGHT, Vector3.BACK, inner * 2.0, h)
@@ -132,29 +131,68 @@ func _build_benches(ground: LowPolyBatch, cliffs: LowPolyBatch) -> void:
 		_slab_face(cliffs, Vector3(inner, 0.0, south_end), Vector3.RIGHT, Vector3.BACK, depth, top)
 
 
-## Fills a vertical face with angular rock slabs. `along` runs along the face,
-## `out_dir` points away from the rock (towards the open air).
+## Builds one continuous rock face: a jittered grid pushed back into the rock
+## by stretched cellular (Voronoi) noise, so the face breaks into tall angular
+## blocks and fracture planes. `along` runs along the face, `out_dir` points
+## out of the rock. The face meets the bench top flush (no recess at the top).
 func _slab_face(b: LowPolyBatch, start: Vector3, along: Vector3, out_dir: Vector3, length: float, height: float) -> void:
-	var s := 0.0
-	var yaw := atan2(along.x, along.z)
-	while s < length:
-		var w := _rng.randf_range(4.5, 9.0)
-		var stack := clampi(int(height / 5.0 + _rng.randf() * 0.8), 1, 3)
-		var y := start.y
-		for k in stack:
-			var hh := height / stack * _rng.randf_range(0.95, 1.15)
-			if k == stack - 1:
-				hh = start.y + height + _rng.randf_range(-0.4, 0.5) - y
-			var depth := _rng.randf_range(3.0, 5.0)
-			var protrude := _rng.randf_range(0.3, 1.4)
-			var center := start + along * (s + w * 0.5) + out_dir * (protrude - depth * 0.5) + Vector3.UP * (y - start.y + hh * 0.5)
-			var basis := Basis(Vector3.UP, yaw + _rng.randf_range(-0.12, 0.12)).rotated(along, _rng.randf_range(-0.08, 0.04))
-			var tone := [Palette.ROCK, Palette.ROCK_COOL, Palette.ROCK_WARM][_rng.randi() % 3] as Color
-			var rng := _rng
-			b.add_slab(center, Vector3(depth, hh, w * 1.08), basis, 0.7, _rng, tone,
-				func(_c, n): return LowPolyBatch._shade(tone, n, rng))
-			y += hh
-		s += w
+	var cell := FastNoiseLite.new()
+	cell.seed = _rng.randi()
+	cell.noise_type = FastNoiseLite.TYPE_CELLULAR
+	cell.cellular_return_type = FastNoiseLite.RETURN_CELL_VALUE
+	cell.cellular_jitter = 1.0
+	cell.frequency = 1.0
+	var fbm := FastNoiseLite.new()
+	fbm.seed = _rng.randi()
+	fbm.frequency = 0.22
+	var step_u := 2.4
+	var step_v := 1.6
+	var nu := maxi(int(ceil(length / step_u)), 1)
+	var nv := maxi(int(ceil(height / step_v)), 1)
+	var pts := []
+	var cells := []
+	for j in nv + 1:
+		var row := []
+		var crow := []
+		for i in nu + 1:
+			var u := length * i / nu
+			var v := height * j / nv
+			if i > 0 and i < nu:
+				u += _rng.randf_range(-0.35, 0.35) * step_u
+			if j > 0 and j < nv:
+				v += _rng.randf_range(-0.3, 0.3) * step_v
+			var c := cell.get_noise_2d(u * 0.055, v * 0.022)   # tall cells = rock columns
+			var depth := (c * 0.5 + 0.5) * 3.0 + fbm.get_noise_2d(u, v * 1.6) * 0.15
+			var top_fade := clampf((height - v) / 1.0, 0.0, 1.0)
+			var bottom := clampf((v + 0.3) / 1.5, 0.35, 1.0)
+			var ends := clampf(minf(u, length - u) / 2.0, 0.0, 1.0)  # pinned where faces meet
+			row.append(start + along * u + Vector3.UP * v - out_dir * depth * top_fade * bottom * ends)
+			crow.append(c)
+		pts.append(row)
+		cells.append(crow)
+	for j in nv:
+		for i in nu:
+			var a: Vector3 = pts[j][i]
+			var bb: Vector3 = pts[j][i + 1]
+			var c: Vector3 = pts[j + 1][i + 1]
+			var d: Vector3 = pts[j + 1][i]
+			var cv: float = (cells[j][i] + cells[j][i + 1] + cells[j + 1][i] + cells[j + 1][i + 1]) * 0.25
+			var tone := Palette.ROCK_COOL.lerp(Palette.ROCK_WARM, clampf(cv * 0.5 + 0.5, 0.0, 1.0))
+			if (i + j) % 2 == 0:
+				_rock_tri(b, a, bb, c, out_dir, tone)
+				_rock_tri(b, a, c, d, out_dir, tone)
+			else:
+				_rock_tri(b, a, bb, d, out_dir, tone)
+				_rock_tri(b, bb, c, d, out_dir, tone)
+
+
+func _rock_tri(b: LowPolyBatch, a: Vector3, bb: Vector3, c: Vector3, out_dir: Vector3, tone: Color) -> void:
+	var n := (bb - a).cross(c - a).normalized()
+	if n.dot(out_dir) < 0.0:
+		n = -n
+	# Up-facing ledges catch light/dust; overhangs and side planes go darker.
+	var col := tone.lightened(0.12 * maxf(n.y, 0.0)).darkened(0.18 * maxf(-n.y, 0.0) + 0.1 * (1.0 - absf(n.dot(out_dir))))
+	b.add_tri_facing(a, bb, c, out_dir, col)
 
 
 func _build_ramp(ground: LowPolyBatch, cliffs: LowPolyBatch) -> void:
@@ -199,10 +237,15 @@ func _build_piles(b: LowPolyBatch) -> void:
 
 
 func _build_rocks(b: LowPolyBatch) -> void:
-	# Boulders scattered on the pit floor, keeping spawn and the ramp approach clear.
+	# Own RNG stream: changes to other generators must not move obstacles around.
+	var saved := _rng
+	_rng = RandomNumberGenerator.new()
+	_rng.seed = seed_value + 101
+	# Boulders scattered on the pit floor, keeping the central driving area
+	# (spawn + test manoeuvres) and the ramp approach clear.
 	for i in 18:
 		var p := Vector3(_rng.randf_range(-PIT_HALF + 4, PIT_HALF - 4), 0, _rng.randf_range(-PIT_HALF + 4, PIT_HALF - 2))
-		if p.distance_to(Vector3(0, 0, 10)) < 13.0 or (absf(p.x - RAMP_X) < 8.0 and p.z < -18.0):
+		if (absf(p.x) < 16.0 and p.z > -16.0 and p.z < 24.0) or (absf(p.x - RAMP_X) < 8.0 and p.z < -18.0):
 			continue
 		if _near_pile(p, 2.0):
 			continue
@@ -221,6 +264,7 @@ func _build_rocks(b: LowPolyBatch) -> void:
 			continue
 		var tone := [Palette.ROCK, Palette.ROCK_WARM, Palette.ROCK_COOL][_rng.randi() % 3] as Color
 		_add_convex_shape(b.add_rock(p, _rng.randf_range(1.2, 2.4), _rng, tone))
+	_rng = saved
 
 
 func _near_pile(p: Vector3, margin: float) -> bool:
@@ -410,6 +454,42 @@ func _add_convex_shape(pts: PackedVector3Array) -> void:
 	shape.points = pts
 	cs.shape = shape
 	_collision.add_child(cs)
+
+
+## Vertex-colour material with a procedural grain (built-in noise, triplanar in
+## world space, so no UVs or image files are needed): gravel on the ground,
+## fine pitting on rock. `scale` = repeats per metre.
+func _grain_material(scale: float, darkest: float, bump: float) -> StandardMaterial3D:
+	var m := LowPolyBatch.material().duplicate() as StandardMaterial3D
+	var noise := FastNoiseLite.new()
+	noise.seed = seed_value
+	noise.noise_type = FastNoiseLite.TYPE_CELLULAR
+	noise.frequency = 0.06
+	noise.fractal_octaves = 3
+	var ramp := Gradient.new()
+	ramp.set_color(0, Color(darkest, darkest, darkest))
+	ramp.set_color(1, Color.WHITE)
+	var tex := NoiseTexture2D.new()
+	tex.width = 256
+	tex.height = 256
+	tex.seamless = true
+	tex.noise = noise
+	tex.color_ramp = ramp
+	var nrm := NoiseTexture2D.new()
+	nrm.width = 256
+	nrm.height = 256
+	nrm.seamless = true
+	nrm.noise = noise
+	nrm.as_normal_map = true
+	nrm.bump_strength = bump
+	m.albedo_texture = tex
+	m.normal_enabled = true
+	m.normal_texture = nrm
+	m.normal_scale = 0.6
+	m.uv1_triplanar = true
+	m.uv1_world_triplanar = true
+	m.uv1_scale = Vector3.ONE * scale
+	return m
 
 
 func _multimesh(n: String, mesh: Mesh, xforms: Array[Transform3D], colors: Array[Color], shadows: bool) -> MultiMeshInstance3D:
