@@ -9,3 +9,6 @@ Reference: [`docs/image.png`](../../image.png). Its benches are big angular bloc
 
 ## Result
 `hero.jpg`, `overview.jpg`, `bench.jpg`: stepped, broken bench faces with light scree slopes and visible ledges. Tests pass, including the ramp climb.
+
+## Follow-up: heavy model lettering
+The DW-90 and DW-40 labels now have a same-colour outline (14 and 12 px), which gives the bold model lettering of the reference. See `hero.jpg`.

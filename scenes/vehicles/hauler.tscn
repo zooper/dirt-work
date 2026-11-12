@@ -52,7 +52,8 @@ text = "DW-40"
 font_size = 96
 pixel_size = 0.005
 modulate = Color(0.95, 0.95, 0.93, 1)
-outline_size = 0
+outline_size = 12
+outline_modulate = Color(0.95, 0.95, 0.93, 1)
 double_sided = false
 
 [node name="ModelRight" type="Label3D" parent="."]
@@ -61,7 +62,8 @@ text = "DW-40"
 font_size = 96
 pixel_size = 0.005
 modulate = Color(0.95, 0.95, 0.93, 1)
-outline_size = 0
+outline_size = 12
+outline_modulate = Color(0.95, 0.95, 0.93, 1)
 double_sided = false
 
 [node name="Grime" type="Node" parent="."]

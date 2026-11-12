@@ -34,7 +34,7 @@ for n, x, z in wheels:
 for s, n in [(-1, "Left"), (1, "Right")]:
     out += [f'[node name="Model{n}" type="Label3D" parent="."]', f'transform = {T(s * 1.56, 2.3, 1.25, s * math.pi / 2)}',
             'text = "DW-40"', 'font_size = 96', 'pixel_size = 0.005', 'modulate = Color(0.95, 0.95, 0.93, 1)',
-            'outline_size = 0', 'double_sided = false', '']
+            'outline_size = 12', 'outline_modulate = Color(0.95, 0.95, 0.93, 1)', 'double_sided = false', '']
 out += ['[node name="Grime" type="Node" parent="."]', 'script = ExtResource("9")', '']
 open("scenes/vehicles/hauler.tscn", "w").write("\n".join(out))
 print("wrote scenes/vehicles/hauler.tscn")

@@ -176,7 +176,7 @@ node("CabFill", "OmniLight3D", C, transform=T(0, 3.35, 0.05), light_color="Color
      light_energy=0.6, omni_range=1.05, shadow_enabled="false")
 for s, n, ry in [(-1, "Left", -math.pi / 2), (1, "Right", math.pi / 2)]:
     node(f"Model{n}", "Label3D", R, transform=T(s * 1.075, 3.0, 2.95, 0, ry, 0), text='"DW-90"', font_size=110,
-         pixel_size=0.005, modulate="Color(0.06, 0.06, 0.07, 1)", outline_size=0, double_sided="false")
+         pixel_size=0.005, modulate="Color(0.06, 0.06, 0.07, 1)", outline_size=14, outline_modulate="Color(0.06, 0.06, 0.07, 1)", double_sided="false")   # same-colour outline = heavy lettering
 node("PlayerInput", "Node", ".", script='ExtResource("2")')
 node("CabControls", "Node", ".", script='ExtResource("18")')
 node("Grime", "Node", ".", script='ExtResource("19")')

@@ -194,7 +194,8 @@ text = "DW-90"
 font_size = 110
 pixel_size = 0.005
 modulate = Color(0.06, 0.06, 0.07, 1)
-outline_size = 0
+outline_size = 14
+outline_modulate = Color(0.06, 0.06, 0.07, 1)
 double_sided = false
 
 [node name="ModelRight" type="Label3D" parent="Chassis/RearPivot"]
@@ -203,7 +204,8 @@ text = "DW-90"
 font_size = 110
 pixel_size = 0.005
 modulate = Color(0.06, 0.06, 0.07, 1)
-outline_size = 0
+outline_size = 14
+outline_modulate = Color(0.06, 0.06, 0.07, 1)
 double_sided = false
 
 [node name="PlayerInput" type="Node" parent="."]
