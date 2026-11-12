@@ -18,6 +18,7 @@ const SHOTS := [
 	["bucket_low", Vector3(-9.0, 1.6, 3.0), Vector3(0.0, 1.0, 6.0), -23.0, 0.0],
 	["overview", Vector3(-30, 22, 60), Vector3(0, 2, -10), 0.0, 0.0],
 	["pour", Vector3(4.0, 5.5, -16.0), Vector3(0.5, 3.5, -27.0), 60.0, 40.0],          # close-up of the dump into the hauler
+	["hauler", Vector3(18.5, 3.0, -25.5), Vector3(7.0, 2.0, -28.5), 0.0, 0.0],        # DW-40 tractor unit, front 3/4
 	["bench", Vector3(4.0, 17.5, -44.5), Vector3(10.0, 15.5, -55.0), 0.0, 0.0],      # excavator + hauler on the upper bench
 	["cab_detail", Vector3(-3.4, 3.7, 11.3), Vector3(0.0, 3.3, 11.0), 0.0, 0.0],   # interior through the side glass
 ]

@@ -12,7 +12,7 @@ enum Mode { CHASE, CAB }
 
 @export var target_path: NodePath
 @export var cab_path: NodePath = ^"../WheelLoader/Chassis/RearPivot/Cab"
-@export var cab_eye := Vector3(0.0, 3.92, 0.27)  ## operator's eye point (cab-local)
+@export var cab_eye := Vector3(0.0, 3.84, 0.27)  ## operator's eye point (cab-local)
 @export var operator_path: NodePath = ^"../WheelLoader/Chassis/RearPivot/Operator"  ## shadow-only in cab view
 @export var distance := 11.0
 @export var min_distance := 6.0

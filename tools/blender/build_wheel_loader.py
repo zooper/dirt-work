@@ -225,10 +225,10 @@ def cab_interior(p, cz, FL, ROOF):
         for zz in (cz - 0.86, cz + 0.86):
             p.box((0.1, ROOF - FL - 0.75, 0.06), (s * 0.84, (FL + 0.55 + ROOF - 0.2) / 2, zz), TRIM, bevel=0.015)
     # Low front dash shelf with vents (stays below the eye line).
-    p.prism([(cz - 0.8, FL + 0.12), (cz - 0.58, FL + 0.12), (cz - 0.58, FL + 0.44), (cz - 0.74, FL + 0.52), (cz - 0.8, FL + 0.52)],
-            -0.82, 0.82, INTERIOR, bevel=0.02)
+    p.prism([(cz - 0.97, FL + 0.12), (cz - 0.58, FL + 0.12), (cz - 0.58, FL + 0.46), (cz - 0.74, FL + 0.575), (cz - 0.97, FL + 0.575)],
+            -0.92, 0.92, INTERIOR, bevel=0.02)
     for x in (-0.6, -0.42, 0.42, 0.6):
-        p.box((0.13, 0.015, 0.07), (x, FL + 0.495, cz - 0.7), GRIP, bevel=0.0)                 # defrost vents
+        p.box((0.13, 0.015, 0.07), (x, FL + 0.55, cz - 0.72), GRIP, bevel=0.0)                 # defrost vents
     # Steering pod rising from the floor, instrument cluster on top facing the operator.
     p.prism([(cz - 0.66, FL + 0.03), (cz - 0.34, FL + 0.03), (cz - 0.4, FL + 0.6), (cz - 0.62, FL + 0.66)],
             -0.21, 0.21, INTERIOR, bevel=0.03, segments=2)
@@ -276,9 +276,9 @@ def cab_interior(p, cz, FL, ROOF):
     p.box((0.2, 0.16, 0.03), (0.62, FL + 1.18, cz - 0.6), TRIM, bevel=0.01, rot=Matrix.Rotation(-0.62, 4, "Z"))
     p.box((0.17, 0.12, 0.02), (0.615, FL + 1.18, cz - 0.585), DISPLAY, bevel=0.0, rot=Matrix.Rotation(-0.62, 4, "Z"))
     # Top of the windscreen: roller-blind cassette, interior mirror, radio/overhead panel.
-    p.box((1.55, 0.06, 0.07), (0, ROOF - 0.27, cz - 0.9), TRIM, bevel=0.015)
-    p.box((0.22, 0.07, 0.02), (0, ROOF - 0.36, cz - 0.84), TRIM, bevel=0.01)
-    p.box((0.2, 0.055, 0.012), (0, ROOF - 0.36, cz - 0.83), GLASS, bevel=0.0)
+    p.box((1.55, 0.05, 0.06), (0, ROOF - 0.215, cz - 0.86), TRIM, bevel=0.012)                 # roller-blind cassette, tucked under the roof
+    p.box((0.22, 0.07, 0.02), (0, ROOF - 0.3, cz - 0.82), TRIM, bevel=0.01)
+    p.box((0.2, 0.055, 0.012), (0, ROOF - 0.3, cz - 0.81), GLASS, bevel=0.0)
     p.box((0.7, 0.07, 0.3), (0, ROOF - 0.25, cz + 0.3), TRIM, bevel=0.03)                    # overhead panel (above the head)
     p.box(       (0.14, 0.012, 0.05), (-0.15, ROOF - 0.29, cz + 0.25), DISPLAY, bevel=0.0)      # radio
     for x in (0.12, 0.24):
