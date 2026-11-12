@@ -158,6 +158,14 @@ class Part:
         bmesh.ops.translate(bm, vec=G(*center), verts=bm.verts)
         self._finish(bm, m, bevel, 1)
 
+    def hull(self, points, m, bevel=0.05, segments=2):
+        """Convex hull of Godot-space points: tapered/flared panels in one piece."""
+        bm = bmesh.new()
+        vs = [bm.verts.new(G(*q)) for q in points]
+        res = bmesh.ops.convex_hull(bm, input=vs)
+        bmesh.ops.delete(bm, geom=res["geom_interior"] + res["geom_unused"], context="VERTS")
+        self._finish(bm, m, bevel, segments)
+
     def tube(self, points, radius, m, segments=6):
         """Round bar through Godot points (rails, ladders)."""
         for p, q in zip(points, points[1:]):
@@ -377,33 +385,57 @@ def build_rear():
     p.prism([(0.25, 0.85), (4.4, 0.85), (4.6, 1.2), (4.5, 2.1), (0.25, 2.1)], -0.8, 0.8, DARK, bevel=0.07)
     p.box((2.5, 0.42, 0.5), (0, Y0, AXLE), DARK, bevel=0.07)
     p.box((0.6, 0.5, 0.6), (0, 1.4, 0.25), STEEL, bevel=0.05)
-    # Tall boxy engine hood with a dark top panel.
-    hood = [(2.0, 2.0), (2.0, 3.35), (2.15, 3.5), (4.25, 3.5), (4.6, 3.3), (4.65, 2.0)]
+    # ---- Rear body: hood, flared shoulders and counterweight as one heavy mass ----
+    # Engine hood (narrow upper body) with chamfered rear-top edge.
+    hood = [(2.0, 2.0), (2.0, 3.35), (2.15, 3.52), (4.2, 3.52), (4.62, 3.22), (4.7, 2.0)]
     p.prism(hood, -1.05, 1.05, YELLOW, bevel=0.12, segments=3)
-    p.prism([(2.2, 3.47), (4.25, 3.47), (4.5, 3.32), (4.5, 3.4), (4.25, 3.57), (2.2, 3.57)], -0.92, 0.92, DARK, bevel=0.03)
+    p.prism([(2.2, 3.47), (4.2, 3.47), (4.5, 3.27), (4.5, 3.37), (4.2, 3.57), (2.2, 3.57)], -0.92, 0.92, DARK, bevel=0.03)
     for k in range(7):
         p.box((0.06, 0.06, 1.6), (-0.6 + k * 0.2, 3.6, 3.2), BLACK, bevel=0.0)
+    # Counterweight: wide at the bumper, flaring up into the hood sides, so the
+    # rear reads as one sculpted block instead of a box bolted onto the hood.
+    cw = []
+    for x in (-1.36, 1.36):
+        cw += [(x, 0.85, 4.25), (x, 0.85, 5.05), (x, 1.05, 5.27), (x, 1.95, 5.27), (x, 2.2, 5.05), (x, 2.2, 4.25)]
+    for x in (-1.06, 1.06):
+        cw += [(x, 2.75, 4.25), (x, 2.75, 4.4)]   # flare stays behind the grille
+    p.hull(cw, YELLOW, bevel=0.09, segments=3)
+    # Shoulder flares: hood side widening down over the rear fenders.
     for s in (-1, 1):
-        # Dark vent panel at the rear of each hood side.
-        p.box((0.05, 0.75, 0.6), (s * 1.06, 2.75, 4.15), BLACK, bevel=0.01)
-        for k in range(5):
-            p.box((0.04, 0.05, 0.55), (s * 1.09, 2.48 + k * 0.13, 4.15), DARK, bevel=0.0)
-    # Rear radiator grille (big dark panel) and the yellow counterweight bumper.
-    p.prism([(4.6, 2.05), (4.75, 2.05), (4.72, 3.3), (4.6, 3.3)], -0.95, 0.95, DARK, bevel=0.03)
-    p.box((1.6, 1.1, 0.05), (0, 2.68, 4.77), BLACK, bevel=0.0)
-    for k in range(8):
-        p.box((1.55, 0.05, 0.06), (0, 2.2 + k * 0.135, 4.8), DARK, bevel=0.0)
-    cw = [(4.3, 0.85), (5.0, 0.85), (5.25, 1.05), (5.3, 1.75), (5.15, 2.1), (4.3, 2.1)]
-    p.prism(cw, -1.35, 1.35, YELLOW, bevel=0.1, segments=3)
+        p.hull([(s * 1.0, 2.0, 2.05), (s * 1.0, 2.0, 4.3), (s * 1.0, 2.9, 2.05), (s * 1.0, 2.9, 4.3),
+                (s * 1.42, 2.0, 2.25), (s * 1.42, 2.0, 4.25), (s * 1.3, 2.35, 2.35), (s * 1.3, 2.35, 4.2)],
+               YELLOW, bevel=0.06, segments=2)
+        # Dark recessed lower side panel (engine bay) with vent slots.
+        p.box((0.05, 0.9, 1.35), (s * 1.38, 1.5, 3.55), DARK, bevel=0.02)
+        for k in range(4):
+            p.box((0.03, 0.06, 1.1), (s * 1.41, 1.25 + k * 0.17, 3.55), BLACK, bevel=0.0)
+        # Rear vent panel on the hood side + panel seams.
+        p.box((0.05, 0.6, 0.55), (s * 1.06, 2.95, 4.1), BLACK, bevel=0.01)
+        for k in range(4):
+            p.box((0.04, 0.05, 0.5), (s * 1.09, 2.75 + k * 0.13, 4.1), DARK, bevel=0.0)
+        p.box((0.02, 1.2, 0.03), (s * 1.06, 2.8, 3.8), BLACK, bevel=0.0)       # vertical seam
+        p.box((0.02, 0.03, 1.55), (s * 1.06, 3.3, 2.85), BLACK, bevel=0.0)     # horizontal seam
+    # Rear face: dark radiator grille set into an angled yellow frame.
+    p.hull([(-0.95, 2.25, 4.62), (0.95, 2.25, 4.62), (-0.95, 3.2, 4.58), (0.95, 3.2, 4.58),
+            (-0.82, 2.32, 4.74), (0.82, 2.32, 4.74), (-0.82, 3.12, 4.7), (0.82, 3.12, 4.7)], DARK, bevel=0.02)
+    for k in range(7):
+        p.box((1.5, 0.045, 0.05), (0, 2.42 + k * 0.11, 4.76), BLACK, bevel=0.0)
+    for s in (-1, 1):   # yellow grille cheeks
+        p.hull([(s * 0.95, 2.2, 4.6), (s * 1.06, 2.2, 4.6), (s * 0.95, 3.25, 4.56), (s * 1.06, 3.25, 4.5),
+                (s * 0.92, 2.2, 4.8), (s * 0.92, 3.2, 4.72)], YELLOW, bevel=0.02)
+    # Lamps recessed into the counterweight corners, number-plate recess.
     for s in (-1, 1):
-        p.box((0.3, 0.2, 0.06), (s * 1.05, 1.85, 5.27), TAIL, bevel=0.015)
-        p.box((0.22, 0.16, 0.06), (s * 0.7, 1.85, 5.27), AMBER, bevel=0.015)
-        p.box((0.36, 0.26, 0.05), (s * 1.05, 1.85, 5.24), DARK, bevel=0.01)
-    p.box((1.2, 0.35, 0.08), (0, 1.35, 5.3), DARK, bevel=0.02)            # tow/plate recess
+        p.box((0.36, 0.26, 0.05), (s * 1.02, 1.85, 5.255), DARK, bevel=0.01)
+        p.box((0.3, 0.2, 0.06), (s * 1.02, 1.85, 5.27), TAIL, bevel=0.015)
+        p.box((0.22, 0.16, 0.06), (s * 0.66, 1.85, 5.27), AMBER, bevel=0.015)
+        p.box((0.2, 0.12, 0.05), (s * 1.02, 1.12, 5.26), LAMP, bevel=0.01)     # reversing lamp
+    p.box((1.2, 0.35, 0.08), (0, 1.4, 5.29), DARK, bevel=0.02)
+    p.box((2.4, 0.12, 0.25), (0, 0.9, 5.2), DARK, bevel=0.03)                  # bumper step
     # Rear fenders: big flared dark arches over the rear tyres.
     for s in (-1, 1):
         x0, x1 = s * (TRACK - TYRE_W / 2 - 0.06), s * (TRACK + TYRE_W / 2 + 0.1)
         p.arch((AXLE, Y0), WHEEL_R + 0.1, 0.13, min(x0, x1), max(x0, x1), 35, 170, DARK, steps=14, bevel=0.04)
+        p.arch((AXLE, Y0), WHEEL_R + 0.23, 0.1, min(x0, x1) + 0.05, max(x0, x1) - 0.05, 62, 150, YELLOW, steps=10, bevel=0.035)
         p.box((0.85, 0.08, 1.3), (s * 1.38, 2.42, 0.9), STEEL, bevel=0.015)     # walkway by the cab
         p.tube([(s * 1.1, 3.6, 2.05), (s * 1.1, 4.05, 2.2), (s * 1.1, 4.05, 3.9), (s * 1.1, 3.6, 4.15)], 0.035, RED)
         p.tube([(s * 1.1, 4.05, 3.05), (s * 1.1, 3.55, 3.05)], 0.03, RED)
