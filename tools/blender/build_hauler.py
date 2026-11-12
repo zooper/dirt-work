@@ -140,7 +140,7 @@ def build_rear():
     # Dump body: angular tub, sides slope outwards, floor rises at the rear.
     W0, W1 = 1.25, 1.55                    # half widths at floor / top
     Z0, Z1 = 0.25, 6.1                     # front / rear
-    YF, YT = 1.9, 3.55                     # floor / top
+    YF, YT = 1.75, 3.15                    # floor / top (low sides: clear view of the pour)
     outer = []
     for z, yf in ((Z0, YF), (Z1 - 0.6, YF), (Z1, YF + 0.55)):
         outer += [(-W0, yf, z), (W0, yf, z)]
@@ -157,7 +157,7 @@ def build_rear():
         for z in (1.4, 2.8, 4.2, 5.4):
             p.box((0.1, YT - YF - 0.2, 0.14), (s * (W0 + 0.2), (YF + YT) / 2, z), YELLOW, bevel=0.02, rot=Matrix.Rotation(s * -0.18, 4, "Y"))
         # Dark model plate on the body front side (fictional branding goes on a Label3D in Godot).
-        p.box((0.04, 0.8, 1.3), (s * (W1 - 0.04), 2.9, 1.25), DARK, bevel=0.02)
+        p.box((0.04, 0.7, 1.3), (s * (W1 - 0.04), 2.55, 1.25), DARK, bevel=0.02)
         x0, x1 = s * (TRACK - TYRE_W / 2 - 0.05), s * (TRACK + TYRE_W / 2 + 0.07)
         p.arch((REAR_AXLES[0], y0), WHEEL_R + 0.1, 0.08, min(x0, x1), max(x0, x1), 40, 140, DARK, steps=8, bevel=0.02)
         p.box((0.3, 0.2, 0.06), (s * 0.95, 1.35, 5.62), TAIL, bevel=0.015)
@@ -179,15 +179,15 @@ def build_load():
     pts = []
     for z in (0.5, 1.6, 2.8, 4.0, 5.2):
         for x in (-1.25, -0.6, 0.0, 0.6, 1.25):
-            h = 3.4 + (1.1 - abs(x) * 0.6) * (1.0 - abs(z - 3.0) / 4.0) + rng.uniform(-0.12, 0.12)
+            h = 2.95 + (0.7 - abs(x) * 0.6) * (1.0 - abs(z - 3.0) / 4.0) + rng.uniform(-0.12, 0.12)
             pts.append((x, h, z))
     for x in (-1.3, 1.3):
         for z in (0.45, 5.4):
-            pts.append((x, 3.2, z))
+            pts.append((x, 2.85, z))
     p.hull(pts, GRAVEL, bevel=0.0)
     for k in range(70):
         x, z = rng.uniform(-1.1, 1.1), rng.uniform(0.6, 5.2)
-        top = 3.4 + (1.1 - abs(x) * 0.6) * (1.0 - abs(z - 3.0) / 4.0)
+        top = 2.95 + (0.7 - abs(x) * 0.6) * (1.0 - abs(z - 3.0) / 4.0)
         s = rng.uniform(0.12, 0.28)
         p.box((s, s * 0.8, s * 1.1), (x, top + s * 0.2, z), GRAVEL_LIGHT if k % 3 else GRAVEL, bevel=s * 0.25,
               rot=Matrix.Rotation(rng.uniform(0, 6.3), 4, "Z") @ Matrix.Rotation(rng.uniform(0, 6.3), 4, "X"))

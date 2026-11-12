@@ -10,7 +10,7 @@ extends SceneTree
 
 const SHOTS := [
 	# name, camera, target, lift, tilt
-	["hero", Vector3(-2.8, 1.9, 64.0), Vector3(-18.5, 2.9, 70.5), 45.0, 30.0],  # reference composition: loader dumping into the hauler
+	["hero", Vector3(-3.5, 3.4, 63.5), Vector3(-18.5, 3.0, 70.5), 55.0, 22.0],  # reference composition: loader dumping into the hauler
 	["side", Vector3(-14.0, 2.3, 10.0), Vector3(0.0, 2.0, 10.0), 0.0, 0.0],
 	["front34", Vector3(7.5, 3.0, 1.5), Vector3(0.0, 1.9, 8.5), 0.0, -10.0],
 	["front", Vector3(0.0, 2.6, -5.0), Vector3(0.0, 2.0, 8.0), 5.0, -10.0],
@@ -41,16 +41,22 @@ func _run() -> void:
 	loader.tilt_angle = -15.0
 	for i in 90:
 		await process_frame
-	_save(out + "/play.jpg")   # gameplay chase camera
+	var only := OS.get_environment("DW_SHOTS").split(",", false)   # e.g. DW_SHOTS=hero,side
+	var want := func(n: String) -> bool: return only.is_empty() or only.has(n)
+	if want.call("play"):
+		_save(out + "/play.jpg")   # gameplay chase camera
 	var follow := level.get_node("FollowCamera") as FollowCamera
 	follow.set_process(false)
 	var cam := level.get_node("FollowCamera/Camera3D") as Camera3D
 	var spawn := loader.global_transform
 	# Loading pose next to the parked hauler (reference composition).
-	var loading := Transform3D(Basis(Vector3.UP, 0.95), Vector3(-15.2, 0.05, 74.0))
+	var loading := Transform3D(Basis(Vector3.UP, 1.08), Vector3(-15.9, 0.05, 72.9))
 	for shot in SHOTS:
+		if not want.call(shot[0]):
+			continue
 		loader.global_transform = loading if shot[0] == "hero" else spawn
 		loader.speed = 0.0
+		loader.bucket_fill = 1.0 if shot[0] == "hero" else 0.0
 		loader.lift_angle = shot[3]
 		loader.tilt_angle = shot[4]
 		cam.global_position = shot[1]
@@ -59,6 +65,11 @@ func _run() -> void:
 			await process_frame
 		_save("%s/%s.jpg" % [out, shot[0]])
 	# In-cab view as the player sees it.
+	if not want.call("cab"):
+		quit()
+		return
+	loader.global_transform = spawn
+	loader.bucket_fill = 0.0
 	loader.lift_angle = 8.0
 	loader.tilt_angle = -15.0
 	follow.set_process(true)

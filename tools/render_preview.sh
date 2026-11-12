@@ -7,5 +7,5 @@
 set -euo pipefail
 out="${1:?out dir}"
 cd "$(dirname "$0")/.."
-DW_PREVIEW_NO_FOG=1 DISPLAY="${XVFB_DISPLAY:-:97}" "${GODOT:-godot}" --rendering-method mobile --audio-driver Dummy \
+DW_PREVIEW_NO_FOG=1 VK_ICD_FILENAMES="${VK_ICD_FILENAMES:-$HOME/.local/opt/xvfb/lvp_local.json}" DISPLAY="${XVFB_DISPLAY:-:97}" "${GODOT:-godot}" --rendering-method mobile --audio-driver Dummy \
 	--path . --resolution 1600x900 -s tools/capture_shots.gd -- "$out" 2>&1 | grep -E "saved|SCRIPT ERROR" || true

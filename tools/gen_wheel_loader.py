@@ -115,7 +115,8 @@ GLB = "res://assets/models/wheel_loader/"
 EXT = [("1", "Script", "res://scripts/vehicles/wheel_loader.gd"), ("2", "Script", "res://scripts/vehicles/player_loader_input.gd"),
        ("4", "Script", "res://scripts/vehicles/hydraulic_ram.gd"), ("5", "Script", "res://scripts/vehicles/beacon.gd"),
        ("10", "PackedScene", GLB + "front.glb"), ("11", "PackedScene", GLB + "rear.glb"), ("12", "PackedScene", GLB + "arm.glb"),
-       ("13", "PackedScene", GLB + "bucket.glb"), ("14", "PackedScene", GLB + "wheel.glb")]
+       ("13", "PackedScene", GLB + "bucket.glb"), ("14", "PackedScene", GLB + "wheel.glb"),
+       ("6", "Script", "res://scripts/vehicles/bucket_spill.gd")]
 
 def model(name, parent, ext, transform=None):
     hdr = f'[node name="{name}" parent="{parent}" instance=ExtResource("{ext}")]'
@@ -123,7 +124,7 @@ def model(name, parent, ext, transform=None):
 
 subs.append(('[sub_resource type="BoxShape3D" id="front_shape"]', dict(size="Vector3(2.8, 1.4, 2.4)")))
 subs.append(('[sub_resource type="BoxShape3D" id="rear_shape"]', dict(size="Vector3(2.6, 1.8, 2.8)")))
-node("WheelLoader", "CharacterBody3D", None, script='ExtResource("1")', wheel_radius=WHEEL_R, lift_min_deg=-12.0, lift_max_deg=48.0, hinge_to_front_axle=AXLE, hinge_to_rear_axle=AXLE)
+node("WheelLoader", "CharacterBody3D", None, script='ExtResource("1")', wheel_radius=WHEEL_R, lift_min_deg=-12.0, lift_max_deg=55.0, hinge_to_front_axle=AXLE, hinge_to_rear_axle=AXLE)
 node("FrontShape", "CollisionShape3D", ".", transform=T(0, 0.7, -1.5), shape='SubResource("front_shape")')
 node("RearShape", "CollisionShape3D", ".", transform=T(0, 0.9, 1.6), shape='SubResource("rear_shape")')
 node("Chassis", "Node3D", ".")
@@ -152,6 +153,7 @@ B = A + "/BucketPivot"
 node("BucketPivot", "Node3D", A, transform=T(0, 0, -ARM))
 model("Model", B, "13")
 node("Tip", "Marker3D", B, transform=T(0, -1.58, -2.2))
+scripted("Spill", "Node3D", B, "6")
 for n in "LR":
     scripted(f"LiftRam{n}", "Node3D", F, "4", base_path=f'NodePath("../LiftRamBase{n}")', end_path=f'NodePath("../ArmPivot/LiftRamEnd{n}")')
 scripted("TiltRam", "Node3D", F, "4", base_path='NodePath("../TiltRamBase")',

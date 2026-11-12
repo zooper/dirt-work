@@ -17,6 +17,9 @@ var lift_input := 0.0      ## -1 (lower) .. 1 (raise)
 var tilt_input := 0.0      ## -1 (curl back) .. 1 (dump)
 var cruise_active := false ## hold cruise_speed; any brake input cancels
 var cruise_speed := 4.0    ## m/s
+## 0..1 how full the bucket is. Presentation hook for now (BucketSpill shows the
+## load and pours it when tipped); M2 volume accounting will drive it.
+var bucket_fill := 0.0
 
 @export_group("Drive")
 @export var max_forward_speed := 8.0     ## m/s
