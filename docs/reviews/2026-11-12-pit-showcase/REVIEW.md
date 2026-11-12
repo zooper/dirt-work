@@ -22,3 +22,7 @@ Reference: [`docs/image.png`](../../image.png).
 - The conveyors, crusher and red cabin (reference, back left) are now behind the camera, in the yard.
 - The machines fill about 55% of the frame width, against about 75% in the reference.
 - Dust and haze still can't be verified in the Mobile preview.
+
+## Follow-up: in-pit feed line
+- `SiteProps._pit_plant()` adds a feeder hopper by the west pile, a conveyor over the first bench to a railed transfer tower, and a second conveyor running out along the bench. A red site cabin and a floodlight stand in the pit's west side.
+- `hero.jpg`: the yellow conveyors now climb behind the loader at the back left, as in the reference. The cabin is hidden behind the pine in this frame but shows in play.

@@ -32,6 +32,7 @@ func _ready() -> void:
 	_yard_clutter(Vector3(22, 0, 60))
 	_loading_bay(LOADING_BAY, LOADING_BAY_YAW)
 	_upper_bench()
+	_pit_plant()
 
 	add_child(_solid.to_instance("SiteSolid"))
 	var glow := _glow.to_instance("SiteGlow", false)
@@ -208,6 +209,31 @@ func _loading_bay(hauler: Vector3, yaw: float) -> void:
 	add_child(pine)
 	_collider(pine.position + Vector3(0, 2.0, 0), Vector3(0.6, 4.0, 0.6))
 	_floodlight(hauler + r * Vector3(-10.0, 0, 16.0))
+
+
+## In-pit feed line behind the loading bay (reference: conveyors climbing the
+## benches at the back left): a feeder hopper by the west pile, a conveyor up
+## over the first bench to a transfer tower, and the red site cabin in front.
+func _pit_plant() -> void:
+	var feeder := Vector3(-30, 0, -33)
+	_box(feeder + Vector3(0, 1.2, 0), Vector3(3.2, 2.4, 3.2), Palette.MACHINE_DARK.lightened(0.1), Basis.IDENTITY, true)
+	var hp := PackedVector3Array()
+	for v in [Vector3(-1.4, 2.4, -1.4), Vector3(1.4, 2.4, -1.4), Vector3(1.4, 2.4, 1.4), Vector3(-1.4, 2.4, 1.4),
+			Vector3(-2.4, 4.0, -2.4), Vector3(2.4, 4.0, -2.4), Vector3(2.4, 4.0, 2.4), Vector3(-2.4, 4.0, 2.4)]:
+		hp.append(feeder + v)
+	_solid.add_hull(hp, Palette.MACHINE_YELLOW)
+	_rails(feeder + Vector3(0, 4.0, 0), 4.8, 4.8)
+	var tower := Vector3(-8, 7.0, -45)
+	_conveyor(feeder + Vector3(1.5, 1.6, -1.0), tower + Vector3(0, 5.2, 0))
+	for sx in [-1.0, 1.0]:
+		for sz in [-1.0, 1.0]:
+			_box(tower + Vector3(sx * 1.6, 2.2, sz * 1.6), Vector3(0.25, 4.4, 0.25), Palette.MACHINE_STEEL)
+	_box(tower + Vector3(0, 5.2, 0), Vector3(3.6, 1.8, 3.6), Palette.MACHINE_DARK.lightened(0.1))
+	_box(tower + Vector3(0, 6.2, 0), Vector3(4.2, 0.15, 4.2), Palette.MACHINE_STEEL)
+	_rails(tower + Vector3(0, 6.25, 0), 4.2, 4.2)
+	_conveyor(tower + Vector3(1.5, 4.6, 0.5), tower + Vector3(14.0, 1.0, 1.5))   # out along the bench
+	_cabin(Vector3(-19, 0, -13), -0.42)
+	_floodlight(Vector3(-22, 0, -18))
 
 
 ## Working face on the second bench (y = 14) above the loading bay: the
