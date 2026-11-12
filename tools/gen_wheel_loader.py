@@ -18,10 +18,10 @@ Tip, Wheel*, RearShape, FrontShape, PlayerInput, LiftRam*, Cab) must stay stable
 import math
 
 LINEARIZE = False    # True only for the gl_compatibility renderer
-WHEEL_R = 1.0        # visual tyre radius (m) - wheel centre at y = WHEEL_R
+WHEEL_R = 1.15       # visual tyre radius (m) - wheel centre at y = WHEEL_R
 LIFT = 0.0           # frames are no longer offset (models are authored in world space)
-TRACK = 1.32         # wheel centre x
-AXLE = 1.6           # hinge-to-axle distance (matches WheelLoader exports)
+TRACK = 1.38         # wheel centre x
+AXLE = 1.75          # hinge-to-axle distance (matches WheelLoader exports)
 
 YELLOW = (0.98, 0.77, 0.10)
 DARK = (0.24, 0.25, 0.27)
@@ -123,7 +123,7 @@ def model(name, parent, ext, transform=None):
 
 subs.append(('[sub_resource type="BoxShape3D" id="front_shape"]', dict(size="Vector3(2.8, 1.4, 2.4)")))
 subs.append(('[sub_resource type="BoxShape3D" id="rear_shape"]', dict(size="Vector3(2.6, 1.8, 2.8)")))
-node("WheelLoader", "CharacterBody3D", None, script='ExtResource("1")', wheel_radius=WHEEL_R, lift_min_deg=-22.0, lift_max_deg=50.0)
+node("WheelLoader", "CharacterBody3D", None, script='ExtResource("1")', wheel_radius=WHEEL_R, lift_min_deg=-23.0, lift_max_deg=50.0, hinge_to_front_axle=AXLE, hinge_to_rear_axle=AXLE)
 node("FrontShape", "CollisionShape3D", ".", transform=T(0, 0.7, -1.5), shape='SubResource("front_shape")')
 node("RearShape", "CollisionShape3D", ".", transform=T(0, 0.9, 1.6), shape='SubResource("rear_shape")')
 node("Chassis", "Node3D", ".")
@@ -139,19 +139,19 @@ def wheel(name, parent, x, z):
 model("Model", F, "10")
 wheel("WheelFL", F, -TRACK, -AXLE); wheel("WheelFR", F, TRACK, -AXLE)
 for s, n in [(-1, "L"), (1, "R")]:
-    marker(f"LiftRamBase{n}", F, (s * 0.52, 1.3, -1.75))
-marker("TiltRamBase", F, (0, 2.85, -1.35))
+    marker(f"LiftRamBase{n}", F, (s * 0.5, 1.45, -1.95))
+marker("TiltRamBase", F, (0, 3.2, -1.15))
 A = F + "/ArmPivot"
-node("ArmPivot", "Node3D", F, transform=T(0, 2.55, -0.85))
+node("ArmPivot", "Node3D", F, transform=T(0, 2.95, -0.7))
 model("Model", A, "12")
-ARM = 3.2
+ARM = 3.45
 for s, n in [(-1, "L"), (1, "R")]:
-    node(f"LiftRamEnd{n}", "Marker3D", A, transform=T(s * 0.52, -0.48, -1.7))
-node("TiltLeverTop", "Marker3D", A, transform=T(0, 1.0, -1.9))
+    node(f"LiftRamEnd{n}", "Marker3D", A, transform=T(s * 0.5, -0.62, -1.9))
+node("TiltLeverTop", "Marker3D", A, transform=T(0, 1.2, -2.05))
 B = A + "/BucketPivot"
 node("BucketPivot", "Node3D", A, transform=T(0, 0, -ARM))
 model("Model", B, "13")
-node("Tip", "Marker3D", B, transform=T(0, -1.43, -1.95))
+node("Tip", "Marker3D", B, transform=T(0, -1.58, -2.2))
 for n in "LR":
     scripted(f"LiftRam{n}", "Node3D", F, "4", base_path=f'NodePath("../LiftRamBase{n}")', end_path=f'NodePath("../ArmPivot/LiftRamEnd{n}")')
 scripted("TiltRam", "Node3D", F, "4", base_path='NodePath("../TiltRamBase")',
@@ -161,10 +161,10 @@ scripted("TiltRam", "Node3D", F, "4", base_path='NodePath("../TiltRamBase")',
 model("Model", R, "11")
 wheel("WheelRL", R, -TRACK, AXLE); wheel("WheelRR", R, TRACK, AXLE)
 C = R + "/Cab"
-node("Cab", "Node3D", R, transform=T(0, 0, 1.15))
-scripted("Beacon", "Node3D", C, "5", transform=T(-0.6, 4.33, 0.5))
+node("Cab", "Node3D", R, transform=T(0, 0, 1.1))
+scripted("Beacon", "Node3D", C, "5", transform=T(-0.65, 4.46, 0.5))
 for s, n, ry in [(-1, "Left", -math.pi / 2), (1, "Right", math.pi / 2)]:
-    node(f"Model{n}", "Label3D", R, transform=T(s * 1.27, 1.95, 4.45, 0, ry, 0), text='"DW-90"', font_size=72,
+    node(f"Model{n}", "Label3D", R, transform=T(s * 1.075, 3.0, 2.95, 0, ry, 0), text='"DW-90"', font_size=110,
          pixel_size=0.005, modulate="Color(0.06, 0.06, 0.07, 1)", outline_size=0, double_sided="false")
 node("PlayerInput", "Node", ".", script='ExtResource("2")')
 

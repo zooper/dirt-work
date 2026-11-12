@@ -65,9 +65,11 @@ size = Vector3(2.6, 1.8, 2.8)
 
 [node name="WheelLoader" type="CharacterBody3D"]
 script = ExtResource("1")
-wheel_radius = 1
-lift_min_deg = -22
+wheel_radius = 1.15
+lift_min_deg = -23
 lift_max_deg = 50
+hinge_to_front_axle = 1.75
+hinge_to_rear_axle = 1.75
 
 [node name="FrontShape" type="CollisionShape3D" parent="."]
 transform = Transform3D(1.000000, 0.000000, 0.000000, 0.000000, 1.000000, 0.000000, 0.000000, 0.000000, 1.000000, 0.000000, 0.700000, -1.500000)
@@ -86,45 +88,45 @@ shape = SubResource("rear_shape")
 [node name="Model" parent="Chassis/FrontFrame" instance=ExtResource("10")]
 
 [node name="WheelFL" type="Node3D" parent="Chassis/FrontFrame"]
-transform = Transform3D(1.000000, 0.000000, 0.000000, 0.000000, 1.000000, 0.000000, 0.000000, 0.000000, 1.000000, -1.320000, 1.000000, -1.600000)
+transform = Transform3D(1.000000, 0.000000, 0.000000, 0.000000, 1.000000, 0.000000, 0.000000, 0.000000, 1.000000, -1.380000, 1.150000, -1.750000)
 
 [node name="Tire" parent="Chassis/FrontFrame/WheelFL" instance=ExtResource("14")]
 
 [node name="WheelFR" type="Node3D" parent="Chassis/FrontFrame"]
-transform = Transform3D(1.000000, 0.000000, 0.000000, 0.000000, 1.000000, 0.000000, 0.000000, 0.000000, 1.000000, 1.320000, 1.000000, -1.600000)
+transform = Transform3D(1.000000, 0.000000, 0.000000, 0.000000, 1.000000, 0.000000, 0.000000, 0.000000, 1.000000, 1.380000, 1.150000, -1.750000)
 
 [node name="Tire" parent="Chassis/FrontFrame/WheelFR" instance=ExtResource("14")]
 
 [node name="LiftRamBaseL" type="Marker3D" parent="Chassis/FrontFrame"]
-transform = Transform3D(1.000000, 0.000000, 0.000000, 0.000000, 1.000000, 0.000000, 0.000000, 0.000000, 1.000000, -0.520000, 1.300000, -1.750000)
+transform = Transform3D(1.000000, 0.000000, 0.000000, 0.000000, 1.000000, 0.000000, 0.000000, 0.000000, 1.000000, -0.500000, 1.450000, -1.950000)
 
 [node name="LiftRamBaseR" type="Marker3D" parent="Chassis/FrontFrame"]
-transform = Transform3D(1.000000, 0.000000, 0.000000, 0.000000, 1.000000, 0.000000, 0.000000, 0.000000, 1.000000, 0.520000, 1.300000, -1.750000)
+transform = Transform3D(1.000000, 0.000000, 0.000000, 0.000000, 1.000000, 0.000000, 0.000000, 0.000000, 1.000000, 0.500000, 1.450000, -1.950000)
 
 [node name="TiltRamBase" type="Marker3D" parent="Chassis/FrontFrame"]
-transform = Transform3D(1.000000, 0.000000, 0.000000, 0.000000, 1.000000, 0.000000, 0.000000, 0.000000, 1.000000, 0.000000, 2.850000, -1.350000)
+transform = Transform3D(1.000000, 0.000000, 0.000000, 0.000000, 1.000000, 0.000000, 0.000000, 0.000000, 1.000000, 0.000000, 3.200000, -1.150000)
 
 [node name="ArmPivot" type="Node3D" parent="Chassis/FrontFrame"]
-transform = Transform3D(1.000000, 0.000000, 0.000000, 0.000000, 1.000000, 0.000000, 0.000000, 0.000000, 1.000000, 0.000000, 2.550000, -0.850000)
+transform = Transform3D(1.000000, 0.000000, 0.000000, 0.000000, 1.000000, 0.000000, 0.000000, 0.000000, 1.000000, 0.000000, 2.950000, -0.700000)
 
 [node name="Model" parent="Chassis/FrontFrame/ArmPivot" instance=ExtResource("12")]
 
 [node name="LiftRamEndL" type="Marker3D" parent="Chassis/FrontFrame/ArmPivot"]
-transform = Transform3D(1.000000, 0.000000, 0.000000, 0.000000, 1.000000, 0.000000, 0.000000, 0.000000, 1.000000, -0.520000, -0.480000, -1.700000)
+transform = Transform3D(1.000000, 0.000000, 0.000000, 0.000000, 1.000000, 0.000000, 0.000000, 0.000000, 1.000000, -0.500000, -0.620000, -1.900000)
 
 [node name="LiftRamEndR" type="Marker3D" parent="Chassis/FrontFrame/ArmPivot"]
-transform = Transform3D(1.000000, 0.000000, 0.000000, 0.000000, 1.000000, 0.000000, 0.000000, 0.000000, 1.000000, 0.520000, -0.480000, -1.700000)
+transform = Transform3D(1.000000, 0.000000, 0.000000, 0.000000, 1.000000, 0.000000, 0.000000, 0.000000, 1.000000, 0.500000, -0.620000, -1.900000)
 
 [node name="TiltLeverTop" type="Marker3D" parent="Chassis/FrontFrame/ArmPivot"]
-transform = Transform3D(1.000000, 0.000000, 0.000000, 0.000000, 1.000000, 0.000000, 0.000000, 0.000000, 1.000000, 0.000000, 1.000000, -1.900000)
+transform = Transform3D(1.000000, 0.000000, 0.000000, 0.000000, 1.000000, 0.000000, 0.000000, 0.000000, 1.000000, 0.000000, 1.200000, -2.050000)
 
 [node name="BucketPivot" type="Node3D" parent="Chassis/FrontFrame/ArmPivot"]
-transform = Transform3D(1.000000, 0.000000, 0.000000, 0.000000, 1.000000, 0.000000, 0.000000, 0.000000, 1.000000, 0.000000, 0.000000, -3.200000)
+transform = Transform3D(1.000000, 0.000000, 0.000000, 0.000000, 1.000000, 0.000000, 0.000000, 0.000000, 1.000000, 0.000000, 0.000000, -3.450000)
 
 [node name="Model" parent="Chassis/FrontFrame/ArmPivot/BucketPivot" instance=ExtResource("13")]
 
 [node name="Tip" type="Marker3D" parent="Chassis/FrontFrame/ArmPivot/BucketPivot"]
-transform = Transform3D(1.000000, 0.000000, 0.000000, 0.000000, 1.000000, 0.000000, 0.000000, 0.000000, 1.000000, 0.000000, -1.430000, -1.950000)
+transform = Transform3D(1.000000, 0.000000, 0.000000, 0.000000, 1.000000, 0.000000, 0.000000, 0.000000, 1.000000, 0.000000, -1.580000, -2.200000)
 
 [node name="LiftRamL" type="Node3D" parent="Chassis/FrontFrame"]
 script = ExtResource("4")
@@ -146,35 +148,35 @@ rod_radius = 0.065
 [node name="Model" parent="Chassis/RearPivot" instance=ExtResource("11")]
 
 [node name="WheelRL" type="Node3D" parent="Chassis/RearPivot"]
-transform = Transform3D(1.000000, 0.000000, 0.000000, 0.000000, 1.000000, 0.000000, 0.000000, 0.000000, 1.000000, -1.320000, 1.000000, 1.600000)
+transform = Transform3D(1.000000, 0.000000, 0.000000, 0.000000, 1.000000, 0.000000, 0.000000, 0.000000, 1.000000, -1.380000, 1.150000, 1.750000)
 
 [node name="Tire" parent="Chassis/RearPivot/WheelRL" instance=ExtResource("14")]
 
 [node name="WheelRR" type="Node3D" parent="Chassis/RearPivot"]
-transform = Transform3D(1.000000, 0.000000, 0.000000, 0.000000, 1.000000, 0.000000, 0.000000, 0.000000, 1.000000, 1.320000, 1.000000, 1.600000)
+transform = Transform3D(1.000000, 0.000000, 0.000000, 0.000000, 1.000000, 0.000000, 0.000000, 0.000000, 1.000000, 1.380000, 1.150000, 1.750000)
 
 [node name="Tire" parent="Chassis/RearPivot/WheelRR" instance=ExtResource("14")]
 
 [node name="Cab" type="Node3D" parent="Chassis/RearPivot"]
-transform = Transform3D(1.000000, 0.000000, 0.000000, 0.000000, 1.000000, 0.000000, 0.000000, 0.000000, 1.000000, 0.000000, 0.000000, 1.150000)
+transform = Transform3D(1.000000, 0.000000, 0.000000, 0.000000, 1.000000, 0.000000, 0.000000, 0.000000, 1.000000, 0.000000, 0.000000, 1.100000)
 
 [node name="Beacon" type="Node3D" parent="Chassis/RearPivot/Cab"]
-transform = Transform3D(1.000000, 0.000000, 0.000000, 0.000000, 1.000000, 0.000000, 0.000000, 0.000000, 1.000000, -0.600000, 4.330000, 0.500000)
+transform = Transform3D(1.000000, 0.000000, 0.000000, 0.000000, 1.000000, 0.000000, 0.000000, 0.000000, 1.000000, -0.650000, 4.460000, 0.500000)
 script = ExtResource("5")
 
 [node name="ModelLeft" type="Label3D" parent="Chassis/RearPivot"]
-transform = Transform3D(0.000000, 0.000000, -1.000000, 0.000000, 1.000000, 0.000000, 1.000000, 0.000000, 0.000000, -1.270000, 1.950000, 4.450000)
+transform = Transform3D(0.000000, 0.000000, -1.000000, 0.000000, 1.000000, 0.000000, 1.000000, 0.000000, 0.000000, -1.075000, 3.000000, 2.950000)
 text = "DW-90"
-font_size = 72
+font_size = 110
 pixel_size = 0.005
 modulate = Color(0.06, 0.06, 0.07, 1)
 outline_size = 0
 double_sided = false
 
 [node name="ModelRight" type="Label3D" parent="Chassis/RearPivot"]
-transform = Transform3D(0.000000, 0.000000, 1.000000, 0.000000, 1.000000, 0.000000, -1.000000, 0.000000, 0.000000, 1.270000, 1.950000, 4.450000)
+transform = Transform3D(0.000000, 0.000000, 1.000000, 0.000000, 1.000000, 0.000000, -1.000000, 0.000000, 0.000000, 1.075000, 3.000000, 2.950000)
 text = "DW-90"
-font_size = 72
+font_size = 110
 pixel_size = 0.005
 modulate = Color(0.06, 0.06, 0.07, 1)
 outline_size = 0
