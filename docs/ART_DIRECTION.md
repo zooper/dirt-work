@@ -4,7 +4,7 @@ Status: approved visual target (concept reference supplied by project owner, 202
 ## North star
 **Premium stylized industrial realism**: convincingly proportioned, mechanically detailed construction machines inside a deliberately faceted, low-poly Nordic quarry. Not farming, not toy-like, not generic primitive blockout, not photorealism.
 
-The approved concept shows a yellow articulated wheel loader tipping gravel into an articulated hauler, with terraced rock faces, conveyors, pines, distant mountains, atmospheric dust and warm late-afternoon lighting. Treat the image as *art direction*, not exact geometry or guaranteed real-time fidelity. Keep a local copy of the supplied concept under `docs/references/quarry-target.png` when available; the image is not committed by this documentation change.
+The approved concept shows a yellow articulated wheel loader tipping gravel into an articulated hauler, with terraced rock faces, conveyors, pines, distant mountains, atmospheric dust and warm late-afternoon lighting. Treat the image as *art direction*, not exact geometry or guaranteed real-time fidelity. **Approved reference image:** ![Approved Dirt Work quarry concept](image.png)\n\nSource file: [`docs/image.png`](image.png). This is the primary visual target for the DW-90 and quarry environment; compare actual Godot captures against it.
 
 ## Visual hierarchy
 1. **Hero machinery — highest detail:** believable silhouettes and scale, wide earthmover tires with deep tread and recessed rims, articulated chassis, proper bucket thickness/profile, functional lift/linkage geometry, cylinders and hoses, cab framing, glazing, handrails, steps, lamps, vents and counterweights.
