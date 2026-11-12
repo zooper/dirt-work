@@ -10,13 +10,14 @@ extends SceneTree
 
 const SHOTS := [
 	# name, camera, target, lift, tilt
-	["hero", Vector3(-3.5, 3.4, 63.5), Vector3(-18.5, 3.0, 70.5), 55.0, 22.0],  # reference composition: loader dumping into the hauler
+	["hero", Vector3(11.4, 3.4, -0.5), Vector3(-0.5, 4.4, -28.0), 55.0, 22.0, 40.0],  # reference composition: loader dumping into the hauler
 	["side", Vector3(-14.0, 2.3, 10.0), Vector3(0.0, 2.0, 10.0), 0.0, 0.0],
 	["front34", Vector3(7.5, 3.0, 1.5), Vector3(0.0, 1.9, 8.5), 0.0, -10.0],
 	["front", Vector3(0.0, 2.6, -5.0), Vector3(0.0, 2.0, 8.0), 5.0, -10.0],
 	["rear", Vector3(3.0, 3.0, 25.0), Vector3(0.0, 2.0, 10.0), 0.0, 0.0],
 	["bucket_low", Vector3(-9.0, 1.6, 3.0), Vector3(0.0, 1.0, 6.0), -23.0, 0.0],
 	["overview", Vector3(-30, 22, 60), Vector3(0, 2, -10), 0.0, 0.0],
+	["bench", Vector3(4.0, 17.5, -44.5), Vector3(10.0, 15.5, -55.0), 0.0, 0.0],      # excavator + hauler on the upper bench
 	["cab_detail", Vector3(-3.4, 3.7, 11.3), Vector3(0.0, 3.3, 11.0), 0.0, 0.0],   # interior through the side glass
 ]
 
@@ -50,7 +51,7 @@ func _run() -> void:
 	var cam := level.get_node("FollowCamera/Camera3D") as Camera3D
 	var spawn := loader.global_transform
 	# Loading pose next to the parked hauler (reference composition).
-	var loading := Transform3D(Basis(Vector3.UP, 1.08), Vector3(-15.9, 0.05, 72.9))
+	var loading := Transform3D(Basis(Vector3.UP, 1.08 - PI * 0.5), Vector3(-2.9, 0.05, -23.9))
 	for shot in SHOTS:
 		if not want.call(shot[0]):
 			continue
@@ -59,6 +60,7 @@ func _run() -> void:
 		loader.bucket_fill = 1.0 if shot[0] == "hero" else 0.0
 		loader.lift_angle = shot[3]
 		loader.tilt_angle = shot[4]
+		cam.fov = shot[5] if shot.size() > 5 else 58.0   # optional per-shot FOV
 		cam.global_position = shot[1]
 		cam.look_at(shot[2])
 		for i in 20:
@@ -72,6 +74,7 @@ func _run() -> void:
 	loader.bucket_fill = 0.0
 	loader.lift_angle = 8.0
 	loader.tilt_angle = -15.0
+	cam.fov = 58.0
 	follow.set_process(true)
 	follow.mode = FollowCamera.Mode.CAB
 	follow.head_pitch = follow.cab_default_pitch

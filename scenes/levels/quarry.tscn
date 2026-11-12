@@ -5,6 +5,7 @@
 [ext_resource type="Script" path="res://scripts/core/follow_camera.gd" id="3"]
 [ext_resource type="Script" path="res://scripts/world/site_props.gd" id="4"]
 [ext_resource type="PackedScene" path="res://scenes/vehicles/hauler.tscn" id="5"]
+[ext_resource type="PackedScene" path="res://assets/models/excavator/excavator.glb" id="6"]
 
 [sub_resource type="ProceduralSkyMaterial" id="SkyMat"]
 sky_top_color = Color(0.36, 0.55, 0.82, 1)
@@ -73,7 +74,13 @@ script = ExtResource("1")
 script = ExtResource("4")
 
 [node name="Hauler" parent="." instance=ExtResource("5")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -20, 0, 66)
+transform = Transform3D(0, 0, -1, 0, 1, 0, 1, 0, 0, 4, 0, -28)
+
+[node name="BenchExcavator" parent="." instance=ExtResource("6")]
+transform = Transform3D(0, 0, 1, 0, 1, 0, -1, 0, 0, 14, 14, -55)
+
+[node name="BenchHauler" parent="." instance=ExtResource("5")]
+transform = Transform3D(0, 0, 1, 0, 1, 0, -1, 0, 0, -6, 14, -54.5)
 
 [node name="WheelLoader" parent="." instance=ExtResource("2")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.05, 10)

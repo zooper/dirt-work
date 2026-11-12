@@ -210,7 +210,7 @@ func _build_ramp(ground: LowPolyBatch, cliffs: LowPolyBatch) -> void:
 # --- Piles, rocks, rubble ---------------------------------------------------
 
 func _build_piles(b: LowPolyBatch) -> void:
-	var spots := [Vector3(-22, 0, -22), Vector3(-6, 0, -30), Vector3(-27, 0, -2), Vector3(26, 0, 4)]
+	var spots := [Vector3(-24, 0, -24), Vector3(-29, 0, 22), Vector3(-27, 0, -2), Vector3(26, 0, 4)]
 	for p in spots:
 		var r := _rng.randf_range(8.5, 11.0)
 		var h := r * _rng.randf_range(0.6, 0.7)
@@ -231,7 +231,8 @@ func _build_rocks(b: LowPolyBatch) -> void:
 	# (spawn + test manoeuvres) and the ramp approach clear.
 	for i in 18:
 		var p := Vector3(_rng.randf_range(-PIT_HALF + 4, PIT_HALF - 4), 0, _rng.randf_range(-PIT_HALF + 4, PIT_HALF - 2))
-		if (absf(p.x) < 16.0 and p.z > -16.0 and p.z < 24.0) or (absf(p.x - RAMP_X) < 8.0 and p.z < -18.0):
+		if (absf(p.x) < 16.0 and p.z > -16.0 and p.z < 24.0) or (absf(p.x - RAMP_X) < 8.0 and p.z < -18.0) \
+				or (absf(p.x - SiteProps.LOADING_BAY.x) < 15.0 and absf(p.z - SiteProps.LOADING_BAY.z) < 10.0):
 			continue
 		if _near_pile(p, 2.0):
 			continue

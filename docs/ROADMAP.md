@@ -19,7 +19,7 @@
 - [ ] Money counter and completion feedback
 
 ## M3 — Polish
-- [~] Better low-poly assets and lighting — DW-90 passes 1–3 (rear body, boom, cab interior), golden-hour lighting, faceted rock, DW-40 hauler prop, pour/dust, showcase loading bay (see docs/reviews/); needs Forward+ review on macOS
+- [~] Better low-poly assets and lighting — DW-90 passes 1–3 (rear body, boom, cab interior), golden-hour lighting, faceted rock, DW-40 hauler prop, pour/dust, showcase loading bay in the pit, bench excavator + second hauler, cab interior rebuild + moving controls (see docs/reviews/); needs Forward+ review on macOS
 - [ ] Sounds and particles
 - [ ] Save/load, settings and accessibility
 - [ ] Performance profiling on macOS

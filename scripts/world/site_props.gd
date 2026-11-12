@@ -7,6 +7,11 @@ extends Node3D
 
 @export var seed_value := 4412
 
+## Showcase loading spot in the pit against the north benches (reference
+## composition); the Hauler instance in quarry.tscn stands here, facing +X.
+const LOADING_BAY := Vector3(4, 0, -28)
+const LOADING_BAY_YAW := -PI * 0.5
+
 var _rng := RandomNumberGenerator.new()
 var _solid := LowPolyBatch.new()
 var _glow := LowPolyBatch.new()
@@ -25,7 +30,8 @@ func _ready() -> void:
 		_floodlight(p)
 	_crusher_plant(Vector3(-52, 0, 72))
 	_yard_clutter(Vector3(22, 0, 60))
-	_loading_bay(Vector3(-20, 0, 66))
+	_loading_bay(LOADING_BAY, LOADING_BAY_YAW)
+	_upper_bench()
 
 	add_child(_solid.to_instance("SiteSolid"))
 	var glow := _glow.to_instance("SiteGlow", false)
@@ -165,9 +171,10 @@ func _conveyor(from: Vector3, to: Vector3) -> void:
 
 ## Dressing around the hauler loading spot (the reference showcase): a chunky
 ## angular rock stockpile, big boulders, a lone pine and a floodlight.
-func _loading_bay(hauler: Vector3) -> void:
+func _loading_bay(hauler: Vector3, yaw: float) -> void:
+	var r := Basis(Vector3.UP, yaw)   # offsets below are in hauler-local space
 	# Cobble stockpile (east of the hauler's nose): big angular stones heaped up.
-	var c := hauler + Vector3(7.5, 0, -3.5)
+	var c := hauler + r * Vector3(7.5, 0, -3.5)
 	var hull := PackedVector3Array()
 	for i in 90:
 		var a := _rng.randf() * TAU
@@ -187,7 +194,7 @@ func _loading_bay(hauler: Vector3) -> void:
 	# Big boulders by the bay entrance.
 	for off in [Vector3(13.5, 0, 4.0), Vector3(15.0, 0, 6.5), Vector3(12.0, 0, 8.0)]:
 		var size := _rng.randf_range(0.9, 1.6)
-		var pts := _solid.add_rock(hauler + off + Vector3.UP * size * 0.45, size, _rng, Palette.ROCK_COOL.darkened(0.2), 0.75)
+		var pts := _solid.add_rock(hauler + r * off + Vector3.UP * size * 0.45, size, _rng, Palette.ROCK_COOL.darkened(0.2), 0.75)
 		var bcs := CollisionShape3D.new()
 		var bs := ConvexPolygonShape3D.new()
 		bs.points = pts
@@ -196,11 +203,25 @@ func _loading_bay(hauler: Vector3) -> void:
 	# A lone pine at the bay edge, and a floodlight among the site buildings.
 	var pine := MeshInstance3D.new()
 	pine.mesh = QuarryWorld.build_pine_mesh(_rng)
-	pine.position = hauler + Vector3(12.5, 0, 10.5)
+	pine.position = hauler + r * Vector3(18.4, 0, 6.9)
 	pine.scale = Vector3.ONE * 1.6
 	add_child(pine)
 	_collider(pine.position + Vector3(0, 2.0, 0), Vector3(0.6, 4.0, 0.6))
-	_floodlight(hauler + Vector3(-10.0, 0, 16.0))
+	_floodlight(hauler + r * Vector3(-10.0, 0, 16.0))
+
+
+## Working face on the second bench (y = 14) above the loading bay: the
+## BenchExcavator (quarry.tscn) digs this blasted-rock heap and loads BenchHauler.
+func _upper_bench() -> void:
+	var c := Vector3(6.5, 14.0, -55.5)
+	var rng := _rng
+	_solid.add_mound(c, 3.6, 2.3, 12, 3, _rng,
+		func(p, n): return LowPolyBatch._shade(Palette.GRAVEL_PILE.lerp(Palette.ROCK_COOL, rng.randf() * 0.4), n, rng))
+	for i in 26:
+		var a := _rng.randf() * TAU
+		var d := _rng.randf_range(2.6, 4.4)
+		_solid.add_rock(c + Vector3(cos(a) * d, 0.2, sin(a) * d), _rng.randf_range(0.25, 0.55), _rng,
+			Palette.GRAVEL_PILE.lerp(Palette.ROCK_COOL, _rng.randf()).darkened(0.25), 0.8)
 
 
 func _rails(center: Vector3, sx: float, sz: float) -> void:
