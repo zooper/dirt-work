@@ -100,13 +100,13 @@ func _build_rocks() -> CPUParticles3D:
 
 func _build_dust() -> CPUParticles3D:
 	var p := CPUParticles3D.new()
-	p.amount = 34
-	p.lifetime = 2.8
-	p.preprocess = 2.0
+	p.amount = 46
+	p.lifetime = 3.6
+	p.preprocess = 3.0
 	p.emitting = false
 	p.local_coords = false
 	var quad := QuadMesh.new()
-	quad.size = Vector2(2.2, 2.2)
+	quad.size = Vector2(3.0, 3.0)
 	var grad := Gradient.new()
 	grad.offsets = PackedFloat32Array([0.0, 1.0])
 	grad.colors = PackedColorArray([Color(1, 1, 1, 1), Color(1, 1, 1, 0)])
@@ -129,14 +129,14 @@ func _build_dust() -> CPUParticles3D:
 	p.mesh = quad
 	p.position = Vector3(0, -2.2, -2.0)
 	p.emission_shape = CPUParticles3D.EMISSION_SHAPE_BOX
-	p.emission_box_extents = Vector3(2.0, 0.6, 1.2)
+	p.emission_box_extents = Vector3(2.4, 0.9, 1.6)
 	p.direction = Vector3(0, 1, 0)
 	p.spread = 60.0
 	p.initial_velocity_min = 0.2
 	p.initial_velocity_max = 0.8
-	p.gravity = Vector3(0.3, 0.15, 0)
-	p.scale_amount_min = 0.8
-	p.scale_amount_max = 2.4
+	p.gravity = Vector3(0.45, 0.22, 0.1)   # drifts downwind and rises
+	p.scale_amount_min = 0.9
+	p.scale_amount_max = 2.8
 	var fade := Gradient.new()
 	fade.offsets = PackedFloat32Array([0.0, 0.25, 1.0])
 	fade.colors = PackedColorArray([Color(1, 1, 1, 0), Color(1, 1, 1, 1), Color(1, 1, 1, 0)])
