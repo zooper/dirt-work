@@ -12,7 +12,8 @@ enum Mode { CHASE, CAB }
 
 @export var target_path: NodePath
 @export var cab_path: NodePath = ^"../WheelLoader/Chassis/RearPivot/Cab"
-@export var cab_eye := Vector3(0.0, 3.85, 0.0)  ## just in front of the operator's head
+@export var cab_eye := Vector3(0.0, 3.92, 0.27)  ## operator's eye point (cab-local)
+@export var operator_path: NodePath = ^"../WheelLoader/Chassis/RearPivot/Operator"  ## shadow-only in cab view
 @export var distance := 11.0
 @export var min_distance := 6.0
 @export var max_distance := 24.0
@@ -24,7 +25,7 @@ enum Mode { CHASE, CAB }
 @export var mouse_sensitivity := 0.18     ## degrees per pixel
 @export var zoom_step := 1.5
 @export var capture_mouse := true
-@export var cab_default_pitch := -0.14   ## radians; looks slightly down at dash + bucket
+@export var cab_default_pitch := -0.2   ## radians; looks slightly down at dash + bucket
 
 var mode := Mode.CHASE
 var orbit_yaw := 0.0     ## radians relative to behind-the-vehicle (chase)
@@ -35,6 +36,8 @@ var _yaw := 0.0
 @onready var _target: Node3D = get_node_or_null(target_path)
 @onready var _cab: Node3D = get_node_or_null(cab_path)
 @onready var _camera: Camera3D = $Camera3D
+@onready var _operator: Node3D = get_node_or_null(operator_path)
+var _operator_hidden := false
 
 
 func _ready() -> void:
@@ -84,6 +87,7 @@ func _process(delta: float) -> void:
 		var speed := deg_to_rad(look_speed_deg) * delta
 		_look(-stick.x * speed, stick.y * speed)
 	_camera.near = 0.03 if mode == Mode.CAB else 0.05
+	_set_operator_hidden(mode == Mode.CAB)
 	if mode == Mode.CAB and _cab:
 		var eye := _cab.global_transform * cab_eye
 		global_position = eye
@@ -101,3 +105,13 @@ func _desired_position() -> Vector3:
 	var back := Vector3(sin(yaw), 0.0, cos(yaw))   # +Z is behind a -Z-forward vehicle
 	var h := height + distance * sin(orbit_pitch)
 	return _target.global_position + back * distance * cos(orbit_pitch) + Vector3.UP * maxf(h, 1.0)
+
+
+## In cab view the camera sits in the operator's head: keep his shadow, hide his body.
+func _set_operator_hidden(hidden: bool) -> void:
+	if _operator == null or hidden == _operator_hidden:
+		return
+	_operator_hidden = hidden
+	var setting := GeometryInstance3D.SHADOW_CASTING_SETTING_SHADOWS_ONLY if hidden else GeometryInstance3D.SHADOW_CASTING_SETTING_ON
+	for mi in _operator.find_children("*", "GeometryInstance3D", true, false):
+		(mi as GeometryInstance3D).cast_shadow = setting

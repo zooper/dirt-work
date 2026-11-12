@@ -81,6 +81,14 @@ TINT = mat("Tint", (0.08, 0.1, 0.12), rough=0.3)
 SCREEN = mat("Screen", (0.35, 0.72, 0.95), rough=0.2, emit=1.5)
 TROUSERS = mat("Trousers", (0.14, 0.16, 0.24), rough=0.85)
 CAP = mat("Cap", (0.10, 0.12, 0.16), rough=0.8)
+# Cab interior: mid-grey moulded plastics, darker trim, soft-glow displays/LEDs.
+INTERIOR = mat("Interior", (0.38, 0.39, 0.41), rough=0.78)
+TRIM = mat("Trim", (0.21, 0.22, 0.24), rough=0.7)
+GRIP = mat("Grip", (0.07, 0.07, 0.08), rough=0.9)
+DISPLAY = mat("Display", (0.16, 0.34, 0.44), rough=0.2, emit=0.35)
+LED_G = mat("LedGreen", (0.3, 1.0, 0.35), rough=0.3, emit=1.2)
+LED_A = mat("LedAmber", (1.0, 0.6, 0.1), rough=0.3, emit=1.2)
+EXTING = mat("Extinguisher", (0.78, 0.08, 0.06), rough=0.45)
 
 
 # ---------------------------------------------------------- mesh helpers ----

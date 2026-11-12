@@ -29,3 +29,4 @@
 - 2026-11-11: The DW-40 hauler is a parked StaticBody3D prop (Blender-built) used as the loading target until M2 adds volume accounting; it may become drivable later.
 - 2026-11-11: `WheelLoader.bucket_fill` is a presentation hook (bucket heap + pour/dust via `BucketSpill`, CPUParticles3D for renderer independence); gameplay will drive it in M2.
 - 2026-11-11: Sun comes from the south-east so the showcase loading bay is front-lit like the reference; gameplay chase camera gets side light.
+- 2026-11-12: The operator is a separate part (`operator.glb`). In cab view `FollowCamera` switches his meshes to shadow-only, so the camera at his eye point (`cab_eye`) never shows his body or arms and his shadow stays. A small no-shadow `CabFill` omni light under `Cab` keeps the shaded operator station readable.

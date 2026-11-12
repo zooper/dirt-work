@@ -10,6 +10,7 @@
 [ext_resource type="PackedScene" path="res://assets/models/wheel_loader/bucket.glb" id="13"]
 [ext_resource type="PackedScene" path="res://assets/models/wheel_loader/wheel.glb" id="14"]
 [ext_resource type="Script" path="res://scripts/vehicles/bucket_spill.gd" id="6"]
+[ext_resource type="PackedScene" path="res://assets/models/wheel_loader/operator.glb" id="15"]
 
 [sub_resource type="StandardMaterial3D" id="glass"]
 albedo_color = Color(0.45, 0.62, 0.75, 0.35)
@@ -151,6 +152,8 @@ rod_radius = 0.065
 
 [node name="Model" parent="Chassis/RearPivot" instance=ExtResource("11")]
 
+[node name="Operator" parent="Chassis/RearPivot" instance=ExtResource("15")]
+
 [node name="WheelRL" type="Node3D" parent="Chassis/RearPivot"]
 transform = Transform3D(1.000000, 0.000000, 0.000000, 0.000000, 1.000000, 0.000000, 0.000000, 0.000000, 1.000000, -1.380000, 1.150000, 1.750000)
 
@@ -167,6 +170,13 @@ transform = Transform3D(1.000000, 0.000000, 0.000000, 0.000000, 1.000000, 0.0000
 [node name="Beacon" type="Node3D" parent="Chassis/RearPivot/Cab"]
 transform = Transform3D(1.000000, 0.000000, 0.000000, 0.000000, 1.000000, 0.000000, 0.000000, 0.000000, 1.000000, -0.650000, 4.460000, 0.500000)
 script = ExtResource("5")
+
+[node name="CabFill" type="OmniLight3D" parent="Chassis/RearPivot/Cab"]
+transform = Transform3D(1.000000, 0.000000, 0.000000, 0.000000, 1.000000, 0.000000, 0.000000, 0.000000, 1.000000, 0.000000, 3.350000, 0.050000)
+light_color = Color(1, 0.93, 0.84, 1)
+light_energy = 0.6
+omni_range = 1.05
+shadow_enabled = false
 
 [node name="ModelLeft" type="Label3D" parent="Chassis/RearPivot"]
 transform = Transform3D(0.000000, 0.000000, -1.000000, 0.000000, 1.000000, 0.000000, 1.000000, 0.000000, 0.000000, -1.075000, 3.000000, 2.950000)

@@ -78,6 +78,10 @@ func _run() -> void:
 	for i in 20:
 		await process_frame
 	_save(out + "/cab.jpg")
+	follow.head_pitch = -0.6   # looking down at the controls
+	for i in 10:
+		await process_frame
+	_save(out + "/cab_dash.jpg")
 	quit()
 
 

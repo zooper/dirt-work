@@ -9,7 +9,8 @@ with the articulation hinge at the origin. They are converted to Blender space
 
 Exported parts and their origins (must match tools/gen_wheel_loader.py):
   front.glb   front frame, origin = hinge
-  rear.glb    rear frame + cab + operator, origin = hinge
+  rear.glb    rear frame + cab + interior, origin = hinge
+  operator.glb seated operator (rear-frame space), origin = hinge
   arm.glb     lift arms + Z-bar lever, origin = arm pivot
   bucket.glb  bucket, origin = bucket pin
   wheel.glb   one wheel (tyre + rim), origin = wheel centre, axle along X
@@ -197,6 +198,124 @@ def build_bucket():
     export(p.to_object(), "bucket.glb")
 
 
+# ------------------------------------------------------------ cab interior ----
+CAB_Z, CAB_FL, CAB_ROOF = 1.1, 2.4, 4.3     # cab centre z, floor and roof height (rear-frame space)
+
+
+def cab_interior(p, cz, FL, ROOF):
+    """Operator station seen from the first-person cab camera (eye ~ (0, FL+1.52, cz+0.28)).
+    Modern loader layout: slim steering pod, low dash shelf so the glass reaches the
+    floor, joystick armrest console on the right, display on the right A-pillar."""
+    p.box((1.62, 0.03, 1.55), (0, FL + 0.02, cz + 0.05), RUBBER, bevel=0.0)                   # floor mat
+    p.box((1.7, 0.04, 1.65), (0, ROOF - 0.2, cz + 0.02), LINER, bevel=0.0)                    # headliner
+    p.box((0.26, 0.025, 0.1), (0, ROOF - 0.225, cz + 0.35), LAMP, bevel=0.01)                 # dome light
+    p.box((1.7, 0.55, 0.05), (0, FL + 0.3, cz + 0.83), TRIM, bevel=0.01)                      # rear wall panel
+    # Interior side wall trims below the side glass, and A/B-pillar covers.
+    for s in (-1, 1):
+        p.box((0.05, 0.5, 1.6), (s * 0.86, FL + 0.28, cz + 0.05), INTERIOR, bevel=0.015)
+        p.box((0.06, 0.08, 1.6), (s * 0.85, FL + 0.55, cz + 0.05), TRIM, bevel=0.01)          # sill trim
+        for zz in (cz - 0.86, cz + 0.86):
+            p.box((0.1, ROOF - FL - 0.75, 0.06), (s * 0.84, (FL + 0.55 + ROOF - 0.2) / 2, zz), TRIM, bevel=0.015)
+    # Low front dash shelf with vents (stays below the eye line).
+    p.prism([(cz - 0.8, FL + 0.12), (cz - 0.58, FL + 0.12), (cz - 0.58, FL + 0.44), (cz - 0.74, FL + 0.52), (cz - 0.8, FL + 0.52)],
+            -0.82, 0.82, INTERIOR, bevel=0.02)
+    for x in (-0.6, -0.42, 0.42, 0.6):
+        p.box((0.13, 0.015, 0.07), (x, FL + 0.495, cz - 0.7), GRIP, bevel=0.0)                 # defrost vents
+    # Steering pod rising from the floor, instrument cluster on top facing the operator.
+    p.prism([(cz - 0.66, FL + 0.03), (cz - 0.34, FL + 0.03), (cz - 0.4, FL + 0.6), (cz - 0.62, FL + 0.66)],
+            -0.21, 0.21, INTERIOR, bevel=0.03, segments=2)
+    tilt = Matrix.Rotation(0.55, 4, "X")
+    p.box((0.46, 0.08, 0.26), (0, FL + 0.68, cz - 0.5), TRIM, bevel=0.03, rot=tilt)            # cluster housing
+    p.box((0.46, 0.06, 0.05), (0, FL + 0.74, cz - 0.62), TRIM, bevel=0.02)                    # sun hood
+    p.box((0.2, 0.012, 0.11), (0, FL + 0.725, cz - 0.49), DISPLAY, bevel=0.0, rot=tilt)        # centre display
+    cn = Vector((0, math.cos(0.55), math.sin(0.55)))
+    for x in (-0.16, 0.16):                                                                   # round gauges
+        g = Vector((x, FL + 0.715, cz - 0.49))
+        p.tube([tuple(g), tuple(g + cn * 0.012)], 0.05, BLACK, segments=10)
+        p.tube([tuple(g + cn * 0.01), tuple(g + cn * 0.016)], 0.04, DISPLAY, segments=10)
+    for k, m in enumerate((LED_G, LED_A, LED_G, LED_A)):
+        p.box((0.02, 0.012, 0.02), (-0.06 + k * 0.04, FL + 0.70, cz - 0.42), m, bevel=0.0, rot=tilt)  # tell-tales
+    # Steering column, wheel with grip, hub, spokes and a spinner knob.
+    wc = Vector((0, FL + 0.93, cz - 0.3))
+    n = Vector((0, 0.8, 0.6)).normalized()
+    u = Vector((1, 0, 0))
+    v = n.cross(u).normalized()
+    p.tube([(0, FL + 0.62, cz - 0.46), tuple(wc - n * 0.04)], 0.035, TRIM, segments=8)
+    rw = 0.175
+    ring = [tuple(wc + (u * math.cos(2 * math.pi * k / 24) + v * math.sin(2 * math.pi * k / 24)) * rw) for k in range(25)]
+    p.tube(ring, 0.021, GRIP, segments=8)
+    p.tube([tuple(wc - n * 0.02), tuple(wc + n * 0.025)], 0.055, TRIM, segments=10)          # hub
+    for ang in (math.pi * 0.15, math.pi * 0.85, math.pi * 1.5):
+        d = u * math.cos(ang) + v * math.sin(ang)
+        p.tube([tuple(wc + d * 0.05), tuple(wc + d * (rw - 0.01))], 0.013, TRIM, segments=5)
+    knob = wc + (u * math.cos(-0.5) + v * math.sin(-0.5)) * rw
+    p.tube([tuple(knob), tuple(knob + n * 0.08)], 0.02, GRIP, segments=8)                    # spinner knob
+    for x in (-0.13, 0.13):                                                                   # pedals
+        p.box((0.1, 0.03, 0.18), (x, FL + 0.14, cz - 0.5), GRIP, bevel=0.0, rot=Matrix.Rotation(0.7, 4, "X"))
+    p.box((0.12, 0.03, 0.2), (-0.38, FL + 0.12, cz - 0.48), GRIP, bevel=0.0, rot=Matrix.Rotation(0.7, 4, "X"))  # brake
+    # Air-suspension seat.
+    p.box((0.4, 0.3, 0.4), (0, FL + 0.18, cz + 0.25), TRIM, bevel=0.03)                      # pedestal
+    p.box((0.6, 0.16, 0.55), (0, FL + 0.42, cz + 0.22), SEAT, bevel=0.05)
+    p.box((0.58, 0.78, 0.14), (0, FL + 0.9, cz + 0.55), SEAT, bevel=0.05, rot=Matrix.Rotation(-0.15, 4, "X"))
+    p.box((0.34, 0.2, 0.12), (0, FL + 1.42, cz + 0.62), SEAT, bevel=0.04)                    # headrest
+    # Right armrest console: joystick, roller switches, keypad.
+    p.box((0.22, 0.5, 0.7), (0.43, FL + 0.38, cz + 0.12), INTERIOR, bevel=0.03)              # console body
+    p.box((0.2, 0.06, 0.62), (0.43, FL + 0.66, cz + 0.14), TRIM, bevel=0.02)                 # armrest top
+    p.box((0.09, 0.04, 0.1), (0.43, FL + 0.7, cz + 0.32), GRIP, bevel=0.015)                 # armrest pad
+    p.cylinder(0.02, 0.12, (0.43, FL + 0.74, cz - 0.08), "y", GRIP, segments=6)
+    p.box((0.08, 0.11, 0.09), (0.43, FL + 0.84, cz - 0.09), GRIP, bevel=0.025)                # joystick
+    p.box((0.03, 0.02, 0.03), (0.43, FL + 0.9, cz - 0.11), LED_A, bevel=0.0)                 # joystick button
+    for k in range(3):
+        p.box((0.025, 0.02, 0.045), (0.38 + k * 0.05, FL + 0.7, cz + 0.07), GRIP, bevel=0.005)  # rollers
+    for k in range(6):
+        p.box((0.035, 0.012, 0.035), (0.39 + (k % 2) * 0.06, FL + 0.695, cz - 0.21 + (k // 2) * 0.05),
+              LED_G if k == 0 else TRIM, bevel=0.0)                                             # keypad
+    # Left side: switch panel and door grab handle; right A-pillar display.
+    p.box((0.04, 0.22, 0.4), (-0.82, FL + 0.66, cz - 0.15), TRIM, bevel=0.01)
+    for k in range(4):
+        p.box((0.02, 0.04, 0.05), (-0.8, FL + 0.7, cz - 0.3 + k * 0.1), LED_G if k == 1 else GRIP, bevel=0.0)
+    p.tube([(-0.8, FL + 0.85, cz - 0.55), (-0.79, FL + 1.1, cz - 0.6)], 0.017, GRIP, segments=6)   # grab handle
+    p.tube([(0.78, FL + 0.95, cz - 0.62), (0.68, FL + 1.12, cz - 0.6)], 0.02, TRIM, segments=6)
+    p.box((0.2, 0.16, 0.03), (0.62, FL + 1.18, cz - 0.6), TRIM, bevel=0.01, rot=Matrix.Rotation(-0.62, 4, "Z"))
+    p.box((0.17, 0.12, 0.02), (0.615, FL + 1.18, cz - 0.585), DISPLAY, bevel=0.0, rot=Matrix.Rotation(-0.62, 4, "Z"))
+    # Top of the windscreen: roller-blind cassette, interior mirror, radio/overhead panel.
+    p.box((1.55, 0.06, 0.07), (0, ROOF - 0.27, cz - 0.9), TRIM, bevel=0.015)
+    p.box((0.22, 0.07, 0.02), (0, ROOF - 0.36, cz - 0.84), TRIM, bevel=0.01)
+    p.box((0.2, 0.055, 0.012), (0, ROOF - 0.36, cz - 0.83), GLASS, bevel=0.0)
+    p.box((0.7, 0.07, 0.3), (0, ROOF - 0.25, cz + 0.3), TRIM, bevel=0.03)                    # overhead panel (above the head)
+    p.box(       (0.14, 0.012, 0.05), (-0.15, ROOF - 0.29, cz + 0.25), DISPLAY, bevel=0.0)      # radio
+    for x in (0.12, 0.24):
+        p.cylinder(0.035, 0.012, (x, ROOF - 0.29, cz + 0.3), "y", GRIP, segments=10)         # vents
+    # Fire extinguisher behind the seat, left.
+    p.cylinder(0.065, 0.42, (-0.6, FL + 0.32, cz + 0.68), "y", EXTING, segments=10)
+    p.box((0.05, 0.06, 0.08), (-0.6, FL + 0.56, cz + 0.68), BLACK, bevel=0.01)
+
+
+def build_operator():
+    """Seated operator in hi-vis; separate part so the cab camera can hide him."""
+    p = Part("Operator")
+    FL, cz = CAB_FL, CAB_Z
+    p.box((0.44, 0.2, 0.48), (0, FL + 0.6, cz + 0.05), TROUSERS, bevel=0.05)                 # thighs
+    for x in (-0.12, 0.12):
+        p.box((0.15, 0.46, 0.15), (x, FL + 0.3, cz - 0.22), TROUSERS, bevel=0.04)          # shins
+        p.box((0.16, 0.1, 0.26), (x, FL + 0.08, cz - 0.28), BLACK, bevel=0.03)              # boots
+    p.box((0.46, 0.62, 0.3), (0, FL + 1.05, cz + 0.36), HIVIS, bevel=0.07, segments=2, rot=Matrix.Rotation(-0.12, 4, "X"))
+    for y in (0.9, 1.16):
+        p.box((0.48, 0.05, 0.32), (0, FL + y, cz + 0.36), WEAR, bevel=0.0, rot=Matrix.Rotation(-0.12, 4, "X"))
+    p.box((0.12, 0.14, 0.12), (0, FL + 1.42, cz + 0.32), SKIN, bevel=0.03)                  # neck
+    p.box((0.24, 0.27, 0.25), (0, FL + 1.58, cz + 0.3), SKIN, bevel=0.07, segments=2)
+    p.box((0.27, 0.08, 0.29), (0, FL + 1.74, cz + 0.3), CAP, bevel=0.03)
+    p.box((0.22, 0.025, 0.12), (0, FL + 1.71, cz + 0.12), CAP, bevel=0.01)                  # cap brim
+    for x in (-1, 1):
+        sh = (x * 0.27, FL + 1.27, cz + 0.33)
+        el = (x * 0.3, FL + 0.95, cz + 0.05)
+        hd = (x * 0.15, FL + 0.98, cz - 0.28) if x < 0 else (0.43, FL + 0.86, cz - 0.05)   # left on wheel, right on joystick
+        p.tube([sh, el], 0.07, HIVIS, segments=8)
+        p.tube([el, hd], 0.055, HIVIS, segments=8)
+        p.box((0.08, 0.08, 0.1), hd, SKIN, bevel=0.03)
+    export(p.to_object(), "operator.glb")
+
+
 # ------------------------------------------------------------- rear frame ----
 def build_rear():
     p = Part("RearFrame")
@@ -271,10 +390,14 @@ def build_rear():
     p.cylinder(0.13, 0.12, (-0.6, 4.72, 2.45), "y", BLACK, segments=12, radius2=0.1)
     p.cylinder(0.15, 0.6, (0.6, 3.85, 2.35), "y", DARK, segments=12)
     # ---- cab ----
-    cz = 1.1
-    FL, ROOF = 2.4, 4.3
+    cz, FL, ROOF = CAB_Z, CAB_FL, CAB_ROOF
     p.prism([(cz - 1.0, FL - 0.35), (cz + 1.0, FL - 0.35), (cz + 1.0, FL), (cz - 1.0, FL)], -1.0, 1.0, DARK, bevel=0.04)
-    p.box((1.95, 0.55, 1.95), (0, FL + 0.27, cz), YELLOW, bevel=0.06)                         # lower cab panels
+    # Lower cab panels: four walls (hollow, so the floor and pedals show inside).
+    for zz in (cz - 0.945, cz + 0.945):
+        p.box((1.95, 0.55, 0.06), (0, FL + 0.27, zz), YELLOW, bevel=0.025)
+    for x in (-0.945, 0.945):
+        p.box((0.06, 0.55, 1.95), (x, FL + 0.27, cz), YELLOW, bevel=0.025)
+    p.box((1.9, 0.05, 1.9), (0, FL - 0.02, cz), DARK, bevel=0.0)                              # cab floor plate
     for x in (-0.9, 0.9):
         p.prism([(cz - 0.92, FL + 0.5), (cz - 0.78, FL + 0.5), (cz - 0.9, ROOF - 0.15), (cz - 1.04, ROOF - 0.15)], x - 0.07, x + 0.07, BLACK, bevel=0.02)
         p.prism([(cz + 0.82, FL + 0.5), (cz + 0.96, FL + 0.5), (cz + 0.96, ROOF - 0.15), (cz + 0.82, ROOF - 0.15)], x - 0.07, x + 0.07, BLACK, bevel=0.02)
@@ -294,58 +417,8 @@ def build_rear():
         for zz, dz in ((cz - 1.2, -0.06), (cz + 1.08, 0.06)):
             p.box((0.3, 0.18, 0.12), (s * 0.75, ROOF + 0.02, zz), DARK, bevel=0.02)
             p.box((0.24, 0.13, 0.04), (s * 0.75, ROOF + 0.02, zz + dz), LAMP, bevel=0.01)
-    # ---- Cab interior ----
-    p.box((1.62, 0.03, 1.55), (0, FL + 0.02, cz + 0.05), RUBBER, bevel=0.0)                   # floor mat
-    p.box((1.7, 0.04, 1.65), (0, ROOF - 0.2, cz + 0.02), LINER, bevel=0.0)                    # headliner
-    p.box((0.3, 0.03, 0.12), (0, ROOF - 0.225, cz + 0.35), LAMP, bevel=0.01)                  # dome light
-    p.box((1.7, 0.55, 0.05), (0, FL + 0.3, cz + 0.83), DARK, bevel=0.01)                      # rear wall panel
-    # Dashboard with instrument screen, steering column and wheel.
-    p.box((1.55, 0.5, 0.32), (0, FL + 0.45, cz - 0.6), DARK, bevel=0.04)
-    p.box((1.5, 0.08, 0.38), (0, FL + 0.72, cz - 0.58), BLACK, bevel=0.02, rot=Matrix.Rotation(0.35, 4, "X"))
-    p.box((0.32, 0.18, 0.02), (0, FL + 0.82, cz - 0.5), SCREEN, bevel=0.0, rot=Matrix.Rotation(0.55, 4, "X"))
-    for x in (-0.45, -0.3, 0.3, 0.45):
-        p.box((0.08, 0.05, 0.02), (x, FL + 0.78, cz - 0.52), AMBER if x < 0 else LAMP, bevel=0.0)  # tell-tales
-    p.tube([(0, FL + 0.55, cz - 0.55), (0, FL + 0.98, cz - 0.38)], 0.04, BLACK)
-    wc = Vector((0, FL + 1.0, cz - 0.36))
-    n = Vector((0, 0.77, 0.64)).normalized()
-    u = Vector((1, 0, 0))
-    v = n.cross(u).normalized()
-    ring = [tuple(wc + (u * math.cos(2 * math.pi * k / 14) + v * math.sin(2 * math.pi * k / 14)) * 0.2) for k in range(15)]
-    p.tube(ring, 0.025, BLACK, segments=6)
-    p.tube([tuple(wc), tuple(wc + u * 0.2)], 0.015, BLACK, segments=5)
-    p.tube([tuple(wc), tuple(wc - u * 0.2)], 0.015, BLACK, segments=5)
-    for x in (-0.13, 0.13):                                                                   # pedals
-        p.box((0.1, 0.03, 0.18), (x, FL + 0.14, cz - 0.52), BLACK, bevel=0.0, rot=Matrix.Rotation(0.7, 4, "X"))
-    # Air-suspension seat with armrest console, loader joystick and side display.
-    p.box((0.4, 0.3, 0.4), (0, FL + 0.18, cz + 0.25), DARK, bevel=0.03)                      # pedestal
-    p.box((0.6, 0.16, 0.55), (0, FL + 0.42, cz + 0.22), SEAT, bevel=0.05)
-    p.box((0.58, 0.78, 0.14), (0, FL + 0.9, cz + 0.55), SEAT, bevel=0.05, rot=Matrix.Rotation(-0.15, 4, "X"))
-    p.box((0.34, 0.2, 0.12), (0, FL + 1.42, cz + 0.62), SEAT, bevel=0.04)                    # headrest
-    p.box((0.2, 0.14, 0.55), (0.42, FL + 0.66, cz + 0.12), DARK, bevel=0.03)                 # armrest console
-    p.cylinder(0.025, 0.14, (0.42, FL + 0.8, cz - 0.05), "y", BLACK, segments=6)
-    p.box((0.07, 0.09, 0.07), (0.42, FL + 0.9, cz - 0.05), BLACK, bevel=0.02)                # joystick
-    p.box((0.06, 0.05, 0.05), (0.42, FL + 0.75, cz + 0.12), AMBER, bevel=0.0)
-    p.tube([(0.62, FL + 0.7, cz - 0.1), (0.66, FL + 1.05, cz - 0.3)], 0.02, BLACK)
-    p.box((0.03, 0.16, 0.24), (0.66, FL + 1.12, cz - 0.32), SCREEN, bevel=0.005)            # side display
-    # Operator: seated, hi-vis vest with reflective bands, cap, hands on the wheel.
-    p.box((0.44, 0.2, 0.48), (0, FL + 0.6, cz + 0.05), TROUSERS, bevel=0.05)                 # thighs
-    for x in (-0.12, 0.12):
-        p.box((0.15, 0.46, 0.15), (x, FL + 0.3, cz - 0.22), TROUSERS, bevel=0.04)          # shins
-        p.box((0.16, 0.1, 0.26), (x, FL + 0.08, cz - 0.28), BLACK, bevel=0.03)              # boots
-    p.box((0.46, 0.62, 0.3), (0, FL + 1.05, cz + 0.36), HIVIS, bevel=0.07, segments=2, rot=Matrix.Rotation(-0.12, 4, "X"))
-    for y in (0.9, 1.16):
-        p.box((0.48, 0.05, 0.32), (0, FL + y, cz + 0.36), WEAR, bevel=0.0, rot=Matrix.Rotation(-0.12, 4, "X"))
-    p.box((0.12, 0.14, 0.12), (0, FL + 1.42, cz + 0.32), SKIN, bevel=0.03)                  # neck
-    p.box((0.24, 0.27, 0.25), (0, FL + 1.58, cz + 0.3), SKIN, bevel=0.07, segments=2)
-    p.box((0.27, 0.08, 0.29), (0, FL + 1.74, cz + 0.3), CAP, bevel=0.03)
-    p.box((0.22, 0.025, 0.12), (0, FL + 1.71, cz + 0.12), CAP, bevel=0.01)                  # cap brim
-    for x in (-1, 1):
-        sh = (x * 0.27, FL + 1.27, cz + 0.33)
-        el = (x * 0.3, FL + 0.95, cz + 0.05)
-        hd = (x * 0.16, FL + 1.02, cz - 0.3)
-        p.tube([sh, el], 0.07, HIVIS, segments=8)
-        p.tube([el, hd], 0.055, HIVIS, segments=8)
-        p.box((0.08, 0.08, 0.1), hd, SKIN, bevel=0.03)
+    # ---- Cab interior (the operator is a separate part: operator.glb) ----
+    cab_interior(p, cz, FL, ROOF)
     # Exterior cab details: roof light bar, wiper.
     for x in (-0.3, 0.3):
         p.box((0.24, 0.14, 0.1), (x, ROOF + 0.02, cz - 1.2), DARK, bevel=0.02)
@@ -360,4 +433,5 @@ build_front()
 build_arm()
 build_bucket()
 build_rear()
+build_operator()
 print("DONE", dw_blender.OUT)
