@@ -279,7 +279,7 @@ func _track_pair(path: Array, track: float, width: float) -> void:
 ## Working face on the second bench (y = 14) above the loading bay: the
 ## BenchExcavator (quarry.tscn) digs this blasted-rock heap and loads BenchHauler.
 func _upper_bench() -> void:
-	var c := Vector3(6.5, 14.0, -55.5)
+	var c := Vector3(6.5, 14.0, -54.2)
 	var rng := _rng
 	_solid.add_mound(c, 3.6, 2.3, 12, 3, _rng,
 		func(p, n): return LowPolyBatch._shade(Palette.GRAVEL_PILE.lerp(Palette.ROCK_COOL, rng.randf() * 0.4), n, rng))

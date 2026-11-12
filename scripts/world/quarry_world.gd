@@ -19,6 +19,7 @@ const YARD_SOUTH := 100.0
 const RAMP_X := 20.0
 
 var _rng := RandomNumberGenerator.new()
+var _face_rng := RandomNumberGenerator.new()   ## rock-face detail; separate stream so other scenery stays put
 var _collision: StaticBody3D
 ## Pile centres/radii for future volume accounting (M2) and for decoration.
 var piles: Array[Dictionary] = []
@@ -100,6 +101,7 @@ func _build_ground(b: LowPolyBatch) -> void:
 # --- Benches / cliffs -------------------------------------------------------
 
 func _build_benches(ground: LowPolyBatch, cliffs: LowPolyBatch) -> void:
+	_face_rng.seed = seed_value + 202
 	for i in TIERS.size():
 		var inner: float = TIERS[i][0]
 		var top: float = TIERS[i][1]
@@ -127,8 +129,8 @@ func _build_benches(ground: LowPolyBatch, cliffs: LowPolyBatch) -> void:
 		_slab_face(cliffs, Vector3(-inner, bottom, -inner), Vector3.RIGHT, Vector3.BACK, inner * 2.0, h)
 		_slab_face(cliffs, Vector3(-inner, bottom, south_end), Vector3.FORWARD, Vector3.RIGHT, south_end + inner, h)
 		_slab_face(cliffs, Vector3(inner, bottom, -inner), Vector3.BACK, Vector3.LEFT, south_end + inner, h)
-		_slab_face(cliffs, Vector3(-outer, 0.0, south_end), Vector3.RIGHT, Vector3.BACK, depth, top)
-		_slab_face(cliffs, Vector3(inner, 0.0, south_end), Vector3.RIGHT, Vector3.BACK, depth, top)
+		_slab_face(cliffs, Vector3(-outer, 0.0, south_end), Vector3.RIGHT, Vector3.BACK, depth, top, false)
+		_slab_face(cliffs, Vector3(inner, 0.0, south_end), Vector3.RIGHT, Vector3.BACK, depth, top, false)
 
 
 ## Builds a rock face as a row of overlapping, irregular prismatic columns that
@@ -136,7 +138,7 @@ func _build_benches(ground: LowPolyBatch, cliffs: LowPolyBatch) -> void:
 ## uneven tops, sunlit fronts and darker side planes (reference: large faceted
 ## blocks with a coherent vertical fracture direction). `along` runs along the
 ## face, `out_dir` points out of the rock.
-func _slab_face(b: LowPolyBatch, start: Vector3, along: Vector3, out_dir: Vector3, length: float, height: float) -> void:
+func _slab_face(b: LowPolyBatch, start: Vector3, along: Vector3, out_dir: Vector3, length: float, height: float, scree := true) -> void:
 	var s := -1.0
 	while s < length:
 		var w := _rng.randf_range(3.0, 7.5)
@@ -150,26 +152,80 @@ func _slab_face(b: LowPolyBatch, start: Vector3, along: Vector3, out_dir: Vector
 			top_l = height
 		var x0 := s
 		var x1 := minf(s + w * 1.2, length + 1.0)
-		var pts := PackedVector3Array()
-		for corner in [[x0, 0.0, pf_l], [x1, 0.0, pf_r], [x0, top_l, pf_l + lean], [x1, top_r, pf_r + lean],
-				[x0, 0.0, back], [x1, 0.0, back], [x0, top_l - 0.4, back], [x1, top_r - 0.4, back]]:
-			var u: float = clampf(corner[0], 0.0, length)
-			var v: float = clampf(corner[1], 0.0, height + 1.0)
-			pts.append(start + along * u + Vector3.UP * v + out_dir * corner[2])
-		# A chamfer point breaks the front into two fracture planes.
 		var mid_v := height * _rng.randf_range(0.3, 0.7)
 		var mid_u := lerpf(x0, x1, _rng.randf_range(0.3, 0.7))
-		pts.append(start + along * clampf(mid_u, 0.0, length) + Vector3.UP * mid_v + out_dir * (maxf(pf_l, pf_r) + _rng.randf_range(0.2, 0.8)))
+		var mid_out := maxf(pf_l, pf_r) + _rng.randf_range(0.2, 0.8)
 		var tone := Palette.ROCK_COOL.lerp(Palette.ROCK_WARM, _rng.randf()).lerp(Palette.ROCK, 0.4)
-		var od := out_dir
-		b.add_hull(pts, tone, func(_c, n: Vector3) -> Color:
-			return tone.lightened(0.18 * maxf(n.dot(od), 0.0) * 0.6 + 0.12 * maxf(n.y, 0.0)).darkened(0.22 * (1.0 - absf(n.dot(od))) * (1.0 - maxf(n.y, 0.0))))
+		if height > 5.0 and _face_rng.randf() < 0.6:
+			# Horizontal fracture: a lower block and a set-back upper block.
+			var hs := height * _face_rng.randf_range(0.38, 0.62)
+			var hs_r := hs + _face_rng.randf_range(-0.6, 0.6)
+			var set_back := _face_rng.randf_range(0.4, 1.4)
+			_column(b, start, along, out_dir, length, height, x0, x1, 0.0, hs, hs_r, pf_l, pf_r, _face_rng.randf_range(-0.3, 0.2), back,
+				lerpf(0.0, hs, 0.5), mid_u, mid_out, tone)
+			var up_tone := tone.lerp(Palette.ROCK_WARM, _face_rng.randf() * 0.3).lightened(_face_rng.randf_range(-0.04, 0.06))
+			var ux0 := x0 + _face_rng.randf_range(-0.8, 0.8)
+			var ux1 := x1 + _face_rng.randf_range(-0.8, 0.8)
+			_column(b, start, along, out_dir, length, height, ux0, ux1, minf(hs, hs_r) - 0.3, top_l, top_r, pf_l - set_back, pf_r - set_back, lean, back,
+				lerpf(hs, top_l, _face_rng.randf_range(0.3, 0.7)), lerpf(ux0, ux1, _face_rng.randf_range(0.3, 0.7)), mid_out - set_back, up_tone)
+		else:
+			_column(b, start, along, out_dir, length, height, x0, x1, 0.0, top_l, top_r, pf_l, pf_r, lean, back, mid_v, mid_u, mid_out, tone)
 		s += w
 	# Talus: a few fallen blocks at the foot.
 	for k in int(length / 9.0):
 		var u := _rng.randf_range(1.0, length - 1.0)
 		var p := start + along * u + out_dir * _rng.randf_range(1.0, 2.5) + Vector3.UP * 0.4
 		b.add_rock(p, _rng.randf_range(0.6, 1.4), _rng, Palette.ROCK.lerp(Palette.ROCK_COOL, _rng.randf()), 0.75)
+	if scree:
+		_scree(b, start, along, out_dir, length)
+
+
+## One prismatic rock column (convex hull) from y0 to its broken top, with a
+## chamfer point that splits the front into two fracture planes.
+func _column(b: LowPolyBatch, start: Vector3, along: Vector3, out_dir: Vector3, length: float, height: float,
+		x0: float, x1: float, y0: float, top_l: float, top_r: float, pf_l: float, pf_r: float, lean: float, back: float,
+		mid_v: float, mid_u: float, mid_out: float, tone: Color) -> void:
+	var pts := PackedVector3Array()
+	for corner in [[x0, y0, pf_l], [x1, y0, pf_r], [x0, top_l, pf_l + lean], [x1, top_r, pf_r + lean],
+			[x0, y0, back], [x1, y0, back], [x0, top_l - 0.4, back], [x1, top_r - 0.4, back]]:
+		var u: float = clampf(corner[0], 0.0, length)
+		var v: float = clampf(corner[1], 0.0, height + 1.0)
+		pts.append(start + along * u + Vector3.UP * v + out_dir * corner[2])
+	pts.append(start + along * clampf(mid_u, 0.0, length) + Vector3.UP * mid_v + out_dir * mid_out)
+	var od := out_dir
+	b.add_hull(pts, tone, func(_c, n: Vector3) -> Color:
+		return tone.lightened(0.18 * maxf(n.dot(od), 0.0) * 0.6 + 0.12 * maxf(n.y, 0.0)).darkened(0.22 * (1.0 - absf(n.dot(od))) * (1.0 - maxf(n.y, 0.0))))
+
+
+## Scree apron along the foot of a face: a ragged gravel slope from ~1-2 m up
+## the wall down to the bench floor (collision on, so machines never clip it).
+func _scree(b: LowPolyBatch, start: Vector3, along: Vector3, out_dir: Vector3, length: float) -> void:
+	var step := 3.0
+	var n := int(length / step)
+	var prev_top := Vector3.ZERO
+	var prev_foot := Vector3.ZERO
+	for i in n + 1:
+		var u := clampf(i * step + _face_rng.randf_range(-0.8, 0.8), 0.0, length)
+		var base := start + along * u
+		if absf(base.x - RAMP_X) < 7.0 and base.z < -TIERS[0][0] + 1.0 and base.y < 1.0:
+			prev_top = Vector3.ZERO   # keep the ramp foot clear
+			continue
+		var h := _face_rng.randf_range(0.7, 1.9)
+		var top := base + Vector3.UP * h + out_dir * _face_rng.randf_range(1.2, 1.8)
+		var foot := base + Vector3.UP * 0.02 + out_dir * (h * 2.2 + _face_rng.randf_range(1.2, 2.2))
+		if prev_top != Vector3.ZERO:
+			var c1 := Palette.GRAVEL_PILE_WARM.lerp(Palette.ROCK_COOL, _face_rng.randf() * 0.5)
+			var c2 := c1.darkened(_face_rng.randf_range(0.02, 0.1))
+			b.add_tri_facing(prev_top, top, foot, Vector3.UP + out_dir, c1)
+			b.add_tri_facing(prev_top, foot, prev_foot, Vector3.UP + out_dir, c2)
+			_add_convex_shape(PackedVector3Array([prev_top, top, foot, prev_foot,
+				prev_top - out_dir * 1.5, top - out_dir * 1.5, Vector3(prev_top.x, base.y, prev_top.z) - out_dir * 1.5, Vector3(top.x, base.y, top.z) - out_dir * 1.5]))
+			for k in 2:   # loose stones on the slope
+				var t := _face_rng.randf()
+				var q := prev_top.lerp(foot, _face_rng.randf_range(0.3, 0.95)).lerp(top.lerp(prev_foot, t), 0.3)
+				b.add_rock(q + Vector3.UP * 0.1, _face_rng.randf_range(0.2, 0.45), _face_rng, Palette.ROCK.lerp(Palette.ROCK_COOL, _face_rng.randf()), 0.8)
+		prev_top = top
+		prev_foot = foot
 
 
 func _rock_tri(b: LowPolyBatch, a: Vector3, bb: Vector3, c: Vector3, out_dir: Vector3, tone: Color) -> void:
