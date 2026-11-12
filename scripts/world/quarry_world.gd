@@ -400,20 +400,30 @@ func _mountain_color(cen: Vector3, _n: Vector3, h: float) -> Color:
 
 
 func _build_clouds() -> LowPolyBatch:
+	# Soft low-poly cumulus: flat bases, several round overlapping puffs, big and
+	# far away near the horizon. Own RNG stream so the forest etc. do not move.
+	var rng := RandomNumberGenerator.new()
+	rng.seed = seed_value + 303
 	var b := LowPolyBatch.new()
-	for i in 11:
-		var c := Vector3(_rng.randf_range(-450, 450), _rng.randf_range(110, 160), _rng.randf_range(-500, 300))
-		var puffs := _rng.randi_range(4, 7)
+	for i in 14:
+		var ang := rng.randf_range(-PI, PI)
+		var dist := rng.randf_range(420.0, 720.0)
+		var c := Vector3(sin(ang) * dist, rng.randf_range(95.0, 150.0), -cos(ang) * dist)
+		var along := Vector3(cos(ang), 0, sin(ang))             # spread puffs sideways to the viewer
+		var width := rng.randf_range(120.0, 210.0)
+		var puffs := rng.randi_range(5, 8)
 		for k in puffs:
-			var t := (k - puffs * 0.5) / puffs
-			var r := _rng.randf_range(7, 13) * (1.0 - absf(t) * 0.8)
-			var off := Vector3(t * 40.0, _rng.randf_range(-1, 3) + (1.0 - absf(t)) * 4.0, _rng.randf_range(-6, 6))
+			var t := (k + 0.5) / puffs - 0.5
+			var r := width * rng.randf_range(0.15, 0.22) * (1.0 - absf(t) * 1.1)
+			var off := along * t * width + Vector3(0, (1.0 - absf(t) * 2.0) * r * 0.5, rng.randf_range(-r, r) * 0.4)
 			var pts := PackedVector3Array()
-			for d in 18:
-				var v := Vector3(_rng.randf_range(-1, 1), _rng.randf_range(-0.2, 1), _rng.randf_range(-1, 1)).normalized()
-				pts.append(c + off + Vector3(v.x * r * 1.4, v.y * r, v.z * r))
-			var rng := _rng
-			b.add_hull(pts, Color.WHITE, func(_cc, n): return Color(1.0, 0.93, 0.88).lerp(Color(0.92, 0.72, 0.74), clampf(-n.y * 0.9 + 0.15, 0.0, 1.0) + rng.randf() * 0.04))  # sunset-lit, pink undersides
+			for d in 26:
+				var v := Vector3(rng.randf_range(-1, 1), rng.randf_range(-0.25, 1), rng.randf_range(-1, 1)).normalized()
+				v.y = maxf(v.y, -0.12)                               # flat cloud base
+				pts.append(c + off + Vector3(v.x * r * 1.25, v.y * r, v.z * r))
+			b.add_hull(pts, Color.WHITE, func(_cc, n):
+				var under := clampf(-n.y * 1.2 + 0.1, 0.0, 1.0)
+				return Color(1.0, 0.97, 0.94).lerp(Color(0.96, 0.84, 0.84), under) + Color(1, 1, 1) * rng.randf() * 0.02)  # sunlit tops, soft pink undersides
 	return b
 
 

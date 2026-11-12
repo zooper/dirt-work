@@ -33,6 +33,7 @@ func _ready() -> void:
 	_loading_bay(LOADING_BAY, LOADING_BAY_YAW)
 	_upper_bench()
 	_pit_plant()
+	_tyre_tracks()
 
 	add_child(_solid.to_instance("SiteSolid"))
 	var glow := _glow.to_instance("SiteGlow", false)
@@ -182,7 +183,7 @@ func _loading_bay(hauler: Vector3, yaw: float) -> void:
 		var d := sqrt(_rng.randf()) * 3.6
 		var h := maxf(2.0 * (1.0 - d / 3.8), 0.0)
 		var p := c + Vector3(cos(a) * d, h * _rng.randf_range(0.7, 1.0), sin(a) * d)
-		_solid.add_rock(p, _rng.randf_range(0.32, 0.62), _rng, Palette.GRAVEL_PILE.lerp(Palette.ROCK_COOL, _rng.randf()).darkened(_rng.randf_range(0.2, 0.4)), 0.8)
+		_solid.add_rock(p, _rng.randf_range(0.32, 0.62), _rng, Palette.GRAVEL_PILE_WARM.lerp(Palette.ROCK_COOL, _rng.randf() * 0.6).darkened(_rng.randf_range(0.0, 0.18)), 0.8)
 	for k in 10:
 		var a := TAU * k / 10.0
 		hull.append(c + Vector3(cos(a) * 3.8, 0, sin(a) * 3.8))
@@ -234,6 +235,45 @@ func _pit_plant() -> void:
 	_conveyor(tower + Vector3(1.5, 4.6, 0.5), tower + Vector3(14.0, 1.0, 1.5))   # out along the bench
 	_cabin(Vector3(-19, 0, -13), -0.42)
 	_floodlight(Vector3(-22, 0, -18))
+
+
+## Packed, darker wheel ruts on the pit floor: the loader's approach to the
+## hauler and the hauler's own path in (reference: tracks across the floor).
+func _tyre_tracks() -> void:
+	var loader_path := [Vector3(-2.2, 0, -25.2), Vector3(-5.0, 0, -18.0), Vector3(-7.0, 0, -9.0), Vector3(-4.0, 0, 1.0), Vector3(0.0, 0, 10.0)]
+	_track_pair(loader_path, 2.76, 0.95)
+	var hauler_path := [Vector3(-3.0, 0, -28.0), Vector3(-11.0, 0, -26.5), Vector3(-15.5, 0, -19.0), Vector3(-15.0, 0, -6.0)]
+	_track_pair(hauler_path, 2.6, 0.8)
+	_track_pair([Vector3(11.0, 0, -28.0), Vector3(16.0, 0, -27.0), Vector3(20.0, 0, -18.0), Vector3(20.0, 0, -11.0)], 2.6, 0.8)
+
+
+func _track_pair(path: Array, track: float, width: float) -> void:
+	# Densely sample a Catmull-Rom spline through `path`, then lay two ribbons.
+	var pts: Array[Vector3] = []
+	for i in path.size() - 1:
+		var p0: Vector3 = path[maxi(i - 1, 0)]
+		var p1: Vector3 = path[i]
+		var p2: Vector3 = path[i + 1]
+		var p3: Vector3 = path[mini(i + 2, path.size() - 1)]
+		var n := int(ceil(p1.distance_to(p2) / 0.5))
+		for k in n:
+			var t := float(k) / n
+			pts.append(0.5 * ((2.0 * p1) + (-p0 + p2) * t + (2.0 * p0 - 5.0 * p1 + 4.0 * p2 - p3) * t * t + (-p0 + 3.0 * p1 - 3.0 * p2 + p3) * t * t * t))
+	pts.append(path[path.size() - 1])
+	var base := Palette.GRAVEL_FLOOR.darkened(0.2)
+	var lug := Palette.GRAVEL_FLOOR.darkened(0.3)
+	for side in [-1.0, 1.0]:
+		for i in pts.size() - 1:
+			var a := pts[i]
+			var b := pts[i + 1]
+			var dir := (b - a).normalized()
+			var rt := Vector3(-dir.z, 0, dir.x)
+			var o: Vector3 = rt * float(side) * track * 0.5
+			var y := Vector3.UP * 0.025
+			var fade := clampf(minf(float(i), float(pts.size() - 2 - i)) / 6.0, 0.0, 1.0)   # soft ends
+			var col := (lug if i % 2 == 0 else base).lerp(Palette.GRAVEL_FLOOR, 1.0 - fade)
+			_solid.add_quad_facing(a + o - rt * width * 0.5 + y, a + o + rt * width * 0.5 + y,
+				b + o + rt * width * 0.5 + y, b + o - rt * width * 0.5 + y, Vector3.UP, col)
 
 
 ## Working face on the second bench (y = 14) above the loading bay: the
