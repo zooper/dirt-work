@@ -1,16 +1,23 @@
 extends SceneTree
-## Dev tool: renders fixed camera shots of the quarry to PNG for visual review.
-## Needs a real display/GL context (not --headless), e.g. on a Linux server:
-##   DISPLAY=:97 godot --path . -s tools/capture_shots.gd -- <out_dir>
-## Shots: "play" (follow camera as in-game), "concept" (low 3/4 hero view of the
-## loader, framed like the concept art), "overview" (wide establishing view).
+## Dev tool: renders the fixed visual-review shots required by docs/ART_DIRECTION.md.
+## Needs a real display/GL context (not --headless), e.g. on Linux:
+##   tools/render_preview.sh <out_dir>            (Xvfb + lavapipe, Mobile renderer)
+##   DISPLAY=:0 godot --path . -s tools/capture_shots.gd -- <out_dir>   (real GPU)
+## Files are written as JPEG (compact enough to commit as review records).
+##
+## The loader spawns at (0, 0, 10) facing -Z. Each shot sets the hydraulics
+## (lift/tilt degrees) and a camera position/target.
 
-const SHOTS := {
-	"concept": [Vector3(-7.5, 2.2, 3.0), Vector3(1.0, 2.0, 9.0)],
-	"overview": [Vector3(-30, 22, 60), Vector3(0, 2, -10)],
-	"side": [Vector3(-13.0, 2.4, 10.0), Vector3(0.0, 1.9, 10.0)],
-	"front34": [Vector3(6.5, 3.0, 2.0), Vector3(0.0, 1.8, 9.0)],
-}
+const SHOTS := [
+	# name, camera, target, lift, tilt
+	["hero", Vector3(-10.5, 1.9, 14.5), Vector3(0.5, 2.6, 7.0), 42.0, 25.0],     # reference angle, bucket up
+	["side", Vector3(-14.0, 2.3, 10.0), Vector3(0.0, 2.0, 10.0), 0.0, 0.0],
+	["front34", Vector3(7.5, 3.0, 1.5), Vector3(0.0, 1.9, 8.5), 0.0, -10.0],
+	["front", Vector3(0.0, 2.6, -5.0), Vector3(0.0, 2.0, 8.0), 5.0, -10.0],
+	["rear", Vector3(3.0, 3.0, 25.0), Vector3(0.0, 2.0, 10.0), 0.0, 0.0],
+	["bucket_low", Vector3(-9.0, 1.6, 3.0), Vector3(0.0, 1.0, 6.0), -23.0, 0.0],
+	["overview", Vector3(-30, 22, 60), Vector3(0, 2, -10), 0.0, 0.0],
+]
 
 
 func _initialize() -> void:
@@ -33,27 +40,30 @@ func _run() -> void:
 	loader.tilt_angle = -15.0
 	for i in 90:
 		await process_frame
-	_save(out + "/play.png")
-	var follow := level.get_node("FollowCamera") as Node3D
+	_save(out + "/play.jpg")   # gameplay chase camera
+	var follow := level.get_node("FollowCamera") as FollowCamera
 	follow.set_process(false)
 	var cam := level.get_node("FollowCamera/Camera3D") as Camera3D
 	for shot in SHOTS:
-		var spec: Array = SHOTS[shot]
-		cam.global_position = spec[0]
-		cam.look_at(spec[1])
+		loader.lift_angle = shot[3]
+		loader.tilt_angle = shot[4]
+		cam.global_position = shot[1]
+		cam.look_at(shot[2])
 		for i in 20:
 			await process_frame
-		_save("%s/%s.png" % [out, shot])
+		_save("%s/%s.jpg" % [out, shot[0]])
 	# In-cab view as the player sees it.
+	loader.lift_angle = 8.0
+	loader.tilt_angle = -15.0
 	follow.set_process(true)
-	(follow as FollowCamera).mode = FollowCamera.Mode.CAB
+	follow.mode = FollowCamera.Mode.CAB
 	for i in 20:
 		await process_frame
-	_save(out + "/cab.png")
+	_save(out + "/cab.jpg")
 	quit()
 
 
 func _save(path: String) -> void:
 	var img := root.get_texture().get_image()
-	img.save_png(path)
-	print("saved ", path)
+	var err := img.save_jpg(path, 0.86) if path.ends_with(".jpg") else img.save_png(path)
+	print("saved " if err == OK else "FAILED ", path)
