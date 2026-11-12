@@ -6,7 +6,7 @@ extends Node3D
 ## Placed under BucketPivot at the bucket lip.
 
 @export var dump_tilt_deg := 12.0    ## tilt beyond which material pours out
-@export var lip_width := 2.9
+@export var lip_width := 3.4
 
 var _loader: WheelLoader
 var _heap: MeshInstance3D
@@ -58,11 +58,11 @@ func _build_heap() -> MeshInstance3D:
 	rng.seed = 91
 	var b := LowPolyBatch.new()
 	var pts := PackedVector3Array()
-	for x in [-1.45, -0.7, 0.0, 0.7, 1.45]:
+	for x in [-1.7, -0.85, 0.0, 0.85, 1.7]:
 		for z in [-0.2, -0.7, -1.2, -1.7]:
-			var h := 0.25 + (1.0 - absf(x) / 1.6) * 0.55 * (1.0 - absf(z + 0.9) / 1.2)
+			var h := 0.25 + (1.0 - absf(x) / 1.9) * 0.55 * (1.0 - absf(z + 0.9) / 1.2)
 			pts.append(Vector3(x, h + rng.randf_range(-0.06, 0.06), z))
-	for x in [-1.5, 1.5]:
+	for x in [-1.75, 1.75]:
 		for z in [-0.1, -1.8]:
 			pts.append(Vector3(x, -0.9, z))
 	b.add_hull(pts, Palette.GRAVEL_PILE, func(_c, nrm): return Palette.GRAVEL_PILE.lerp(Palette.ROCK_WARM, rng.randf() * 0.4).darkened(0.15 * (1.0 - maxf(nrm.y, 0.0))))

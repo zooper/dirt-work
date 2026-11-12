@@ -10,7 +10,7 @@ extends SceneTree
 
 const SHOTS := [
 	# name, camera, target, lift, tilt
-	["hero", Vector3(11.4, 3.4, -0.5), Vector3(-0.5, 4.4, -28.0), 60.0, 40.0, 40.0],  # reference composition: loader dumping into the hauler
+	["hero", Vector3(8.9, 3.5, -5.2), Vector3(-0.5, 4.3, -28.0), 60.0, 40.0, 42.0],  # reference composition: loader dumping into the hauler
 	["side", Vector3(-14.0, 2.3, 10.0), Vector3(0.0, 2.0, 10.0), 0.0, 0.0],
 	["front34", Vector3(7.5, 3.0, 1.5), Vector3(0.0, 1.9, 8.5), 0.0, -10.0],
 	["front", Vector3(0.0, 2.6, -5.0), Vector3(0.0, 2.0, 8.0), 5.0, -10.0],

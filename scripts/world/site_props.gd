@@ -204,7 +204,7 @@ func _loading_bay(hauler: Vector3, yaw: float) -> void:
 	# A lone pine at the bay edge, and a floodlight among the site buildings.
 	var pine := MeshInstance3D.new()
 	pine.mesh = QuarryWorld.build_pine_mesh(_rng)
-	pine.position = hauler + r * Vector3(18.4, 0, 6.9)
+	pine.position = hauler + r * Vector3(15.6, 0, 9.4)
 	pine.scale = Vector3.ONE * 1.6
 	add_child(pine)
 	_collider(pine.position + Vector3(0, 2.0, 0), Vector3(0.6, 4.0, 0.6))

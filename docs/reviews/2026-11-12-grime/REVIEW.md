@@ -12,3 +12,7 @@ Reference: [`docs/image.png`](../../image.png). Its machines carry dust on the t
 ## Limitations
 - The overlay costs one extra blended pass per machine mesh, which is acceptable for a handful of machines.
 - It hasn't been checked in Forward+ on the Mac.
+
+## Follow-up: wider rock bucket and tighter hero framing
+- Bucket width went from 3.45 to 3.95 m, now wider than the 3.8 m over the tyres, like the reference. The bucket also got bolt-on side cutters, a second pair of back ribs, a horizontal back band, spill-guard gussets and ten tooth adapters. The in-bucket heap and pour lip were widened to match.
+- The hero camera moved 17% closer with a 42° FOV, and the pine was moved back to the left frame edge. `front34.jpg` and `hero.jpg` show the result.

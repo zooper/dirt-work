@@ -167,7 +167,7 @@ def build_arm():
 def build_bucket():
     """Origin at the bucket pin; opening faces -z (forward). Big rock bucket."""
     p = Part("Bucket")
-    W, H, D = 3.45, 1.6, 1.95
+    W, H, D = 3.95, 1.6, 1.95          # wider than the tyres (track + tyre = 3.8 m), like the reference
     back = arc_pts(-0.62, -0.72, 0.88, 160, 290, 10)
     shell = [(-D * 0.45, 0.08), (0.2, 0.12)] + [(z, y) for z, y in back[1:]] + [(-D, -H + 0.02)]
     t = 0.09
@@ -185,14 +185,22 @@ def build_bucket():
         p.prism([(-D * 0.4, -0.05), (-D * 0.95, -H + 0.05), (-D * 0.85, -H + 0.32), (-D * 0.35, 0.12)],
                 s * (W / 2 + 0.04), s * (W / 2 + 0.1), WEAR, bevel=0.012)
         # Vertical stiffener ribs on the back.
-        p.box((0.12, 1.1, 0.12), (s * 0.6, -0.55, 0.22), BUCKET, bevel=0.03)
+        for rx in (0.45, 1.25):
+            p.box((0.12, 1.1, 0.12), (s * rx, -0.55, 0.22), BUCKET, bevel=0.03)
+        # Bolt-on side cutter at the front of each side plate.
+        p.prism([(-D * 0.9, -H + 0.05), (-D - 0.05, -H + 0.05), (-D * 0.98, -H + 0.55), (-D * 0.82, -H + 0.5)],
+                s * (W / 2 + 0.03), s * (W / 2 + 0.13), WEAR, bevel=0.012)
         p.box((0.18, 0.65, 0.5), (s * 0.82, 0.05, 0.08), DARK, bevel=0.04)    # pin brackets
     p.box((W + 0.05, 0.16, 0.55), (0, 0.16, -0.18), BUCKET, bevel=0.04)          # spill guard
+    p.box((W + 0.08, 0.14, 0.14), (0, -0.62, 0.36), DARK, bevel=0.03)            # horizontal back band
+    for k in range(5):                                                           # spill-guard gussets
+        p.box((0.08, 0.26, 0.4), (-W / 2 + 0.4 + k * (W - 0.8) / 4, 0.33, -0.2), BUCKET, bevel=0.015)
     p.box((0.45, 0.5, 0.4), (0, 0.36, 0.08), DARK, bevel=0.04)                  # link bracket
     p.box((W - 0.3, 0.1, 1.1), (0, -H - 0.02, -D * 0.6), WEAR, bevel=0.02)
     p.box((W - 0.05, 0.08, 0.26), (0, -H + 0.03, -D + 0.05), WEAR, bevel=0.015)
-    for i in range(9):
-        x = -W / 2 + 0.25 + i * (W - 0.5) / 8
+    for i in range(10):
+        x = -W / 2 + 0.25 + i * (W - 0.5) / 9
+        p.box((0.24, 0.12, 0.3), (x, -H + 0.04, -D + 0.12), DARK, bevel=0.02)   # tooth adapter
         p.prism([(-D + 0.05, -H + 0.09), (-D - 0.4, -H + 0.02), (-D - 0.42, -H - 0.02), (-D + 0.05, -H - 0.05)],
                 x - 0.09, x + 0.09, WEAR, bevel=0.014)
     export(p.to_object(), "bucket.glb")
