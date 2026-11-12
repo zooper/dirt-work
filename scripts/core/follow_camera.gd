@@ -24,6 +24,7 @@ enum Mode { CHASE, CAB }
 @export var mouse_sensitivity := 0.18     ## degrees per pixel
 @export var zoom_step := 1.5
 @export var capture_mouse := true
+@export var cab_default_pitch := -0.14   ## radians; looks slightly down at dash + bucket
 
 var mode := Mode.CHASE
 var orbit_yaw := 0.0     ## radians relative to behind-the-vehicle (chase)
@@ -57,7 +58,7 @@ func _unhandled_input(event: InputEvent) -> void:
 	elif event.is_action_pressed("camera_switch"):
 		mode = Mode.CAB if mode == Mode.CHASE else Mode.CHASE
 		head_yaw = 0.0
-		head_pitch = 0.0
+		head_pitch = cab_default_pitch
 		orbit_yaw = 0.0
 		orbit_pitch = 0.0
 	elif event.is_action_pressed("camera_zoom_in"):

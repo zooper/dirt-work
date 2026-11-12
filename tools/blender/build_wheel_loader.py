@@ -83,13 +83,18 @@ WEAR = mat("WearSteel", (0.62, 0.63, 0.66), rough=0.35, metal=0.6)
 RUBBER = mat("Rubber", (0.11, 0.11, 0.12), rough=0.92)
 BLACK = mat("Black", (0.05, 0.05, 0.06), rough=0.8)
 RED = mat("RailRed", (0.82, 0.10, 0.08), rough=0.5)
-GLASS = mat("Glass", (0.35, 0.50, 0.60), rough=0.05, alpha=0.32)
+GLASS = mat("Glass", (0.62, 0.72, 0.78), rough=0.05, alpha=0.18)
 LAMP = mat("Lamp", (1.0, 0.95, 0.82), rough=0.2, emit=4.0)
 TAIL = mat("TailLamp", (1.0, 0.12, 0.05), rough=0.2, emit=3.0)
 AMBER = mat("Amber", (1.0, 0.55, 0.05), rough=0.2, emit=2.0)
 HIVIS = mat("HiVis", (0.80, 0.95, 0.15), rough=0.8)
 SKIN = mat("Skin", (0.86, 0.64, 0.50), rough=0.8)
 SEAT = mat("Seat", (0.12, 0.12, 0.13), rough=0.85)
+LINER = mat("Liner", (0.55, 0.56, 0.57), rough=0.9)
+TINT = mat("Tint", (0.08, 0.1, 0.12), rough=0.3)
+SCREEN = mat("Screen", (0.35, 0.72, 0.95), rough=0.2, emit=1.5)
+TROUSERS = mat("Trousers", (0.14, 0.16, 0.24), rough=0.85)
+CAP = mat("Cap", (0.10, 0.12, 0.16), rough=0.8)
 
 
 # ---------------------------------------------------------- mesh helpers ----
@@ -478,18 +483,63 @@ def build_rear():
         for zz, dz in ((cz - 1.2, -0.06), (cz + 1.08, 0.06)):
             p.box((0.3, 0.18, 0.12), (s * 0.75, ROOF + 0.02, zz), DARK, bevel=0.02)
             p.box((0.24, 0.13, 0.04), (s * 0.75, ROOF + 0.02, zz + dz), LAMP, bevel=0.01)
-    # Interior: seat, console, low steering wheel, operator in hi-vis + cap.
-    p.box((0.6, 0.5, 0.55), (0, FL + 0.6, cz + 0.3), SEAT, bevel=0.05)
-    p.box((0.6, 0.7, 0.15), (0, FL + 1.0, cz + 0.6), SEAT, bevel=0.04)
-    p.box((0.5, 0.45, 0.3), (0, FL + 0.55, cz - 0.5), DARK, bevel=0.04)
-    p.cylinder(0.04, 0.3, (0, FL + 0.9, cz - 0.42), "y", BLACK, segments=6)
-    p.cylinder(0.17, 0.04, (0, FL + 1.05, cz - 0.4), "y", BLACK, segments=12)
-    p.box((0.5, 0.6, 0.32), (0, FL + 1.1, cz + 0.32), HIVIS, bevel=0.06, segments=2)
-    p.box((0.52, 0.05, 0.34), (0, FL + 1.0, cz + 0.32), WEAR, bevel=0.0)                   # reflective band
-    p.box((0.13, 0.42, 0.13), (-0.3, FL + 1.1, cz + 0.1), HIVIS, bevel=0.04)
-    p.box((0.13, 0.42, 0.13), (0.3, FL + 1.1, cz + 0.1), HIVIS, bevel=0.04)
-    p.box((0.26, 0.28, 0.26), (0, FL + 1.57, cz + 0.28), SKIN, bevel=0.06, segments=2)
-    p.box((0.3, 0.09, 0.33), (0, FL + 1.74, cz + 0.25), DARK, bevel=0.03)
+    # ---- Cab interior ----
+    p.box((1.62, 0.03, 1.55), (0, FL + 0.02, cz + 0.05), RUBBER, bevel=0.0)                   # floor mat
+    p.box((1.7, 0.04, 1.65), (0, ROOF - 0.2, cz + 0.02), LINER, bevel=0.0)                    # headliner
+    p.box((0.3, 0.03, 0.12), (0, ROOF - 0.225, cz + 0.35), LAMP, bevel=0.01)                  # dome light
+    p.box((1.7, 0.55, 0.05), (0, FL + 0.3, cz + 0.83), DARK, bevel=0.01)                      # rear wall panel
+    # Dashboard with instrument screen, steering column and wheel.
+    p.box((1.55, 0.5, 0.32), (0, FL + 0.45, cz - 0.6), DARK, bevel=0.04)
+    p.box((1.5, 0.08, 0.38), (0, FL + 0.72, cz - 0.58), BLACK, bevel=0.02, rot=Matrix.Rotation(0.35, 4, "X"))
+    p.box((0.32, 0.18, 0.02), (0, FL + 0.82, cz - 0.5), SCREEN, bevel=0.0, rot=Matrix.Rotation(0.55, 4, "X"))
+    for x in (-0.45, -0.3, 0.3, 0.45):
+        p.box((0.08, 0.05, 0.02), (x, FL + 0.78, cz - 0.52), AMBER if x < 0 else LAMP, bevel=0.0)  # tell-tales
+    p.tube([(0, FL + 0.55, cz - 0.55), (0, FL + 0.98, cz - 0.38)], 0.04, BLACK)
+    wc = Vector((0, FL + 1.0, cz - 0.36))
+    n = Vector((0, 0.77, 0.64)).normalized()
+    u = Vector((1, 0, 0))
+    v = n.cross(u).normalized()
+    ring = [tuple(wc + (u * math.cos(2 * math.pi * k / 14) + v * math.sin(2 * math.pi * k / 14)) * 0.2) for k in range(15)]
+    p.tube(ring, 0.025, BLACK, segments=6)
+    p.tube([tuple(wc), tuple(wc + u * 0.2)], 0.015, BLACK, segments=5)
+    p.tube([tuple(wc), tuple(wc - u * 0.2)], 0.015, BLACK, segments=5)
+    for x in (-0.13, 0.13):                                                                   # pedals
+        p.box((0.1, 0.03, 0.18), (x, FL + 0.14, cz - 0.52), BLACK, bevel=0.0, rot=Matrix.Rotation(0.7, 4, "X"))
+    # Air-suspension seat with armrest console, loader joystick and side display.
+    p.box((0.4, 0.3, 0.4), (0, FL + 0.18, cz + 0.25), DARK, bevel=0.03)                      # pedestal
+    p.box((0.6, 0.16, 0.55), (0, FL + 0.42, cz + 0.22), SEAT, bevel=0.05)
+    p.box((0.58, 0.78, 0.14), (0, FL + 0.9, cz + 0.55), SEAT, bevel=0.05, rot=Matrix.Rotation(-0.15, 4, "X"))
+    p.box((0.34, 0.2, 0.12), (0, FL + 1.42, cz + 0.62), SEAT, bevel=0.04)                    # headrest
+    p.box((0.2, 0.14, 0.55), (0.42, FL + 0.66, cz + 0.12), DARK, bevel=0.03)                 # armrest console
+    p.cylinder(0.025, 0.14, (0.42, FL + 0.8, cz - 0.05), "y", BLACK, segments=6)
+    p.box((0.07, 0.09, 0.07), (0.42, FL + 0.9, cz - 0.05), BLACK, bevel=0.02)                # joystick
+    p.box((0.06, 0.05, 0.05), (0.42, FL + 0.75, cz + 0.12), AMBER, bevel=0.0)
+    p.tube([(0.62, FL + 0.7, cz - 0.1), (0.66, FL + 1.05, cz - 0.3)], 0.02, BLACK)
+    p.box((0.03, 0.16, 0.24), (0.66, FL + 1.12, cz - 0.32), SCREEN, bevel=0.005)            # side display
+    # Operator: seated, hi-vis vest with reflective bands, cap, hands on the wheel.
+    p.box((0.44, 0.2, 0.48), (0, FL + 0.6, cz + 0.05), TROUSERS, bevel=0.05)                 # thighs
+    for x in (-0.12, 0.12):
+        p.box((0.15, 0.46, 0.15), (x, FL + 0.3, cz - 0.22), TROUSERS, bevel=0.04)          # shins
+        p.box((0.16, 0.1, 0.26), (x, FL + 0.08, cz - 0.28), BLACK, bevel=0.03)              # boots
+    p.box((0.46, 0.62, 0.3), (0, FL + 1.05, cz + 0.36), HIVIS, bevel=0.07, segments=2, rot=Matrix.Rotation(-0.12, 4, "X"))
+    for y in (0.9, 1.16):
+        p.box((0.48, 0.05, 0.32), (0, FL + y, cz + 0.36), WEAR, bevel=0.0, rot=Matrix.Rotation(-0.12, 4, "X"))
+    p.box((0.12, 0.14, 0.12), (0, FL + 1.42, cz + 0.32), SKIN, bevel=0.03)                  # neck
+    p.box((0.24, 0.27, 0.25), (0, FL + 1.58, cz + 0.3), SKIN, bevel=0.07, segments=2)
+    p.box((0.27, 0.08, 0.29), (0, FL + 1.74, cz + 0.3), CAP, bevel=0.03)
+    p.box((0.22, 0.025, 0.12), (0, FL + 1.71, cz + 0.12), CAP, bevel=0.01)                  # cap brim
+    for x in (-1, 1):
+        sh = (x * 0.27, FL + 1.27, cz + 0.33)
+        el = (x * 0.3, FL + 0.95, cz + 0.05)
+        hd = (x * 0.16, FL + 1.02, cz - 0.3)
+        p.tube([sh, el], 0.07, HIVIS, segments=8)
+        p.tube([el, hd], 0.055, HIVIS, segments=8)
+        p.box((0.08, 0.08, 0.1), hd, SKIN, bevel=0.03)
+    # Exterior cab details: roof light bar, wiper.
+    for x in (-0.3, 0.3):
+        p.box((0.24, 0.14, 0.1), (x, ROOF + 0.02, cz - 1.2), DARK, bevel=0.02)
+        p.box((0.2, 0.11, 0.04), (x, ROOF + 0.02, cz - 1.26), LAMP, bevel=0.01)
+    p.tube([(-0.6, FL + 0.6, cz - 0.83), (0.15, FL + 0.62, cz - 0.83)], 0.015, BLACK, segments=5)   # parked wiper
     p.cylinder(0.14, 0.06, (-0.65, ROOF + 0.13, cz + 0.5), "y", BLACK, segments=10)          # beacon base
     export(p.to_object(), "rear.glb")
 
