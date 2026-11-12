@@ -426,7 +426,7 @@ func _build_clouds() -> LowPolyBatch:
 				var v := Vector3(_rng.randf_range(-1, 1), _rng.randf_range(-0.2, 1), _rng.randf_range(-1, 1)).normalized()
 				pts.append(c + off + Vector3(v.x * r * 1.4, v.y * r, v.z * r))
 			var rng := _rng
-			b.add_hull(pts, Color.WHITE, func(_cc, n): return Color(1.0, 0.96, 0.93).lerp(Color(0.85, 0.8, 0.88), clampf(-n.y, 0.0, 1.0) * 0.8 + rng.randf() * 0.04))
+			b.add_hull(pts, Color.WHITE, func(_cc, n): return Color(1.0, 0.93, 0.88).lerp(Color(0.92, 0.72, 0.74), clampf(-n.y * 0.9 + 0.15, 0.0, 1.0) + rng.randf() * 0.04))  # sunset-lit, pink undersides
 	return b
 
 

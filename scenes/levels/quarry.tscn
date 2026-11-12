@@ -6,12 +6,14 @@
 [ext_resource type="Script" path="res://scripts/world/site_props.gd" id="4"]
 
 [sub_resource type="ProceduralSkyMaterial" id="SkyMat"]
-sky_top_color = Color(0.22, 0.45, 0.82, 1)
-sky_horizon_color = Color(0.93, 0.78, 0.66, 1)
-sky_curve = 0.12
-ground_horizon_color = Color(0.93, 0.78, 0.66, 1)
+sky_top_color = Color(0.36, 0.55, 0.82, 1)
+sky_horizon_color = Color(0.98, 0.76, 0.6, 1)
+sky_curve = 0.09
+sky_energy_multiplier = 1.1
+ground_horizon_color = Color(0.98, 0.76, 0.6, 1)
 ground_bottom_color = Color(0.32, 0.38, 0.30, 1)
-sun_angle_max = 20.0
+sun_angle_max = 25.0
+sun_curve = 0.08
 
 [sub_resource type="Sky" id="Sky_1"]
 sky_material = SubResource("SkyMat")
@@ -20,9 +22,9 @@ sky_material = SubResource("SkyMat")
 background_mode = 2
 sky = SubResource("Sky_1")
 ambient_light_source = 3
-ambient_light_color = Color(0.86, 0.88, 0.95, 1)
-ambient_light_sky_contribution = 0.75
-ambient_light_energy = 0.55
+ambient_light_color = Color(0.62, 0.7, 0.9, 1)
+ambient_light_sky_contribution = 0.55
+ambient_light_energy = 0.7
 tonemap_mode = 3
 tonemap_exposure = 1.0
 tonemap_white = 6.0
@@ -35,16 +37,17 @@ ssil_enabled = true
 ssil_radius = 4.0
 ssil_intensity = 1.2
 glow_enabled = true
-glow_intensity = 0.6
+glow_intensity = 0.8
 glow_bloom = 0.05
 glow_hdr_threshold = 1.2
 fog_enabled = true
-fog_light_color = Color(0.86, 0.84, 0.82, 1)
-fog_density = 0.0009
-fog_aerial_perspective = 0.45
+fog_light_color = Color(0.96, 0.8, 0.66, 1)
+fog_sun_scatter = 0.35
+fog_density = 0.0016
+fog_aerial_perspective = 0.6
 fog_sky_affect = 0.3
 adjustment_enabled = true
-adjustment_saturation = 1.12
+adjustment_saturation = 1.08
 adjustment_contrast = 1.04
 
 [node name="Quarry" type="Node3D"]
@@ -53,14 +56,14 @@ adjustment_contrast = 1.04
 environment = SubResource("Environment_1")
 
 [node name="Sun" type="DirectionalLight3D" parent="."]
-transform = Transform3D(0.843661, 0.333464, -0.420758, 0, 0.783716, 0.621119, 0.536875, -0.524014, 0.661191, 0, 40, 0)
-light_color = Color(1, 0.94, 0.84, 1)
-light_energy = 1.35
+transform = Transform3D(0.748588, 0.238217, -0.618764, 0, 0.933229, 0.359282, 0.663035, -0.268954, 0.698604, 0, 40, 0)
+light_color = Color(1, 0.8, 0.58, 1)
+light_energy = 1.9
 shadow_enabled = true
 shadow_bias = 0.04
 light_angular_distance = 1.2
 directional_shadow_mode = 1
-directional_shadow_max_distance = 140.0
+directional_shadow_max_distance = 160.0
 
 [node name="World" type="Node3D" parent="."]
 script = ExtResource("1")
